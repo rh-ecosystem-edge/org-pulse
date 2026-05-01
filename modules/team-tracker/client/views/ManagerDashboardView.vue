@@ -316,67 +316,60 @@
             </div>
 
             <!-- Team metadata (read-only) -->
-            <div v-if="teamFieldDefs.length > 0 && hasTeamMetadata(team)" class="mt-3 mb-3">
-              <div class="grid grid-cols-2 gap-x-6 gap-y-2 text-sm">
-                <template v-for="field in visibleTeamFields" :key="field.id">
-                  <div v-if="team.metadata[field.id] != null" class="flex items-start gap-2">
-                    <span class="text-gray-500 dark:text-gray-400 shrink-0">{{ field.label }}:</span>
-                    <!-- Person reference: show as clickable links -->
-                    <template v-if="field.type === 'person-reference-linked'">
-                      <div class="flex flex-wrap gap-1">
-                        <button
-                          v-for="uid in normalizeArray(team.metadata[field.id])"
-                          :key="uid"
-                          @click="navigateToPersonDetail(uid)"
-                          class="text-primary-600 dark:text-primary-400 hover:underline"
-                        >{{ referencedPeople[uid] || uid }}</button>
-                      </div>
-                    </template>
-                    <!-- Multi-value constrained: show as pills -->
-                    <template v-else-if="field.type === 'constrained' && field.multiValue">
-                      <div class="flex flex-wrap gap-1">
-                        <span
-                          v-for="v in normalizeArray(team.metadata[field.id])"
-                          :key="v"
-                          class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-                        >{{ v }}</span>
-                      </div>
-                    </template>
-                    <!-- Default: plain text -->
-                    <template v-else>
-                      <span class="text-gray-900 dark:text-gray-100">{{ Array.isArray(team.metadata[field.id]) ? team.metadata[field.id].join(', ') : team.metadata[field.id] }}</span>
+            <div v-if="teamFieldDefs.length > 0 && hasTeamMetadata(team)" class="mt-3 border-t border-gray-100 dark:border-gray-700 pt-3 space-y-2 text-sm">
+              <template v-for="field in visibleTeamFields" :key="field.id">
+                <div v-if="team.metadata[field.id] != null" class="flex items-start gap-2">
+                  <span class="text-gray-500 dark:text-gray-400 shrink-0 min-w-[6rem] text-right text-xs font-medium uppercase tracking-wide pt-0.5">{{ field.label }}</span>
+                  <!-- Person reference: show as comma-separated clickable links -->
+                  <div v-if="field.type === 'person-reference-linked'" class="flex-1">
+                    <template v-for="(uid, i) in normalizeArray(team.metadata[field.id])" :key="uid">
+                      <template v-if="i > 0">, </template>
+                      <button
+                        @click="navigateToPersonDetail(uid)"
+                        class="text-primary-600 dark:text-primary-400 hover:underline"
+                      >{{ referencedPeople[uid] || uid }}</button>
                     </template>
                   </div>
-                </template>
+                  <!-- Multi-value constrained: show as pills -->
+                  <div v-else-if="field.type === 'constrained' && field.multiValue" class="flex flex-wrap gap-1 flex-1">
+                    <span
+                      v-for="v in normalizeArray(team.metadata[field.id])"
+                      :key="v"
+                      class="inline-flex items-center px-2 py-0.5 rounded-full text-xs bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300"
+                    >{{ v }}</span>
+                  </div>
+                  <!-- Default: plain text -->
+                  <span v-else class="text-gray-900 dark:text-gray-100 flex-1">{{ Array.isArray(team.metadata[field.id]) ? team.metadata[field.id].join(', ') : team.metadata[field.id] }}</span>
+                </div>
+              </template>
+            </div>
+
+            <!-- Team boards + expand toggle -->
+            <div class="mt-3 pt-3 border-t border-gray-100 dark:border-gray-700 flex items-center justify-between">
+              <button
+                @click="toggleTeamExpanded(team.id)"
+                class="text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center gap-1"
+              >
+                <ChevronDown
+                  class="w-3.5 h-3.5 transition-transform"
+                  :class="expandedTeams[team.id] ? 'rotate-180' : ''"
+                />
+                {{ expandedTeams[team.id] ? 'Hide' : 'Show' }} your reports on this team
+              </button>
+              <div v-if="team.boards && team.boards.length > 0" class="flex flex-wrap gap-3">
+                <a
+                  v-for="(board, idx) in team.boards"
+                  :key="idx"
+                  :href="board.url"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="inline-flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 hover:underline"
+                >
+                  {{ board.name || 'Board' }}
+                  <ExternalLink class="w-3 h-3" />
+                </a>
               </div>
             </div>
-
-            <!-- Team boards (read-only links) -->
-            <div v-if="team.boards && team.boards.length > 0" class="mt-2 flex flex-wrap gap-2">
-              <a
-                v-for="(board, idx) in team.boards"
-                :key="idx"
-                :href="board.url"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="inline-flex items-center gap-1 text-xs text-primary-600 dark:text-primary-400 hover:underline"
-              >
-                {{ board.name || 'Board' }}
-                <ExternalLink class="w-3 h-3" />
-              </a>
-            </div>
-
-            <!-- Expand/collapse direct reports on this team -->
-            <button
-              @click="toggleTeamExpanded(team.id)"
-              class="mt-3 text-xs text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 flex items-center gap-1"
-            >
-              <ChevronDown
-                class="w-3.5 h-3.5 transition-transform"
-                :class="expandedTeams[team.id] ? 'rotate-180' : ''"
-              />
-              {{ expandedTeams[team.id] ? 'Hide' : 'Show' }} your reports on this team
-            </button>
 
             <div v-if="expandedTeams[team.id]" class="mt-3 space-y-3 pl-4 border-l-2 border-gray-200 dark:border-gray-700">
               <div
