@@ -621,7 +621,6 @@ onMounted(() => {
   loadGitlabStats()
   fetchDefinitions()
   resumeTourIfActive('team-detail')
-
 })
 
 onBeforeUnmount(() => {
