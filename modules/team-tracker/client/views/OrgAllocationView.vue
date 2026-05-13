@@ -92,7 +92,7 @@ onMounted(() => {
   <div>
     <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
       <div>
-        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Org Allocation</h2>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">40/40/20 Allocation</h2>
         <p v-if="hasData" class="text-sm text-gray-500 dark:text-gray-400">
           {{ teams.length }} {{ teams.length === 1 ? 'team' : 'teams' }} across {{ summary?.boardCount || 0 }} boards
         </p>
