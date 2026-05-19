@@ -99,6 +99,7 @@ function getLatestProjection(data) {
       validationDate: entry.latest.validationDate || null,
       onboardingMethod: entry.latest.onboardingMethod || 'automated',
       firstCommentDate: entry.latest.firstCommentDate || null,
+      contextPath: entry.latest.contextPath || '',
       syncedAt: entry.latest.syncedAt
     };
   }

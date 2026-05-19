@@ -162,6 +162,11 @@ function validateComponentOnboarding(body) {
     }
   }
 
+  // contextPath: optional string
+  if (body.contextPath !== undefined && typeof body.contextPath !== 'string') {
+    errors.push('contextPath must be a string');
+  }
+
   if (errors.length > 0) {
     return { valid: false, errors };
   }
@@ -189,7 +194,8 @@ function validateComponentOnboarding(body) {
       resolved: body.resolved || null,
       validationDate: body.validationDate || null,
       onboardingMethod: body.onboardingMethod || 'automated',
-      firstCommentDate: body.firstCommentDate || null
+      firstCommentDate: body.firstCommentDate || null,
+      contextPath: body.contextPath || ''
     }
   };
 }
