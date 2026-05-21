@@ -269,7 +269,13 @@
                     class="cursor-pointer"
                     @click="startCellEdit(report, field)"
                   >
+                    <span
+                      v-if="isFieldEmpty(report.customFields?.[field.id], field) && hasExceptionFor('person', report.uid, field.id)"
+                      class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                      :title="getExceptionReason('person', report.uid, field.id)"
+                    >Exception</span>
                     <FieldDisplayCell
+                      v-else
                       :value="report.customFields?.[field.id]"
                       :field="field"
                       :referenced-people="referencedPeople"
@@ -429,7 +435,13 @@
                       class="cursor-pointer"
                       @click="startTeamFieldEdit(team, field)"
                     >
+                      <span
+                        v-if="isFieldEmpty(team.metadata?.[field.id], field) && hasExceptionFor('team', team.id, field.id)"
+                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                        :title="getExceptionReason('team', team.id, field.id)"
+                      >Exception</span>
                       <FieldDisplayCell
+                        v-else
                         :value="team.metadata?.[field.id]"
                         :field="field"
                         :referenced-people="referencedPeople"
@@ -442,7 +454,7 @@
                   <td class="px-4 py-3 text-sm" :class="teamBulkEditing ? 'bg-blue-50 dark:bg-blue-900/20' : ''">
                     <div
                       class="group flex items-center gap-1.5 cursor-pointer"
-                      :class="{ 'bg-red-100 dark:bg-red-700/50 rounded px-1': !team.boards || team.boards.length === 0 }"
+                      :class="{ 'bg-red-100 dark:bg-red-700/50 rounded px-1': (!team.boards || team.boards.length === 0) && !hasExceptionFor('team', team.id, '__boards__') }"
                       @click="boardsDrawerTeam = team"
                     >
                       <div v-if="team.boards && team.boards.length > 0" class="flex flex-wrap gap-1.5">
@@ -459,6 +471,11 @@
                           <ExternalLink class="w-3 h-3" />
                         </a>
                       </div>
+                      <span
+                        v-else-if="hasExceptionFor('team', team.id, '__boards__')"
+                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300"
+                        :title="getExceptionReason('team', team.id, '__boards__')"
+                      >Exception</span>
                       <span v-else class="text-gray-400 dark:text-gray-500">—</span>
                       <svg class="h-3 w-3 text-gray-400 dark:text-gray-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -492,6 +509,7 @@ import { useFieldDefinitions } from '@shared/client/composables/useFieldDefiniti
 import { useTeams } from '@shared/client/composables/useTeams'
 import { useRoster } from '@shared/client/composables/useRoster'
 import { apiRequest } from '@shared/client/services/api'
+import { isFieldEmpty as _isFieldEmpty, buildExceptionSet, hasException as _hasException, getException as _getException } from '../utils/field-helpers'
 import ConstrainedAutocomplete from '../components/ConstrainedAutocomplete.vue'
 import FieldDisplayCell from '../components/FieldDisplayCell.vue'
 import FieldEditCell from '../components/FieldEditCell.vue'
@@ -500,7 +518,7 @@ import { useManagerTutorial } from '../composables/useManagerTutorial'
 
 const nav = inject('moduleNav', null)
 
-const { directReports, indirectReports, teams, allOrgTeams, allPeople, referencedPeople, fieldDefinitions, loading, error, reason, includeIndirect, load, refresh } = useManagerDashboard()
+const { directReports, indirectReports, teams, allOrgTeams, allPeople, referencedPeople, fieldDefinitions, fieldExceptions, loading, error, reason, includeIndirect, load, refresh } = useManagerDashboard()
 const { updatePersonFields } = useFieldDefinitions()
 const { updateTeamFields } = useTeams()
 const { reloadRoster } = useRoster()
@@ -550,16 +568,25 @@ const visibleReports = computed(() =>
 // --- Field completeness ---
 
 function isFieldEmpty(value, field) {
-  if (value === null || value === undefined || value === '') return true
-  if (Array.isArray(value) && value.length === 0) return true
-  if (field.multiValue && Array.isArray(value) && value.every(v => !v)) return true
-  return false
+  return _isFieldEmpty(value, field)
+}
+
+const exceptionSet = computed(() => buildExceptionSet(fieldExceptions.value))
+
+function hasExceptionFor(entityType, entityId, fieldId) {
+  return _hasException(exceptionSet.value, entityType, entityId, fieldId)
+}
+
+function getExceptionReason(entityType, entityId, fieldId) {
+  const ex = _getException(fieldExceptions.value, entityType, entityId, fieldId)
+  return ex ? `Exception: ${ex.reason}\nCreated by ${ex.createdBy}` : ''
 }
 
 const incompleteReports = computed(() => {
   return visibleReports.value.filter(report => {
     return visiblePersonFields.value.some(field =>
-      isFieldEmpty(report.customFields?.[field.id], field)
+      isFieldEmpty(report.customFields?.[field.id], field) &&
+      !hasExceptionFor('person', report.uid, field.id)
     )
   })
 })
@@ -568,9 +595,12 @@ const incompleteReportUids = computed(() => new Set(incompleteReports.value.map(
 
 const incompleteTeams = computed(() => {
   return teams.value.filter(team => {
-    if (!team.boards || team.boards.length === 0) return true
+    const hasEmptyBoards = (!team.boards || team.boards.length === 0)
+      && !hasExceptionFor('team', team.id, '__boards__')
+    if (hasEmptyBoards) return true
     return visibleTeamFields.value.some(field =>
-      isFieldEmpty(team.metadata?.[field.id], field)
+      isFieldEmpty(team.metadata?.[field.id], field) &&
+      !hasExceptionFor('team', team.id, field.id)
     )
   })
 })

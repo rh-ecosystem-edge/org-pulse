@@ -498,6 +498,45 @@ Each field option set is a separate JSON file, identified by name. Used by field
 - `updatedAt` and `updatedBy` track the last modification.
 - `migrationDone`, `migratedAt`, `migratedBy` are set by the component model migration to prevent re-running. Only present on the "components" option set after migration.
 
+## Field Exceptions — `data/team-data/field-exceptions.json`
+
+Per-field exceptions that exclude specific fields from completeness checks for individual people or teams. Centrally managed — expected volume is low (tens to hundreds).
+
+```json
+{
+  "version": 1,
+  "exceptions": [
+    {
+      "id": "fex_a1b2c3d4",
+      "entityType": "person",
+      "entityId": "jsmith",
+      "fieldId": "field_dept_id",
+      "reason": "Contractor — department not applicable",
+      "createdAt": "2026-05-20T14:00:00.000Z",
+      "createdBy": "admin@example.com"
+    },
+    {
+      "id": "fex_i9j0k1l2",
+      "entityType": "team",
+      "entityId": "team_def456",
+      "fieldId": "__boards__",
+      "reason": "Infrastructure team — no Jira boards",
+      "createdAt": "2026-05-20T16:00:00.000Z",
+      "createdBy": "admin@example.com"
+    }
+  ]
+}
+```
+
+**Notes:**
+- `id` format: `fex_` prefix + 8 hex chars.
+- `entityType` is `"person"` or `"team"`.
+- `entityId` is a person UID (registry key) or team ID.
+- `fieldId` references a field from `field-definitions.json`, or the reserved sentinel `__boards__` (valid only with `entityType: "team"`) for teams that intentionally have no Jira boards.
+- Uniqueness: one exception per `(entityType, entityId, fieldId)` tuple. Duplicate creates update the reason (upsert).
+- If the file does not exist, the system treats it as zero exceptions.
+- Excepted fields are excluded from completeness counts in the message provider and Data Quality/Manager Dashboard UIs, but remain visible with an "Exception" badge.
+
 ## Audit Log — `data/audit-log.json`
 
 Append-only log of team structure management actions. Entries are added by team, field, and migration operations.
@@ -525,8 +564,8 @@ Append-only log of team structure management actions. Entries are added by team,
 
 **Notes:**
 - `entries` is ordered newest-first (prepended). Capped at `maxEntries` (10,000) — oldest entries are trimmed.
-- `action` values include: `team.create`, `team.rename`, `team.delete`, `team.boards.update`, `person.team.assign`, `person.team.unassign`, `person.fields.update`, `team.fields.update`, `field.create`, `field.update`, `field.delete`, `field.reorder`, `migration.sheets_to_inapp`, `field-options.add`, `field-options.replace`, `field-options.remove`, `migration.field-to-options`.
-- `entityType` is one of: `"team"`, `"person"`, `"field"`, `"system"`, `"field-options"`, `"migration"`.
+- `action` values include: `team.create`, `team.rename`, `team.delete`, `team.boards.update`, `person.team.assign`, `person.team.unassign`, `person.fields.update`, `team.fields.update`, `field.create`, `field.update`, `field.delete`, `field.reorder`, `migration.sheets_to_inapp`, `field-options.add`, `field-options.replace`, `field-options.remove`, `migration.field-to-options`, `field-exception.create`, `field-exception.update`, `field-exception.remove`.
+- `entityType` is one of: `"team"`, `"person"`, `"field"`, `"system"`, `"field-options"`, `"field-exception"`, `"migration"`.
 - `field`, `oldValue`, `newValue` are used for change-tracking (e.g., rename, field value updates). `null` when not applicable.
 - `detail` is a human-readable summary of the action.
 

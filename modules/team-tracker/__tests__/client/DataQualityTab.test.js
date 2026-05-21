@@ -12,6 +12,7 @@ const mockAllPeople = ref([])
 const mockReferencedPeople = ref({})
 const mockFieldDefinitions = ref({ person: [], team: [] })
 const mockOrgKeys = ref([])
+const mockFieldExceptions = ref([])
 const mockLoading = ref(false)
 const mockError = ref(null)
 
@@ -23,6 +24,7 @@ vi.mock('../../client/composables/useFieldCompleteness', () => ({
     referencedPeople: mockReferencedPeople,
     fieldDefinitions: mockFieldDefinitions,
     orgKeys: mockOrgKeys,
+    fieldExceptions: mockFieldExceptions,
     loading: mockLoading,
     error: mockError,
     load: mockLoad,
@@ -84,6 +86,7 @@ beforeEach(() => {
   mockReferencedPeople.value = {}
   mockFieldDefinitions.value = { person: [], team: [] }
   mockOrgKeys.value = []
+  mockFieldExceptions.value = []
   mockLoading.value = false
   mockError.value = null
   mockLoad.mockClear()

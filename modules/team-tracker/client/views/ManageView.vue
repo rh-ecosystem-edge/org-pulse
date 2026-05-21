@@ -25,6 +25,7 @@
       <FieldDefinitionManager v-if="activeTab === 'fields'" />
       <FieldOptionsManager v-if="activeTab === 'field-options'" />
       <DataQualityTab v-if="activeTab === 'data-quality'" />
+      <FieldExceptionsTab v-if="activeTab === 'exceptions'" />
     </template>
   </div>
 </template>
@@ -36,6 +37,7 @@ import TeamManagement from '../components/TeamManagement.vue'
 import FieldDefinitionManager from '../components/FieldDefinitionManager.vue'
 import FieldOptionsManager from '../components/FieldOptionsManager.vue'
 import DataQualityTab from '../components/DataQualityTab.vue'
+import FieldExceptionsTab from '../components/FieldExceptionsTab.vue'
 
 const { isAdmin, isTeamAdmin, loading } = usePermissions()
 const moduleNav = inject('moduleNav')
@@ -44,7 +46,8 @@ const tabs = [
   { id: 'teams', label: 'Teams' },
   { id: 'fields', label: 'Fields' },
   { id: 'field-options', label: 'Field Options' },
-  { id: 'data-quality', label: 'Data Quality' }
+  { id: 'data-quality', label: 'Data Quality' },
+  { id: 'exceptions', label: 'Exceptions' }
 ]
 
 // Support deep-linking via ?tab=data-quality
@@ -60,6 +63,15 @@ watch(activeTab, (tab) => {
     moduleNav?.updateParams({ tab }, { push: false })
   }
 })
+
+// React to param changes (e.g. navigateTo('manage', { tab: 'exceptions' }) from a child)
+if (moduleNav?.params) {
+  watch(() => moduleNav.params.value?.tab, (newTab) => {
+    if (newTab && tabIds.includes(newTab)) {
+      activeTab.value = newTab
+    }
+  })
+}
 
 const hasAccess = computed(() => isAdmin.value || isTeamAdmin.value)
 

@@ -238,15 +238,28 @@
                         @add-person="addToEditPersonValue($event)"
                         @remove-person="removeFromEditPersonValue($event)"
                       />
+                      <button
+                        v-if="isFieldEmpty(person.customFields?.[field.id], field)"
+                        class="mt-1 px-2 py-0.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded hover:bg-blue-100 dark:hover:bg-blue-900/40"
+                        @click="openExceptionModal('person', person.uid, person.name, field.id)"
+                      >Add Exception</button>
                     </div>
-                    <div v-else class="cursor-pointer" @click="startCellEdit(person, field)">
-                      <FieldDisplayCell
-                        :value="person.customFields?.[field.id]"
-                        :field="field"
-                        :referenced-people="referencedPeople"
-                        :highlight="isFieldEmpty(person.customFields?.[field.id], field)"
-                        @person-click="navigateToPersonDetail($event)"
+                    <div v-else>
+                      <ExceptionPopover
+                        v-if="isFieldEmpty(person.customFields?.[field.id], field) && hasExceptionFor('person', person.uid, field.id)"
+                        :exception="getExceptionObj('person', person.uid, field.id)"
+                        @remove="handleRemoveException"
+                        @view-all="navigateToExceptionsTab"
                       />
+                      <div v-else class="cursor-pointer" @click="startCellEdit(person, field)">
+                        <FieldDisplayCell
+                          :value="person.customFields?.[field.id]"
+                          :field="field"
+                          :referenced-people="referencedPeople"
+                          :highlight="isFieldEmpty(person.customFields?.[field.id], field)"
+                          @person-click="navigateToPersonDetail($event)"
+                        />
+                      </div>
                     </div>
                   </td>
                 </tr>
@@ -383,22 +396,35 @@
                         @add-person="addToEditTeamFieldValue($event)"
                         @remove-person="editTeamFieldValue = editTeamFieldValue.filter(u => u !== $event)"
                       />
+                      <button
+                        v-if="isFieldEmpty(team.metadata?.[field.id], field)"
+                        class="mt-1 px-2 py-0.5 text-xs font-medium text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 rounded hover:bg-blue-100 dark:hover:bg-blue-900/40"
+                        @click="openExceptionModal('team', team.id, team.name, field.id)"
+                      >Add Exception</button>
                     </div>
-                    <div v-else class="cursor-pointer" @click="startTeamFieldEdit(team, field)">
-                      <FieldDisplayCell
-                        :value="team.metadata?.[field.id]"
-                        :field="field"
-                        :referenced-people="referencedPeople"
-                        :highlight="isFieldEmpty(team.metadata?.[field.id], field)"
-                        @person-click="navigateToPersonDetail($event)"
+                    <div v-else>
+                      <ExceptionPopover
+                        v-if="isFieldEmpty(team.metadata?.[field.id], field) && hasExceptionFor('team', team.id, field.id)"
+                        :exception="getExceptionObj('team', team.id, field.id)"
+                        @remove="handleRemoveException"
+                        @view-all="navigateToExceptionsTab"
                       />
+                      <div v-else class="cursor-pointer" @click="startTeamFieldEdit(team, field)">
+                        <FieldDisplayCell
+                          :value="team.metadata?.[field.id]"
+                          :field="field"
+                          :referenced-people="referencedPeople"
+                          :highlight="isFieldEmpty(team.metadata?.[field.id], field)"
+                          @person-click="navigateToPersonDetail($event)"
+                        />
+                      </div>
                     </div>
                   </td>
                   <!-- Boards column -->
                   <td class="px-4 py-3 text-sm" :class="teamBulkEditing ? 'bg-blue-50 dark:bg-blue-900/20' : ''">
                     <div
                       class="group flex items-center gap-1.5 cursor-pointer"
-                      :class="{ 'bg-red-100 dark:bg-red-700/50 rounded px-1': !team.boards || team.boards.length === 0 }"
+                      :class="{ 'bg-red-100 dark:bg-red-700/50 rounded px-1': (!team.boards || team.boards.length === 0) && !hasExceptionFor('team', team.id, '__boards__') }"
                       @click="boardsDrawerTeam = team"
                     >
                       <div v-if="team.boards && team.boards.length > 0" class="flex flex-wrap gap-1.5">
@@ -415,6 +441,12 @@
                           <ExternalLink class="w-3 h-3" />
                         </a>
                       </div>
+                      <ExceptionPopover
+                        v-else-if="hasExceptionFor('team', team.id, '__boards__')"
+                        :exception="getExceptionObj('team', team.id, '__boards__')"
+                        @remove="handleRemoveException"
+                        @view-all="navigateToExceptionsTab"
+                      />
                       <span v-else class="text-gray-400 dark:text-gray-500">—</span>
                       <svg class="h-3 w-3 text-gray-400 dark:text-gray-500 flex-shrink-0" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                         <path stroke-linecap="round" stroke-linejoin="round" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
@@ -436,6 +468,20 @@
       @close="boardsDrawerTeam = null"
       @saved="refresh()"
     />
+
+    <!-- Exception modal (inline creation from edit mode) -->
+    <AddExceptionModal
+      v-if="showExceptionModal"
+      :people="allPeople.map(p => ({ uid: p.uid, name: p.name }))"
+      :teams="teams.map(t => ({ id: t.id, name: t.name, orgKey: t.orgKey }))"
+      :field-definitions="fieldDefinitions"
+      :prefill-entity-type="exceptionPrefill.entityType"
+      :prefill-entity-id="exceptionPrefill.entityId"
+      :prefill-entity-label="exceptionPrefill.entityLabel"
+      :prefill-field-id="exceptionPrefill.fieldId"
+      @close="showExceptionModal = false"
+      @created="handleExceptionCreated"
+    />
   </div>
 </template>
 
@@ -447,14 +493,17 @@ import { useFieldDefinitions } from '@shared/client/composables/useFieldDefiniti
 import { useTeams } from '@shared/client/composables/useTeams'
 import { useRoster } from '@shared/client/composables/useRoster'
 import { apiRequest } from '@shared/client/services/api'
+import { isFieldEmpty as _isFieldEmpty, buildExceptionSet, hasException as _hasException, getException as _getException } from '../utils/field-helpers'
 import ConstrainedAutocomplete from './ConstrainedAutocomplete.vue'
 import FieldDisplayCell from './FieldDisplayCell.vue'
 import FieldEditCell from './FieldEditCell.vue'
 import TeamBoardsDrawer from './TeamBoardsDrawer.vue'
+import AddExceptionModal from './AddExceptionModal.vue'
+import ExceptionPopover from './ExceptionPopover.vue'
 
 const nav = inject('moduleNav', null)
 
-const { people, teams, allPeople, referencedPeople, fieldDefinitions, orgKeys, loading, error, load, refresh } = useFieldCompleteness()
+const { people, teams, allPeople, referencedPeople, fieldDefinitions, orgKeys, fieldExceptions, loading, error, load, refresh } = useFieldCompleteness()
 const { updatePersonFields } = useFieldDefinitions()
 const { updateTeamFields } = useTeams()
 const { reloadRoster } = useRoster()
@@ -495,6 +544,36 @@ const boardsDrawerTeam = ref(null)
 // --- Teams: bulk editing ---
 const teamBulkEditing = ref(false)
 const teamBulkChanges = reactive({})
+
+// --- Exception modal (inline creation from edit mode) ---
+const showExceptionModal = ref(false)
+const exceptionPrefill = ref({ entityType: null, entityId: null, entityLabel: null, fieldId: null })
+
+function openExceptionModal(entityType, entityId, entityLabel, fieldId) {
+  exceptionPrefill.value = { entityType, entityId, entityLabel, fieldId }
+  // Close whichever edit mode is open
+  editingCell.value = { uid: null, fieldId: null }
+  editingTeamCell.value = { teamId: null, fieldId: null }
+  showExceptionModal.value = true
+}
+
+async function handleExceptionCreated() {
+  showExceptionModal.value = false
+  await refresh()
+}
+
+async function handleRemoveException(exceptionId) {
+  try {
+    await apiRequest(`/modules/team-tracker/field-exceptions/${exceptionId}`, { method: 'DELETE' })
+    await refresh()
+  } catch (err) {
+    console.error('Failed to remove exception:', err)
+  }
+}
+
+function navigateToExceptionsTab() {
+  nav?.navigateTo('manage', { tab: 'exceptions' })
+}
 
 // --- Computed: field definitions ---
 const visiblePersonFields = computed(() =>
@@ -580,16 +659,24 @@ const filteredPeopleBeforeSearch = computed(() => {
 
 // Step 2: incompleteness computation (on filtered set)
 function isFieldEmpty(value, field) {
-  if (value === null || value === undefined || value === '') return true
-  if (Array.isArray(value) && value.length === 0) return true
-  if (field.multiValue && Array.isArray(value) && value.every(v => !v)) return true
-  return false
+  return _isFieldEmpty(value, field)
+}
+
+const exceptionSet = computed(() => buildExceptionSet(fieldExceptions.value))
+
+function hasExceptionFor(entityType, entityId, fieldId) {
+  return _hasException(exceptionSet.value, entityType, entityId, fieldId)
+}
+
+function getExceptionObj(entityType, entityId, fieldId) {
+  return _getException(fieldExceptions.value, entityType, entityId, fieldId)
 }
 
 const incompletePeople = computed(() =>
   filteredPeopleBeforeSearch.value.filter(person =>
     visiblePersonFields.value.some(field =>
-      isFieldEmpty(person.customFields?.[field.id], field)
+      isFieldEmpty(person.customFields?.[field.id], field) &&
+      !hasExceptionFor('person', person.uid, field.id)
     )
   )
 )
@@ -647,9 +734,12 @@ const filteredTeamsBeforeSearch = computed(() => {
 
 const incompleteTeams = computed(() =>
   filteredTeamsBeforeSearch.value.filter(team => {
-    if (!team.boards || team.boards.length === 0) return true
+    const hasEmptyBoards = (!team.boards || team.boards.length === 0)
+      && !hasExceptionFor('team', team.id, '__boards__')
+    if (hasEmptyBoards) return true
     return visibleTeamFields.value.some(field =>
-      isFieldEmpty(team.metadata?.[field.id], field)
+      isFieldEmpty(team.metadata?.[field.id], field) &&
+      !hasExceptionFor('team', team.id, field.id)
     )
   })
 )

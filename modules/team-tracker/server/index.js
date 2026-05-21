@@ -636,6 +636,17 @@ module.exports = function registerRoutes(router, context) {
       team.orgDisplayName = orgDisplayNames[team.orgKey] || team.orgKey;
     }
 
+    // Load field exceptions filtered to manager's purview
+    const fieldExceptionsStoreForDashboard = require('./field-exceptions-store');
+    const allExceptions = fieldExceptionsStoreForDashboard.listExceptions(storage);
+    const directReportUidSet = new Set(purview.directReportUids);
+    const purviewTeamIds = new Set(purview.teams.map(t => t.id));
+    const filteredExceptions = allExceptions.filter(ex => {
+      if (ex.entityType === 'person') return directReportUidSet.has(ex.entityId);
+      if (ex.entityType === 'team') return purviewTeamIds.has(ex.entityId);
+      return false;
+    });
+
     const response = {
       manager: managerPerson ? {
         uid: req.userUid,
@@ -650,7 +661,8 @@ module.exports = function registerRoutes(router, context) {
       fieldDefinitions: {
         person: personFieldDefs,
         team: teamFieldDefs
-      }
+      },
+      fieldExceptions: filteredExceptions
     };
     if (includeIndirect) response.indirectReports = indirectReports || [];
     res.json(response);
@@ -727,6 +739,9 @@ module.exports = function registerRoutes(router, context) {
       displayName: orgDisplayNames[key] || key
     }));
 
+    const fieldExceptionsStoreLocal = require('./field-exceptions-store');
+    const exceptionsData = fieldExceptionsStoreLocal.readExceptions(storage);
+
     res.json({
       people,
       teams,
@@ -736,7 +751,8 @@ module.exports = function registerRoutes(router, context) {
         person: personFieldDefs,
         team: teamFieldDefs
       },
-      orgKeys
+      orgKeys,
+      fieldExceptions: exceptionsData.exceptions
     });
   });
 
@@ -4076,11 +4092,15 @@ module.exports = function registerRoutes(router, context) {
 
       const fieldStore = require('../../../shared/server/field-store');
       const teamStore = require('../../../shared/server/team-store');
+      const fieldExceptionsStore = require('./field-exceptions-store');
       const fieldDefs = fieldStore.readFieldDefinitions(storage);
       if (!fieldDefs) return [];
 
       const personFields = fieldDefs.personFields.filter(f => !f.deleted && f.visible);
       const teamFields = fieldDefs.teamFields.filter(f => !f.deleted && f.visible);
+
+      // Load exception map for O(1) lookups
+      const exceptionMap = fieldExceptionsStore.getExceptionMap(storage);
 
       // If no visible person fields and no team fields, still check boards
       // (boards are always a completeness concern for teams)
@@ -4090,7 +4110,10 @@ module.exports = function registerRoutes(router, context) {
       for (const uid of directReportSet) {
         const person = registry.people[uid];
         if (!person || person.status !== 'active') continue;
-        const hasEmpty = personFields.some(f => isFieldEmpty(person._appFields?.[f.id], f));
+        const hasEmpty = personFields.some(f =>
+          isFieldEmpty(person._appFields?.[f.id], f) &&
+          !exceptionMap.has(`person:${uid}:${f.id}`)
+        );
         if (hasEmpty) incompletePersonCount++;
       }
 
@@ -4099,8 +4122,12 @@ module.exports = function registerRoutes(router, context) {
       const purview = getManagerPurview(user.uid, registry, teamsData, { includeIndirect: false });
       let incompleteTeamCount = 0;
       for (const team of purview.teams) {
-        const hasEmptyBoards = !team.boards || team.boards.length === 0;
-        const hasEmptyField = teamFields.some(f => isFieldEmpty(team.metadata?.[f.id], f));
+        const hasEmptyBoards = (!team.boards || team.boards.length === 0)
+          && !exceptionMap.has(`team:${team.id}:__boards__`);
+        const hasEmptyField = teamFields.some(f =>
+          isFieldEmpty(team.metadata?.[f.id], f) &&
+          !exceptionMap.has(`team:${team.id}:${f.id}`)
+        );
         if (hasEmptyBoards || hasEmptyField) incompleteTeamCount++;
       }
 
@@ -4142,9 +4169,11 @@ module.exports = function registerRoutes(router, context) {
   const registerIpaRegistryRoutes = require('./routes/ipa-registry');
   const registerOrgTeamsRoutes = require('./routes/org-teams');
   const { isOrgSyncInProgress, getTriggerOrgSync } = require('./routes/org-teams');
+  const registerFieldExceptionRoutes = require('./routes/field-exceptions');
 
   registerIpaRegistryRoutes(router, context);
   registerOrgTeamsRoutes(router, context);
+  registerFieldExceptionRoutes(router, context);
 
   // ─── Unified Sync ───
 

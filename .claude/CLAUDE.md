@@ -250,6 +250,7 @@ All routes prefixed with `/api`. Authenticated via OAuth proxy in production.
 - `/api/modules/team-tracker/registry/people/search/ldap` — LDAP search (rate-limited)
 - `/api/modules/team-tracker/field-options` — list field option sets
 - `/api/modules/team-tracker/field-options/:name` — single option set
+- `/api/modules/team-tracker/field-exceptions` — list field exceptions with optional filters (roster:read)
 - `/api/modules/team-tracker/snapshots/:teamKey` — team snapshots
 - `/api/modules/team-tracker/snapshots/:teamKey/:personName` — person snapshots
 - `/api/modules/team-tracker/components` — component list (deprecated alias)
@@ -353,6 +354,7 @@ All routes prefixed with `/api`. Authenticated via OAuth proxy in production.
 - `/api/modules/team-tracker/structure/migrate` — Sheets-to-in-app migration (admin)
 - `/api/modules/team-tracker/structure/migrate/field-to-options` — field-to-options migration (team-admin)
 - `/api/modules/team-tracker/field-options/:name/values` — add option values (team-admin)
+- `/api/modules/team-tracker/field-exceptions` — create field exception (team-admin/admin)
 - `/api/modules/team-tracker/registry/people/ldap-import` — LDAP import (team-admin/admin)
 - `/api/modules/releases/registry` — create release (release-manager)
 - `/api/modules/releases/registry/discover` — auto-discover from Product Pages (release-manager)
@@ -417,6 +419,7 @@ All routes prefixed with `/api`. Authenticated via OAuth proxy in production.
 - `/api/modules/team-tracker/structure/field-definitions/person/:fieldId` — soft-delete field (admin/team-admin)
 - `/api/modules/team-tracker/structure/field-definitions/team/:fieldId` — soft-delete field (admin/team-admin)
 - `/api/modules/team-tracker/field-options/:name/values` — remove option values (admin)
+- `/api/modules/team-tracker/field-exceptions/:id` — remove field exception (team-admin/admin)
 - `/api/health-metrics/tracking/opt-out` — opt back in (authenticated)
 - `/api/health-metrics/events` — purge raw events (admin)
 - `/api/health-metrics/viewers/:email` — remove viewer (admin)

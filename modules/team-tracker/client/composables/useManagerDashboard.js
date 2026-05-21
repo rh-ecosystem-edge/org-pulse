@@ -9,6 +9,7 @@ const allOrgTeams = ref([])
 const allPeople = ref([])
 const referencedPeople = ref({})
 const fieldDefinitions = ref({ person: [], team: [] })
+const fieldExceptions = ref([])
 const loading = ref(false)
 const error = ref(null)
 const reason = ref(null)
@@ -30,6 +31,7 @@ export function useManagerDashboard() {
       allPeople.value = data.allPeople || []
       referencedPeople.value = data.referencedPeople || {}
       fieldDefinitions.value = data.fieldDefinitions || { person: [], team: [] }
+      fieldExceptions.value = data.fieldExceptions || []
       reason.value = data.reason || null
     } catch (err) {
       error.value = err.message
@@ -51,6 +53,7 @@ export function useManagerDashboard() {
     allPeople,
     referencedPeople,
     fieldDefinitions,
+    fieldExceptions,
     loading,
     error,
     reason,

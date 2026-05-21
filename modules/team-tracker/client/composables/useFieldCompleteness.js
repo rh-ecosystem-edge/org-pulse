@@ -7,6 +7,7 @@ const allPeople = ref([])
 const referencedPeople = ref({})
 const fieldDefinitions = ref({ person: [], team: [] })
 const orgKeys = ref([])
+const fieldExceptions = ref([])
 const loading = ref(false)
 const error = ref(null)
 
@@ -22,6 +23,7 @@ export function useFieldCompleteness() {
       referencedPeople.value = data.referencedPeople || {}
       fieldDefinitions.value = data.fieldDefinitions || { person: [], team: [] }
       orgKeys.value = data.orgKeys || []
+      fieldExceptions.value = data.fieldExceptions || []
     } catch (err) {
       error.value = err.message
     } finally {
@@ -40,6 +42,7 @@ export function useFieldCompleteness() {
     referencedPeople,
     fieldDefinitions,
     orgKeys,
+    fieldExceptions,
     loading,
     error,
     load,

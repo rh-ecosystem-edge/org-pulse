@@ -14,6 +14,7 @@ const mockAllOrgTeams = ref([])
 const mockAllPeople = ref([])
 const mockReferencedPeople = ref({})
 const mockFieldDefinitions = ref({ person: [], team: [] })
+const mockFieldExceptions = ref([])
 const mockLoading = ref(false)
 const mockError = ref(null)
 const mockReason = ref(null)
@@ -29,6 +30,7 @@ vi.mock('../../client/composables/useManagerDashboard', () => ({
     allPeople: mockAllPeople,
     referencedPeople: mockReferencedPeople,
     fieldDefinitions: mockFieldDefinitions,
+    fieldExceptions: mockFieldExceptions,
     loading: mockLoading,
     error: mockError,
     reason: mockReason,
@@ -99,6 +101,7 @@ beforeEach(() => {
   mockAllPeople.value = []
   mockReferencedPeople.value = {}
   mockFieldDefinitions.value = { person: [], team: [] }
+  mockFieldExceptions.value = []
   mockLoading.value = false
   mockError.value = null
   mockReason.value = null
