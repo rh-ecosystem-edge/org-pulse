@@ -468,6 +468,16 @@ describe('fetchHygieneFeatures jqlVersions option', function () {
     expect(mock.capturedJqls[0]).not.toContain('ver"sion')
   })
 
+  it('sanitizes backslashes before quotes to prevent escape bypass', async function () {
+    var mock = createMockJira()
+    await fetchHygieneFeatures(mock.mockJiraRequest, mock.mockFetchAll, 'test', {}, null, {
+      jqlVersions: ['ver\\"sion']
+    })
+    // Input: ver\"sion → after backslash escape: ver\\"sion → after quote escape: ver\\\\"sion
+    // The backslash must be escaped first so \" doesn't become \\" (breaking out of the string)
+    expect(mock.capturedJqls[0]).not.toContain('ver\\"sion')
+  })
+
   it('falls back to version when jqlVersions is empty array', async function () {
     var mock = createMockJira()
     await fetchHygieneFeatures(mock.mockJiraRequest, mock.mockFetchAll, 'rhoai-3.5.z', {}, null, {

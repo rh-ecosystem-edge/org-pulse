@@ -624,8 +624,7 @@ function registerRegistryRoutes(router, context) {
         });
       }
 
-      var { fetchProjectVersions } = require('../../../shared/server/jira');
-      var { jiraRequest: jiraRequestFn } = require('../../../shared/server/jira');
+      var { fetchProjectVersions, jiraRequest: jiraRequestFn } = require('../../../shared/server/jira');
 
       var jiraVersions = await fetchProjectVersions(jiraRequestFn, projects);
       var registry = readRegistry(readFromStorage);
@@ -692,6 +691,9 @@ function registerRegistryRoutes(router, context) {
       var mapping = mappings[i];
       if (!mapping.releaseId || !Array.isArray(mapping.fixVersions)) continue;
 
+      // Filter to string values only
+      var cleanVersions = mapping.fixVersions.filter(function(v) { return typeof v === 'string' && v.trim().length > 0; });
+
       var release = null;
       for (var ri = 0; ri < registry.releases.length; ri++) {
         if (registry.releases[ri].id === mapping.releaseId) {
@@ -702,7 +704,7 @@ function registerRegistryRoutes(router, context) {
 
       if (!release) continue;
 
-      release.fixVersions = mapping.fixVersions;
+      release.fixVersions = cleanVersions;
       release.updatedAt = new Date().toISOString();
       updated.push({ releaseId: release.id, fixVersions: release.fixVersions });
     }

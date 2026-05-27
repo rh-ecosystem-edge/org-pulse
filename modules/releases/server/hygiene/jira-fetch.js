@@ -341,10 +341,10 @@ async function fetchHygieneFeatures(jiraRequestFn, fetchAllJqlResultsFn, version
     ? options.jqlVersions
     : [version]
 
-  // Sanitize: escape double quotes to prevent JQL injection
+  // Sanitize: escape backslashes then double quotes to prevent JQL injection
   const sanitized = []
   for (var si = 0; si < jqlVersions.length; si++) {
-    sanitized.push(jqlVersions[si].replace(/"/g, '\\"'))
+    sanitized.push(jqlVersions[si].replace(/\\/g, '\\\\').replace(/"/g, '\\"'))
   }
 
   // ── Pass 1: Fetch all features (lightweight) ──
