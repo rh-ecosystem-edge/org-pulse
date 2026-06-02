@@ -22,7 +22,7 @@ jobs:
       pull-requests: write  # To post comments and read reviews
     env:
       # Space-separated list of GitHub usernames allowed to approve AI config changes
-      ALLOWED_APPROVERS: "accorvin"
+      ALLOWED_APPROVERS: "accorvin saprabhu05 dchourasia"
       # Space-separated list of files requiring owner approval. Keep THIS workflow file in the list so someone can't merge and update this OR the AI configs w/o approval.
       SENSITIVE_FILES: ".claude/CLAUDE.md AGENTS.md .github/workflows/guard-ai-configs.yml"
     steps:
