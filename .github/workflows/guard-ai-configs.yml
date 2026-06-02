@@ -33,16 +33,24 @@ jobs:
 
       - name: Resolve Pull Request Metadata
         id: metadata
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_NUMBER_PR: ${{ github.event.pull_request.number }}
+          PR_NUMBER_REVIEW: ${{ github.event.review.pull_request.number }}
+          BASE_REF_PR: ${{ github.event.pull_request.base.ref }}
+          BASE_REF_REVIEW: ${{ github.event.review.pull_request.base.ref }}
+          HEAD_REF_PR: ${{ github.event.pull_request.head.ref }}
+          HEAD_REF_REVIEW: ${{ github.event.review.pull_request.head.ref }}
         run: |
           # Safely calculate PR Number, Base Branch, and Head Branch depending on whether a PR or Review event triggered this
-          if [ "${{ github.event_name }}" = "pull_request_review" ]; then
-            echo "pr_number=${{ github.event.pull_request.number || github.event.review.pull_request.number }}" >> $GITHUB_OUTPUT
-            echo "base_ref=origin/${{ github.event.pull_request.base.ref || github.event.review.pull_request.base.ref }}" >> $GITHUB_OUTPUT
-            echo "head_ref=origin/${{ github.event.pull_request.head.ref || github.event.review.pull_request.head.ref }}" >> $GITHUB_OUTPUT
+          if [ "$EVENT_NAME" = "pull_request_review" ]; then
+            echo "pr_number=${PR_NUMBER_PR:-$PR_NUMBER_REVIEW}" >> $GITHUB_OUTPUT
+            echo "base_ref=origin/${BASE_REF_PR:-$BASE_REF_REVIEW}" >> $GITHUB_OUTPUT
+            echo "head_ref=origin/${HEAD_REF_PR:-$HEAD_REF_REVIEW}" >> $GITHUB_OUTPUT
           else
-            echo "pr_number=${{ github.event.pull_request.number }}" >> $GITHUB_OUTPUT
-            echo "base_ref=origin/${{ github.event.pull_request.base.ref }}" >> $GITHUB_OUTPUT
-            echo "head_ref=origin/${{ github.event.pull_request.head.ref }}" >> $GITHUB_OUTPUT
+            echo "pr_number=$PR_NUMBER_PR" >> $GITHUB_OUTPUT
+            echo "base_ref=origin/$BASE_REF_PR" >> $GITHUB_OUTPUT
+            echo "head_ref=origin/$HEAD_REF_PR" >> $GITHUB_OUTPUT
           fi
 
       - name: Check if sensitive AI configs or workflows changed
