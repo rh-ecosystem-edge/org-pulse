@@ -1,5 +1,5 @@
 <script setup>
-import { inject, computed, watch } from 'vue'
+import { inject, computed, watch, ref } from 'vue'
 import { useAuth } from '@shared/client/composables/useAuth.js'
 import { useRoster } from '@shared/client/composables/useRoster.js'
 import { useFieldDefinitions } from '@shared/client/composables/useFieldDefinitions.js'
@@ -14,7 +14,6 @@ import ForYouEmptyState from '../components/ForYouEmptyState.vue'
 import ForYouActionsTab from '../components/ForYouActionsTab.vue'
 import ForYouBoardTab from '../components/ForYouBoardTab.vue'
 import { useModuleLink } from '@shared/client/composables/useModuleLink.js'
-import { ref } from 'vue'
 
 const moduleNav = inject('moduleNav')
 const { navigateTo: navigateToModule } = useModuleLink()
