@@ -73,12 +73,24 @@ describe('mergeFeatureData', () => {
     expect(result.updated).toBe('2026-06-01T00:00:00Z')
   })
 
-  it('pipeline created timestamp is immutable', () => {
+  it('Jira is source of truth for created timestamp', () => {
     const existing = { key: 'X-1', created: '2025-01-01T00:00:00Z' }
     const pipeline = { key: 'X-1', created: '2025-01-01T00:00:00Z' }
     const jira = { key: 'X-1', created: '2025-06-01T00:00:00Z' }
     const result = mergeFeatureData(existing, pipeline, jira)
-    expect(result.created).toBe('2025-01-01T00:00:00Z')
+    expect(result.created).toBe('2025-06-01T00:00:00Z')
+  })
+
+  it('falls back to pipeline created when Jira has none', () => {
+    const pipeline = { key: 'X-1', created: '2025-03-01T00:00:00Z' }
+    const result = mergeFeatureData(null, pipeline, null)
+    expect(result.created).toBe('2025-03-01T00:00:00Z')
+  })
+
+  it('Jira-only discovery populates created', () => {
+    const jira = { key: 'X-1', created: '2025-06-01T00:00:00Z' }
+    const result = mergeFeatureData(null, null, jira)
+    expect(result.created).toBe('2025-06-01T00:00:00Z')
   })
 
   it('handles all null inputs gracefully', () => {

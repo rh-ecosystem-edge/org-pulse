@@ -77,8 +77,10 @@ function mergeFeatureData(existing, pipelineData, jiraData) {
   }
   // If jiraData is null (enrichment failed/skipped), preserve existing Jira fields
 
-  // Timestamps
-  if (pipeline.created) {
+  // created: Jira is source of truth (issue creation date)
+  if (jira.created) {
+    merged.created = jira.created;
+  } else if (pipeline.created) {
     merged.created = pipeline.created;
   }
 
