@@ -3,9 +3,6 @@ name: Integration Tests
 on:
   pull_request:
     branches: [main]
-    paths:
-      - 'modules/**'
-      - 'tests/integration/**'
 
 concurrency:
   group: integration-tests-${{ github.ref }}
@@ -23,7 +20,7 @@ jobs:
       enabled-modules: ${{ steps.build-matrix.outputs.modules }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - uses: dorny/paths-filter@v4
         id: filter
@@ -87,9 +84,29 @@ jobs:
         module: ${{ fromJson(needs.detect-changes.outputs.enabled-modules) }}
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Run Module Test
         uses: ./.github/actions/test-org-pulse-module
         with:
           module: ${{ matrix.module }}
+
+  integration-test-status:
+    name: Integration Test Status
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [detect-changes, run-tests]
+    steps:
+      - name: Evaluate integration test results
+        run: |
+          MODULES='${{ needs.detect-changes.outputs.enabled-modules }}'
+          if [ "$MODULES" = "[]" ] || [ -z "$MODULES" ]; then
+            echo "No module changes — integration tests skipped"
+          elif [ "${{ needs.run-tests.result }}" = "success" ]; then
+            echo "All integration tests passed"
+          elif [ "${{ needs.run-tests.result }}" = "skipped" ]; then
+            echo "No module changes — integration tests skipped"
+          else
+            echo "Integration tests failed"
+            exit 1
+          fi
