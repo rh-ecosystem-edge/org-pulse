@@ -38,7 +38,13 @@ import {
   CalendarDays,
   ChartCandlestick,
   PieChart,
-  GitBranch
+  GitBranch,
+  Kanban,
+  Grid3x3,
+  LineChart,
+  Brain,
+  PenSquare,
+  FileUp
 } from 'lucide-vue-next'
 
 export const ICON_MAP = {
@@ -70,6 +76,12 @@ export const ICON_MAP = {
   Sparkles,
   Activity,
   Wand2,
+  Kanban,
+  Grid3x3,
+  LineChart,
+  Brain,
+  PenSquare,
+  FileUp,
   'bar-chart': BarChart3,
   'users-round': UsersRound,
   'chart-candlestick': ChartCandlestick,

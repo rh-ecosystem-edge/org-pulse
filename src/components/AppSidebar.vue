@@ -234,6 +234,7 @@ import {
   ChevronRight,
   Info,
   FileCode2,
+  KeyRound,
   Settings
 } from 'lucide-vue-next'
 import { computed, ref, watch, onMounted, onBeforeUnmount } from 'vue'
