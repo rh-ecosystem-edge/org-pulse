@@ -114,7 +114,8 @@ jobs:
     needs: [test, detect-changes]
     if: |
       github.ref == 'refs/heads/main' &&
-      (needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true')
+      (needs.detect-changes.outputs.backend == 'true' || needs.detect-changes.outputs.frontend == 'true') &&
+      secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != ''
     runs-on: ubuntu-latest
     outputs:
       version: ${{ steps.bump.outputs.version }}
