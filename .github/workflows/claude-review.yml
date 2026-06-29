@@ -53,6 +53,7 @@ jobs:
     timeout-minutes: 20
     if: |
       github.event_name != 'merge_group' &&
+      secrets.GCP_SA_KEY != '' && secrets.APP_ID != '' && secrets.APP_PRIVATE_KEY != '' &&
       ((github.event_name == 'pull_request' &&
        github.event.pull_request.head.repo.full_name == github.repository &&
        github.event.pull_request.draft != true &&
