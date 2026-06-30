@@ -3,34 +3,7 @@ name: Build & Push Images
 on:
   workflow_dispatch:
   push:
-    branches: [main, preprod]
-    paths:
-      # Backend
-      - 'server/**'
-      - 'modules/*/server/**'
-      - 'shared/server/**'
-      - 'deploy/core.backend.Dockerfile'
-      - 'deploy/ai-eng.backend.Dockerfile'
-      # Frontend
-      - 'src/**'
-      - 'public/**'
-      - 'modules/*/client/**'
-      - 'shared/client/**'
-      - 'platform/**'
-      - 'index.html'
-      - 'vite.config.mjs'
-      - 'tailwind.config.mjs'
-      - 'postcss.config.mjs'
-      - 'deploy/core.frontend*.Dockerfile'
-      - 'deploy/ai-eng.frontend.Dockerfile'
-      - 'deploy/nginx-default.conf'
-      - 'deploy/openshift/base/nginx-app.conf.template'
-      # Shared
-      - 'modules/*/module.json'
-      - 'package*.json'
-      # Smoke tests
-      - 'tests/smoke/**'
-      - 'playwright.config.js'
+    branches: [main]
 
 permissions:
   contents: read
