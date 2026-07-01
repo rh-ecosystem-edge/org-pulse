@@ -205,7 +205,14 @@ watch([() => moduleNav.params.value, rfeData], ([params]) => {
               <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
                 <span class="font-mono">{{ notFoundRFE }}</span> is not in the assessment dataset.
                 <a
-                  v-if="rfeData?.jiraHost"
+                  v-if="notFoundRFE.startsWith('EP-')"
+                  :href="`https://github.com/osac-project/enhancement-proposals/pull/${notFoundRFE.slice(3)}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="text-blue-600 dark:text-blue-400 hover:underline"
+                >View on GitHub</a>
+                <a
+                  v-else-if="rfeData?.jiraHost"
                   :href="`${rfeData.jiraHost}/browse/${notFoundRFE}`"
                   target="_blank"
                   rel="noopener noreferrer"
