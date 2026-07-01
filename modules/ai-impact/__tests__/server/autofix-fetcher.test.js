@@ -142,6 +142,8 @@ describe('computeAutofixMetrics', () => {
     { created: recent, pipelineState: 'autofix-merged', components: ['A'] },
     { created: recent, pipelineState: 'autofix-review', components: ['A'] },
     { created: recent, pipelineState: 'autofix-rejected', components: ['A'] },
+    { created: recent, pipelineState: 'autofix-ready', components: ['A'] },
+    { created: recent, pipelineState: 'autofix-ready', components: ['A'] },
     { created: recent, pipelineState: 'triage-missing-info', components: ['B'] },
     { created: recent, pipelineState: 'triage-not-fixable', components: ['B'] },
     { created: recent, pipelineState: 'triage-external', components: ['B'] },
@@ -151,8 +153,8 @@ describe('computeAutofixMetrics', () => {
 
   it('computes metrics for a week window', () => {
     const m = computeAutofixMetrics(issues, 'week')
-    expect(m.windowTotal).toBe(7)
-    expect(m.triageVerdicts.ready).toBe(3)
+    expect(m.windowTotal).toBe(9)
+    expect(m.triageVerdicts.ready).toBe(2)
     expect(m.triageVerdicts.missingInfo).toBe(1)
     expect(m.triageVerdicts.notFixable).toBe(1)
     expect(m.triageVerdicts.external).toBe(1)
@@ -160,7 +162,8 @@ describe('computeAutofixMetrics', () => {
     expect(m.autofixStates.merged).toBe(1)
     expect(m.autofixStates.review).toBe(1)
     expect(m.autofixStates.rejected).toBe(1)
-    expect(m.totalIssues).toBe(8)
+    expect(m.autofixStates.ready).toBe(2)
+    expect(m.totalIssues).toBe(10)
   })
 
   it('computes success rate from terminal states (merged / (merged + rejected + maxRetries))', () => {
