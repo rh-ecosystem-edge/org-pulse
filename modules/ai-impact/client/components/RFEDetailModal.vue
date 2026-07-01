@@ -17,6 +17,13 @@ const props = defineProps({
 
 const emit = defineEmits(['close', 'navigateToFeature', 'navigateToTestPlan'])
 
+const EP_GITHUB_REPO = 'https://github.com/osac-project/enhancement-proposals/pull'
+
+function issueUrl(key) {
+  if (key && key.startsWith('EP-')) return `${EP_GITHUB_REPO}/${key.slice(3)}`
+  return props.jiraHost ? `${props.jiraHost}/browse/${key}` : null
+}
+
 const assessmentDetail = ref(null)
 const detailLoading = ref(false)
 const modalRef = ref(null)
@@ -119,8 +126,8 @@ function getInvolvementClass(involvement) {
             <div class="flex items-center gap-3 min-w-0">
               <h2 class="text-lg font-semibold text-gray-900 dark:text-gray-100">RFE Details</h2>
               <a
-                v-if="jiraHost"
-                :href="`${jiraHost}/browse/${rfe.key}`"
+                v-if="issueUrl(rfe.key)"
+                :href="issueUrl(rfe.key)"
                 target="_blank"
                 rel="noopener noreferrer"
                 class="font-mono text-xs text-blue-600 dark:text-blue-400 hover:underline shrink-0"
