@@ -259,10 +259,15 @@ function buildTrendData(issues, timeWindow) {
 }
 
 async function fetchAutofixData(jiraRequest, config) {
-  const { autofixProjects, autofixCreatedAfter } = config;
+  const { autofixProjects, autofixExcludedComponents, autofixCreatedAfter } = config;
 
   for (const p of autofixProjects) {
     validateJqlSafeString(p, 'autofixProjects entry');
+  }
+  if (autofixExcludedComponents) {
+    for (const c of autofixExcludedComponents) {
+      validateJqlSafeString(c, 'autofixExcludedComponents entry');
+    }
   }
   if (autofixCreatedAfter) {
     validateJqlSafeString(autofixCreatedAfter, 'autofixCreatedAfter');
@@ -272,6 +277,10 @@ async function fetchAutofixData(jiraRequest, config) {
   const labelClause = ALL_PIPELINE_LABELS.map(l => `"${l}"`).join(', ');
 
   let jql = `project IN (${projectClause}) AND labels IN (${labelClause})`;
+  if (autofixExcludedComponents && autofixExcludedComponents.length > 0) {
+    const excluded = autofixExcludedComponents.map(c => `"${c}"`).join(', ');
+    jql += ` AND (component is EMPTY OR component NOT IN (${excluded}))`;
+  }
   if (autofixCreatedAfter) {
     jql += ` AND created >= "${autofixCreatedAfter}"`;
   }

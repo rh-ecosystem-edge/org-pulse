@@ -9,6 +9,7 @@ const DEFAULT_CONFIG = {
   lookbackMonths: 0,
   trendThresholdPp: 2,
   autofixProjects: ['AIPCC', 'RHOAIENG'],
+  autofixExcludedComponents: ['Enclave'],
   autofixCreatedAfter: null,
   docProject: 'RHAISTRAT',
   docRequiredStatuses: ['Review', 'Release Pending'],
@@ -115,6 +116,17 @@ function saveConfig(writeToStorage, config) {
       throw new Error('trendThresholdPp must be a number between 0 and 50');
     }
     merged.trendThresholdPp = val;
+  }
+
+  // autofixExcludedComponents — must be array of JQL-safe strings (empty = no exclusion)
+  if (config.autofixExcludedComponents !== undefined) {
+    if (!Array.isArray(config.autofixExcludedComponents)) {
+      throw new Error('autofixExcludedComponents must be an array');
+    }
+    for (const c of config.autofixExcludedComponents) {
+      validateJqlSafeString(c, 'autofixExcludedComponents entry');
+    }
+    merged.autofixExcludedComponents = config.autofixExcludedComponents;
   }
 
   // autofixProjects — must be array of JQL-safe strings
