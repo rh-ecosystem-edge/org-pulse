@@ -344,26 +344,10 @@ app.get('/api/healthz', function(req, res) {
  *                     type: string
  *                   example: ["data directory not readable/writable"]
  */
+var { createReadyzHandler } = require('./readyz');
+var readyzHandler = createReadyzHandler(storageModule);
 app.get('/readyz', readyzHandler);
 app.get('/api/readyz', readyzHandler);
-
-function readyzHandler(req, res) {
-  var fsModule = require('fs');
-  var dataRoot = storageModule.DATA_DIR || storageModule.FIXTURES_DIR;
-  var checks = [];
-
-  try {
-    fsModule.accessSync(dataRoot, fsModule.constants.R_OK | fsModule.constants.W_OK);
-  } catch {
-    checks.push('data directory not readable/writable');
-  }
-
-  if (checks.length > 0) {
-    res.status(503).json({ status: 'error', reasons: checks });
-  } else {
-    res.json({ status: 'ok' });
-  }
-}
 
 /**
  * Built-in module manifests — intentionally public (no auth, no proxy secret).
