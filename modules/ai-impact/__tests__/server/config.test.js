@@ -56,6 +56,32 @@ describe('saveConfig', () => {
     expect(() => saveConfig(writeToStorage, { excludedStatuses: ['Good', 'Bad"Status'] })).toThrow('unsafe characters');
   });
 
+  it('accepts valid autofixExcludedComponents', () => {
+    const writeToStorage = vi.fn();
+    saveConfig(writeToStorage, { autofixExcludedComponents: ['Enclave', 'Docs'] });
+    expect(writeToStorage).toHaveBeenCalledWith('ai-impact/config.json', expect.objectContaining({
+      autofixExcludedComponents: ['Enclave', 'Docs']
+    }));
+  });
+
+  it('accepts empty autofixExcludedComponents', () => {
+    const writeToStorage = vi.fn();
+    saveConfig(writeToStorage, { autofixExcludedComponents: [] });
+    expect(writeToStorage).toHaveBeenCalledWith('ai-impact/config.json', expect.objectContaining({
+      autofixExcludedComponents: []
+    }));
+  });
+
+  it('rejects non-array autofixExcludedComponents', () => {
+    const writeToStorage = vi.fn();
+    expect(() => saveConfig(writeToStorage, { autofixExcludedComponents: 'Enclave' })).toThrow('must be an array');
+  });
+
+  it('rejects unsafe autofixExcludedComponents entries', () => {
+    const writeToStorage = vi.fn();
+    expect(() => saveConfig(writeToStorage, { autofixExcludedComponents: ['Good', 'Bad"Comp'] })).toThrow('unsafe characters');
+  });
+
   it('validates trendThresholdPp range', () => {
     const writeToStorage = vi.fn();
     expect(() => saveConfig(writeToStorage, { trendThresholdPp: -1 })).toThrow('number between 0 and 50');
