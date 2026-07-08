@@ -38,8 +38,13 @@ describe('classifyIssue', () => {
     expect(classifyIssue(['jira-autofix-blocked'])).toBe('autofix-blocked')
   })
 
-  it('returns autofix-ready when only jira-autofix is present', () => {
-    expect(classifyIssue(['jira-autofix'])).toBe('autofix-ready')
+  it('returns autofix-ready when jira-autofix is present and status is New', () => {
+    expect(classifyIssue(['jira-autofix'], 'New')).toBe('autofix-ready')
+  })
+
+  it('returns unknown when jira-autofix is present but status is not New', () => {
+    expect(classifyIssue(['jira-autofix'], 'In Progress')).toBe('unknown')
+    expect(classifyIssue(['jira-autofix'])).toBe('unknown')
   })
 
   it('returns triage-not-fixable for jira-triage-not-fixable', () => {

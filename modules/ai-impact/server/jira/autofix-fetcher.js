@@ -34,7 +34,7 @@ const AUTOFIX_LABELS = [
 
 const ALL_PIPELINE_LABELS = [...TRIAGE_LABELS, ...AUTOFIX_LABELS];
 
-function classifyIssue(labels) {
+function classifyIssue(labels, status) {
   const labelSet = new Set(labels);
 
   // Terminal autofix states (check first — most specific)
@@ -47,7 +47,7 @@ function classifyIssue(labels) {
   if (labelSet.has('jira-autofix-ci-failing')) return 'autofix-ci-failing';
   if (labelSet.has('jira-autofix-review')) return 'autofix-review';
   if (labelSet.has('jira-autofix-pending')) return 'autofix-pending';
-  if (labelSet.has('jira-autofix')) return 'autofix-ready';
+  if (labelSet.has('jira-autofix') && status === 'New') return 'autofix-ready';
   // Triage states (security-review first: it's added alongside other verdicts
   // and should take precedence since it requires human review)
   if (labelSet.has('jira-triage-security-review')) return 'triage-security-review';
@@ -76,7 +76,7 @@ function processIssue(issue) {
     labels,
     components,
     assignee: issue.fields.assignee?.displayName || null,
-    pipelineState: classifyIssue(labels)
+    pipelineState: classifyIssue(labels, issue.fields.status?.name || 'Unknown')
   };
 }
 
