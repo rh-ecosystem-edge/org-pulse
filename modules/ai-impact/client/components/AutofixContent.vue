@@ -569,7 +569,7 @@ function buildJiraLabelUrl(jiraLabels, excludeLabels) {
   if (selectedComponent.value !== 'all') {
     jql += ` AND component = "${selectedComponent.value}"`
   }
-  jql += ' AND (component is EMPTY OR component != "Enclave")'
+  jql += ' AND (component is EMPTY OR component NOT IN ("Enclave", "agentic-sdlc"))'
   if (props.timeWindow === 'lastWeek') {
     const { start, end } = getLastWeekBounds()
     jql += ` AND created >= "${new Date(start).toISOString().slice(0, 10)}"`
