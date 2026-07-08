@@ -9,7 +9,7 @@ const DEFAULT_CONFIG = {
   lookbackMonths: 0,
   trendThresholdPp: 2,
   autofixProjects: ['AIPCC', 'RHOAIENG'],
-  autofixExcludedComponents: ['Enclave'],
+  autofixExcludedComponents: ['Enclave', 'agentic-sdlc'],
   autofixCreatedAfter: null,
   docProject: 'RHAISTRAT',
   docRequiredStatuses: ['Review', 'Release Pending'],
