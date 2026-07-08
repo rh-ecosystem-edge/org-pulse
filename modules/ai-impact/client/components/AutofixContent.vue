@@ -570,6 +570,9 @@ function buildJiraLabelUrl(jiraLabels, excludeLabels) {
     jql += ` AND component = "${selectedComponent.value}"`
   }
   jql += ' AND (component is EMPTY OR component NOT IN ("Enclave", "agentic-sdlc"))'
+  if (jiraLabels.length === 1 && jiraLabels[0] === 'jira-autofix') {
+    jql += ' AND status = "New"'
+  }
   if (props.timeWindow === 'lastWeek') {
     const { start, end } = getLastWeekBounds()
     jql += ` AND created >= "${new Date(start).toISOString().slice(0, 10)}"`
