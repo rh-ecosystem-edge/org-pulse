@@ -78,7 +78,7 @@ function handleClose() {
                 ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                 : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'"
             >
-              Feature Review
+              Design Review
             </button>
             <button
               @click="activeTab = 'testplans'"
@@ -171,10 +171,10 @@ function handleClose() {
               </div>
             </div>
 
-            <!-- Feature Review Tab -->
+            <!-- Design Review Tab -->
             <div v-if="activeTab === 'features'" class="space-y-5">
               <div>
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">How Feature Review Works</h3>
+                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100 mb-2">How Design Review Works</h3>
                 <p class="text-sm text-gray-600 dark:text-gray-300">
                   When an RFE is approved, the <a href="https://github.com/ederign/strat-creator" target="_blank" rel="noopener noreferrer" class="text-blue-600 dark:text-blue-400 hover:underline">Strat Creator</a> pipeline automatically generates a Feature ticket in Jira, then scores it with independent AI reviewers. Every feature needs human sign-off before it's considered complete.
                 </p>

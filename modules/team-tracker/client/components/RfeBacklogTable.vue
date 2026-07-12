@@ -35,7 +35,7 @@
               <div class="flex items-center gap-1">
                 <a
                   v-if="aiImpactAvailable"
-                  :href="linkTo('ai-impact', 'rfe-review', { select: issue.key })"
+                  :href="linkTo('ai-impact', 'prd-review', { select: issue.key })"
                   class="text-primary-600 hover:text-primary-800 dark:hover:text-primary-400 hover:underline font-medium"
                 >
                   {{ issue.key }}

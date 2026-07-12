@@ -31,12 +31,12 @@ watch(() => moduleNav.params.value?.section, (section) => {
 
 // Phase metadata for the rich overview cards
 const phaseInfo = {
-  'rfe-review': {
-    desc: 'Incoming feature requests are ingested from Jira, assessed for quality, and scored against the rubric.',
+  'prd-review': {
+    desc: 'Incoming PRDs are ingested from Jira, assessed for quality, and scored against the rubric.',
     color: 'blue',
   },
-  'feature-review': {
-    desc: 'Features are auto-generated from approved RFEs, refined by AI, and reviewed by SMEs.',
+  'design-review': {
+    desc: 'Design documents are auto-generated from approved PRDs, refined by AI, and reviewed by SMEs.',
     color: 'indigo',
   },
   'implementation': {
@@ -446,7 +446,7 @@ function labelColorClasses(color) {
     </div>
 
     <!-- ─── RFE Review Detail ─── -->
-    <div v-else-if="selectedPhase.id === 'rfe-review'" class="flex-1 overflow-auto p-6 lg:p-8">
+    <div v-else-if="selectedPhase.id === 'prd-review'" class="flex-1 overflow-auto p-6 lg:p-8">
       <div class="max-w-3xl mx-auto">
         <!-- Back -->
         <button
@@ -464,15 +464,15 @@ function labelColorClasses(color) {
               <span class="text-blue-600 dark:text-blue-400 text-sm font-bold">1</span>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">RFE Review</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">PRD Review</h2>
               <p class="text-sm text-gray-500 dark:text-gray-400">Every RFE is automatically assessed daily at 4:00 AM UTC. A failing score blocks the RFE from progressing.</p>
             </div>
           </div>
           <button
-            @click="goToPage('rfe-review')"
+            @click="goToPage('prd-review')"
             class="flex items-center gap-1.5 px-3 py-1.5 bg-blue-600 hover:bg-blue-700 text-white text-sm font-medium rounded-lg transition-colors flex-shrink-0 ml-4"
           >
-            Go to RFE Review
+            Go to PRD Review
             <ChevronRight :size="16" />
           </button>
         </div>
@@ -535,7 +535,7 @@ function labelColorClasses(color) {
               <Eye :size="20" class="text-blue-600 dark:text-blue-400 flex-shrink-0 mt-0.5" />
               <div>
                 <div class="text-sm font-semibold text-gray-900 dark:text-white">View details in AI Impact</div>
-                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Find your RFE on the <button @click="goToPage('rfe-review')" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">RFE Review</button> page to see the full score breakdown and per-criterion results</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Find your RFE on the <button @click="goToPage('prd-review')" class="text-blue-600 dark:text-blue-400 hover:underline font-medium">PRD Review</button> page to see the full score breakdown and per-criterion results</div>
               </div>
             </div>
           </div>
@@ -595,13 +595,13 @@ function labelColorClasses(color) {
         <div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-6 mb-6">
           <h3 class="text-sm font-semibold text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-3">What's next</h3>
           <button
-            @click="selectPhase(PHASES.find(p => p.id === 'feature-review'))"
+            @click="selectPhase(PHASES.find(p => p.id === 'design-review'))"
             class="w-full flex items-start gap-3 p-3 bg-indigo-50 dark:bg-indigo-500/5 border border-indigo-200 dark:border-indigo-500/20 rounded-lg text-left group hover:border-indigo-300 dark:hover:border-indigo-500/40 transition-colors"
           >
             <ChevronsRight :size="20" class="text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
             <div>
-              <div class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Feature Review</div>
-              <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Once an RFE is approved, the pipeline creates a Feature ticket in Jira, refines it with architecture context, and scores it across 4 dimensions.</div>
+              <div class="text-sm font-semibold text-gray-900 dark:text-white group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">Design Review</div>
+              <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Once a PRD is approved, the pipeline creates a Design document, refines it with architecture context, and scores it across 4 dimensions.</div>
             </div>
           </button>
         </div>
@@ -642,7 +642,7 @@ function labelColorClasses(color) {
     </div>
 
     <!-- ─── Feature Review Detail ─── -->
-    <div v-else-if="selectedPhase.id === 'feature-review'" class="flex-1 overflow-auto p-6 lg:p-8">
+    <div v-else-if="selectedPhase.id === 'design-review'" class="flex-1 overflow-auto p-6 lg:p-8">
       <div class="max-w-3xl mx-auto">
         <!-- Back -->
         <button
@@ -660,15 +660,15 @@ function labelColorClasses(color) {
               <span class="text-indigo-600 dark:text-indigo-400 text-sm font-bold">2</span>
             </div>
             <div>
-              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Feature Review</h2>
+              <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Design Review</h2>
               <p class="text-sm text-gray-500 dark:text-gray-400">The pipeline creates features from approved RFEs, refines them using architecture context, scores them across 4 dimensions, and requires human sign-off before proceeding.</p>
             </div>
           </div>
           <button
-            @click="goToPage('feature-review')"
+            @click="goToPage('design-review')"
             class="flex items-center gap-1.5 px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white text-sm font-medium rounded-lg transition-colors flex-shrink-0 ml-4"
           >
-            Go to Feature Review
+            Go to Design Review
             <ChevronRight :size="16" />
           </button>
         </div>
@@ -762,7 +762,7 @@ function labelColorClasses(color) {
               <Eye :size="20" class="text-indigo-600 dark:text-indigo-400 flex-shrink-0 mt-0.5" />
               <div>
                 <div class="text-sm font-semibold text-gray-900 dark:text-white">View details in AI Impact</div>
-                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Find your feature on the <button @click="goToPage('feature-review')" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">Feature Review</button> page to see the full AI verdict, per-dimension scores, and reviewer comments</div>
+                <div class="text-xs text-gray-500 dark:text-gray-400 mt-0.5">Find your feature on the <button @click="goToPage('design-review')" class="text-indigo-600 dark:text-indigo-400 hover:underline font-medium">Design Review</button> page to see the full AI verdict, per-dimension scores, and reviewer comments</div>
               </div>
             </div>
           </div>

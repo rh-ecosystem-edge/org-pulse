@@ -42,11 +42,11 @@ function handleSelectFeature(feature) {
 
 function handleCloseModal() {
   selectedFeature.value = null
-  moduleNav.navigateTo('feature-review')
+  moduleNav.navigateTo('design-review')
 }
 
 function handleNavigateToRFE(rfeKey) {
-  moduleNav.navigateTo('rfe-review', { select: rfeKey })
+  moduleNav.navigateTo('prd-review', { select: rfeKey })
 }
 
 function handleNavigateToTestPlan(sourceKey) {

@@ -110,7 +110,7 @@ describe('RfeBacklogTable', () => {
     const rfeLink = wrapper.findAll('a').find(a => a.text() === 'RHAIRFE-100')
     expect(rfeLink).toBeTruthy()
     expect(rfeLink.attributes('href')).toContain('ai-impact')
-    expect(rfeLink.attributes('href')).toContain('rfe-review')
+    expect(rfeLink.attributes('href')).toContain('prd-review')
     expect(rfeLink.attributes('href')).toContain('RHAIRFE-100')
   })
 

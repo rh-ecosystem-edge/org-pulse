@@ -37,14 +37,14 @@ function getTestPlanPhaseSignal() {
 function getTestPlanContextSignal(phaseId) {
   const tp = props.testPlan
   switch (phaseId) {
-    case 'rfe-review':
+    case 'prd-review':
       return {
         completed: true,
         current: false,
         aiUsed: true,
-        detail: 'RFE reviewed'
+        detail: 'PRD reviewed'
       }
-    case 'feature-review':
+    case 'design-review':
       return {
         completed: true,
         current: false,
@@ -62,7 +62,7 @@ function getTestPlanContextSignal(phaseId) {
 function getRFEPhaseSignal(phaseId) {
   const rfe = props.rfe
   switch (phaseId) {
-    case 'rfe-review':
+    case 'prd-review':
       return {
         completed: false,
         current: true,
@@ -71,7 +71,7 @@ function getRFEPhaseSignal(phaseId) {
           ? `AI ${rfe.aiInvolvement === 'both' ? 'created & revised' : rfe.aiInvolvement}`
           : 'No AI involvement'
       }
-    case 'feature-review':
+    case 'design-review':
       if (rfe.linkedFeature) {
         return {
           completed: false,
@@ -106,7 +106,7 @@ function getRFEPhaseSignal(phaseId) {
 function getFeaturePhaseSignal(phaseId) {
   const feature = props.feature
   switch (phaseId) {
-    case 'rfe-review':
+    case 'prd-review':
       return {
         completed: true,
         current: false,
@@ -115,7 +115,7 @@ function getFeaturePhaseSignal(phaseId) {
         linkedKey: feature.sourceRfe,
         isSourceRfe: true
       }
-    case 'feature-review': {
+    case 'design-review': {
       const aiLabels = (feature.labels || []).filter(l => l.startsWith('strat-creator-'))
       const aiUsed = aiLabels.some(l => l === 'strat-creator-auto-created' || l === 'strat-creator-auto-refined')
       return {
@@ -212,7 +212,7 @@ function getFeaturePhaseSignal(phaseId) {
                 </a>
               </template>
               <!-- Linked feature link (RFE context) -->
-              <template v-else-if="phase.id === 'feature-review' && getPhaseSignal(phase.id).linkedKey">
+              <template v-else-if="phase.id === 'design-review' && getPhaseSignal(phase.id).linkedKey">
                 <button
                   class="text-blue-600 dark:text-blue-400 hover:underline"
                   @click="emit('navigateToFeature', getPhaseSignal(phase.id).linkedKey)"
@@ -257,7 +257,7 @@ function getFeaturePhaseSignal(phaseId) {
                   </svg>
                 </a>
               </template>
-              <template v-else-if="phase.status === 'coming-soon' && phase.id !== 'feature-review' && phase.id !== 'build-release'">
+              <template v-else-if="phase.status === 'coming-soon' && phase.id !== 'design-review' && phase.id !== 'build-release'">
                 <span class="text-gray-300 dark:text-gray-600">No signals yet</span>
               </template>
               <template v-else>

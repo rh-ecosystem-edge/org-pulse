@@ -542,9 +542,9 @@ function getAutofixExcludedComponentsDisplay() {
       <div v-else class="text-sm text-gray-500 dark:text-gray-400">No assessment data available</div>
     </div>
 
-    <!-- Feature Review Data -->
+    <!-- Design Review Data -->
     <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
-      <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Feature Reviews</h4>
+      <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Design Reviews</h4>
       <div v-if="featureStatusLoading" class="text-sm text-gray-500 dark:text-gray-400">Loading feature status...</div>
       <template v-else-if="featureStatus">
         <div class="grid grid-cols-4 gap-4 mb-3">

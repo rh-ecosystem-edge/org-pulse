@@ -39,11 +39,11 @@ function handleCloseModal() {
 }
 
 function handleNavigateToFeature(featureKey) {
-  moduleNav.navigateTo('feature-review', { select: featureKey })
+  moduleNav.navigateTo('design-review', { select: featureKey })
 }
 
 function handleNavigateToRFE(rfeKey) {
-  moduleNav.navigateTo('rfe-review', { select: rfeKey })
+  moduleNav.navigateTo('prd-review', { select: rfeKey })
 }
 
 // Handle incoming select param (cross-link from other views)

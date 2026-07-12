@@ -108,7 +108,7 @@ describe('RFEReviewView navigation', () => {
     await nextTick();
 
     expect(mockCrossNavigate).not.toHaveBeenCalled();
-    expect(moduleNav.navigateTo).toHaveBeenCalledWith('rfe-review', { select: 'RHAIRFE-1' });
+    expect(moduleNav.navigateTo).toHaveBeenCalledWith('prd-review', { select: 'RHAIRFE-1' });
   });
 
   it('opens modal when RFE has no linked feature', async () => {
@@ -119,7 +119,7 @@ describe('RFEReviewView navigation', () => {
     await nextTick();
 
     expect(mockCrossNavigate).not.toHaveBeenCalled();
-    expect(moduleNav.navigateTo).toHaveBeenCalledWith('rfe-review', { select: 'RHAIRFE-2' });
+    expect(moduleNav.navigateTo).toHaveBeenCalledWith('prd-review', { select: 'RHAIRFE-2' });
   });
 
   it('passes rfeToFeature prop to PhaseContent', () => {

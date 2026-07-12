@@ -129,7 +129,7 @@ const priorityOptions = [
 
 function handleNavigate(item) {
   if (item.type === 'rfe') {
-    crossNavigate('ai-impact', 'rfe-review', { select: item.key, from: 'sotu' })
+    crossNavigate('ai-impact', 'prd-review', { select: item.key, from: 'sotu' })
   } else {
     crossNavigate('releases', 'feature-detail', { key: item.key, from: 'sotu' })
   }
