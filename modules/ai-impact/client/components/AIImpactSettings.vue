@@ -545,7 +545,7 @@ function getAutofixExcludedComponentsDisplay() {
     <!-- Design Review Data -->
     <div class="border-t border-gray-200 dark:border-gray-700 pt-4">
       <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Design Reviews</h4>
-      <div v-if="featureStatusLoading" class="text-sm text-gray-500 dark:text-gray-400">Loading feature status...</div>
+      <div v-if="featureStatusLoading" class="text-sm text-gray-500 dark:text-gray-400">Loading design review status...</div>
       <template v-else-if="featureStatus">
         <div class="grid grid-cols-4 gap-4 mb-3">
           <div class="bg-gray-50 dark:bg-gray-700 rounded-md p-3">
@@ -575,14 +575,14 @@ function getAutofixExcludedComponentsDisplay() {
             :disabled="clearingFeatures || featureStatus.totalFeatures === 0"
             class="px-4 py-2 border border-red-300 dark:border-red-600 text-red-700 dark:text-red-300 rounded-md text-sm hover:bg-red-50 dark:hover:bg-red-900/20 disabled:opacity-50"
           >
-            {{ clearingFeatures ? 'Clearing...' : 'Clear Feature Data' }}
+            {{ clearingFeatures ? 'Clearing...' : 'Clear Design Review Data' }}
           </button>
           <span v-if="clearFeaturesResult" class="text-sm" :class="clearFeaturesResult.status === 'success' ? 'text-green-600 dark:text-green-400' : 'text-red-600 dark:text-red-400'">
             {{ clearFeaturesResult.message }}
           </span>
         </div>
       </template>
-      <div v-else class="text-sm text-gray-500 dark:text-gray-400">No feature data available</div>
+      <div v-else class="text-sm text-gray-500 dark:text-gray-400">No design review data available</div>
     </div>
 
     <!-- Test Plan Data -->

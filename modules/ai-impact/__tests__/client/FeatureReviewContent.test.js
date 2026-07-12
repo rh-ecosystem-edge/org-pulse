@@ -33,7 +33,7 @@ describe('FeatureReviewContent', () => {
     const wrapper = mount(FeatureReviewContent, {
       props: { error: 'Connection failed' }
     });
-    expect(wrapper.text()).toContain('Failed to load feature data');
+    expect(wrapper.text()).toContain('Failed to load design review data');
     expect(wrapper.text()).toContain('Connection failed');
 
     await wrapper.find('button').trigger('click');

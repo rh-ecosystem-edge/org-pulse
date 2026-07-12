@@ -465,7 +465,7 @@ function labelColorClasses(color) {
             </div>
             <div>
               <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">PRD Review</h2>
-              <p class="text-sm text-gray-500 dark:text-gray-400">Every RFE is automatically assessed daily at 4:00 AM UTC. A failing score blocks the RFE from progressing.</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">Every PRD is automatically assessed daily at 4:00 AM UTC. A failing score blocks the PRD from progressing.</p>
             </div>
           </div>
           <button
@@ -661,7 +661,7 @@ function labelColorClasses(color) {
             </div>
             <div>
               <h2 class="text-xl font-bold text-gray-900 dark:text-gray-100">Design Review</h2>
-              <p class="text-sm text-gray-500 dark:text-gray-400">The pipeline creates features from approved RFEs, refines them using architecture context, scores them across 4 dimensions, and requires human sign-off before proceeding.</p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">The pipeline creates design documents from approved PRDs, refines them using architecture context, scores them across 4 dimensions, and requires human sign-off before proceeding.</p>
             </div>
           </div>
           <button
