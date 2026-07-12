@@ -44,7 +44,7 @@ describe('FeatureReviewContent', () => {
     const wrapper = mount(FeatureReviewContent, {
       props: { features: {} }
     });
-    expect(wrapper.text()).toContain('No Feature Reviews Yet');
+    expect(wrapper.text()).toContain('No Design Reviews Yet');
   });
 
   it('renders metrics and list when features exist', () => {

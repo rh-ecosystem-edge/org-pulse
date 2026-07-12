@@ -168,7 +168,7 @@ const groupedFeatures = computed(() => {
                 <div v-if="item.data.rfe" class="flex items-center gap-1">
                   <a
                     v-if="aiImpactAvailable"
-                    :href="linkTo('ai-impact', 'rfe-review', { select: item.data.rfe })"
+                    :href="linkTo('ai-impact', 'prd-review', { select: item.data.rfe })"
                     class="text-primary-600 dark:text-blue-400 font-mono text-xs hover:underline"
                   >{{ item.data.rfe }}</a>
                   <span v-else class="font-mono text-xs text-gray-900 dark:text-gray-100">{{ item.data.rfe }}</span>

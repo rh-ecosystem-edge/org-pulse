@@ -116,46 +116,46 @@ const actionGuidance = computed(() => {
     switch (s) {
       case 'needs-revision': return {
         text: 'This RFE failed the quality rubric and couldn\'t be auto-fixed. Open it in Jira, check the AI comments for what\'s wrong, and revise the description to clearly state the WHAT and WHY.',
-        linkUrl: `${guideBase}rfe-review`,
-        linkLabel: 'RFE Review guide'
+        linkUrl: `${guideBase}prd-review`,
+        linkLabel: 'PRD Review guide'
       }
       case 'passed-with-caveats': return {
         text: 'This RFE passed scoring but was flagged for attention — usually minor issues the automation couldn\'t resolve. Check the Jira comments for specifics and address them.',
-        linkUrl: `${guideBase}rfe-review`,
-        linkLabel: 'RFE Review guide'
+        linkUrl: `${guideBase}prd-review`,
+        linkLabel: 'PRD Review guide'
       }
       case 'ready-to-advance': return {
         text: 'This RFE passed quality checks and is ready for feature creation. Add the scope label in Jira to queue it for the strategy creation pipeline.',
-        linkUrl: `${guideBase}rfe-review`,
-        linkLabel: 'RFE Review guide'
+        linkUrl: `${guideBase}prd-review`,
+        linkLabel: 'PRD Review guide'
       }
       case 'queued-for-pipeline': return {
         text: 'This RFE is queued and waiting for the automated pipeline to create a strategy feature from it. No action needed — the pipeline runs on a schedule.',
-        linkUrl: `${guideBase}feature-review`,
-        linkLabel: 'Feature Review guide'
+        linkUrl: `${guideBase}design-review`,
+        linkLabel: 'Design Review guide'
       }
       default: return {
         text: 'This RFE hasn\'t been assessed yet. The pipeline will pick it up on its next run and score it against the quality rubric.',
-        linkUrl: `${guideBase}rfe-review`,
-        linkLabel: 'RFE Review guide'
+        linkUrl: `${guideBase}prd-review`,
+        linkLabel: 'PRD Review guide'
       }
     }
   }
   switch (s) {
     case 'rejected': return {
       text: 'The AI review recommended rejecting this feature. Open it in Jira and check the review comments — decide whether to revise the underlying RFE or close it.',
-      linkUrl: `${guideBase}feature-review`,
-      linkLabel: 'Feature Review guide'
+      linkUrl: `${guideBase}design-review`,
+      linkLabel: 'Design Review guide'
     }
     case 'revise-required': return {
       text: 'The AI review found issues with this feature\'s feasibility, testability, scope, or architecture. Check the scoring breakdown and revise the strategy in Jira.',
-      linkUrl: `${guideBase}feature-review`,
-      linkLabel: 'Feature Review guide'
+      linkUrl: `${guideBase}design-review`,
+      linkLabel: 'Design Review guide'
     }
     case 'awaiting-signoff': return {
       text: 'This feature passed AI scoring and is ready for human sign-off. A staff engineer, architect, or SME should review and approve it in Jira.',
-      linkUrl: `${guideBase}feature-review`,
-      linkLabel: 'Feature Review guide'
+      linkUrl: `${guideBase}design-review`,
+      linkLabel: 'Design Review guide'
     }
     case 'signed-off': return {
       text: 'This feature has been reviewed and approved. It\'s ready to move into implementation.',
@@ -164,8 +164,8 @@ const actionGuidance = computed(() => {
     }
     default: return {
       text: 'This feature is awaiting classification by the review pipeline.',
-      linkUrl: `${guideBase}feature-review`,
-      linkLabel: 'Feature Review guide'
+      linkUrl: `${guideBase}design-review`,
+      linkLabel: 'Design Review guide'
     }
   }
 })

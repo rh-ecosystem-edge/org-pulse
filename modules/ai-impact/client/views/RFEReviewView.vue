@@ -30,7 +30,7 @@ const { features, loadFeatures } = useFeatures()
 loadAssessments()
 loadFeatures()
 
-const phase = PHASES.find(p => p.id === 'rfe-review')
+const phase = PHASES.find(p => p.id === 'prd-review')
 const metrics = computed(() => rfeData.value?.metrics || null)
 const trendData = computed(() => rfeData.value?.trendData || [])
 const breakdown = computed(() => rfeData.value?.breakdown || [])
@@ -97,13 +97,13 @@ function handleRetry() {
 
 function handleSelectRFE(rfe) {
   selectedRFE.value = rfe
-  moduleNav.navigateTo('rfe-review', { select: rfe.key })
+  moduleNav.navigateTo('prd-review', { select: rfe.key })
 }
 
 function handleCloseModal() {
   selectedRFE.value = null
   const params = fromForYou.value ? { from: 'sotu' } : {}
-  moduleNav.navigateTo('rfe-review', params)
+  moduleNav.navigateTo('prd-review', params)
 }
 
 function handleNavigateToFeature(featureKey) {

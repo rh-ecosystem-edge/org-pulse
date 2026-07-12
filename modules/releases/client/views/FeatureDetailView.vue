@@ -156,9 +156,9 @@ function goBack() {
   if (fromForYou.value) {
     window.location.hash = '#/'
   } else if (fromRfe.value) {
-    crossNavigate('ai-impact', 'rfe-review', { select: fromRfe.value })
+    crossNavigate('ai-impact', 'prd-review', { select: fromRfe.value })
   } else if (fromFeatureReview.value) {
-    crossNavigate('ai-impact', 'feature-review')
+    crossNavigate('ai-impact', 'design-review')
   } else if (fromPlanFeatures.value) {
     nav.navigateTo('plan', { tab: 'feature-readiness' })
   } else if (fromPlan.value) {
@@ -365,7 +365,7 @@ onMounted(() => {
       class="text-sm text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white flex items-center gap-1"
       @click="goBack"
     >
-      &larr; {{ fromForYou ? 'Back to State of the Union' : fromRfe ? 'Back to RFE Review' : fromFeatureReview ? 'Back to Feature Review' : fromPlanFeatures ? 'Back to Features List' : fromPlan ? 'Back to Plan' : fromHygieneReport ? 'Back to Hygiene Report' : fromFeatureStatus ? 'Back to Feature Status' : 'Back to Execute' }}
+      &larr; {{ fromForYou ? 'Back to State of the Union' : fromRfe ? 'Back to PRD Review' : fromFeatureReview ? 'Back to Design Review' : fromPlanFeatures ? 'Back to Features List' : fromPlan ? 'Back to Plan' : fromHygieneReport ? 'Back to Hygiene Report' : fromFeatureStatus ? 'Back to Feature Status' : 'Back to Execute' }}
     </button>
 
     <!-- Loading -->
@@ -403,7 +403,7 @@ onMounted(() => {
                 Source RFE:
                 <button
                   class="font-mono text-primary-600 dark:text-blue-400 hover:underline"
-                  @click="crossNavigate('ai-impact', 'rfe-review', { select: sourceRfeKey })"
+                  @click="crossNavigate('ai-impact', 'prd-review', { select: sourceRfeKey })"
                 >{{ sourceRfeKey }}</button>
                 <a
                   :href="JIRA_BASE + sourceRfeKey"

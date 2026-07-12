@@ -36,9 +36,9 @@ test.describe('AI Impact Module @ai-impact', () => {
       }
     });
 
-    // Navigate to RFE Review (a data-driven view that makes API calls)
+    // Navigate to PRD Review (a data-driven view that makes API calls)
     // The default landing page (AI Factory Guide) is static and has no API calls
-    await page.goto('/#/ai-impact/rfe-review');
+    await page.goto('/#/ai-impact/prd-review');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
 
@@ -168,16 +168,16 @@ test.describe('AI Impact Views @ai-impact', () => {
     await testView(page, 'ai-factory-guide', 'AI Factory Guide');
   });
 
-  test('should load RFE Review view', async ({ page }) => {
-    await testView(page, 'rfe-review', 'RFE Review');
+  test('should load PRD Review view', async ({ page }) => {
+    await testView(page, 'prd-review', 'PRD Review');
   });
 
-  test('should load Feature Review view', async ({ page }) => {
-    await testView(page, 'feature-review', 'Feature Review');
+  test('should load Design Review view', async ({ page }) => {
+    await testView(page, 'design-review', 'Design Review');
   });
 
-  test('Feature Review view loads data from unified store', async ({ page }) => {
-    // Monitor API requests — Feature Review reads from ai-impact/features
+  test('Design Review view loads data from unified store', async ({ page }) => {
+    // Monitor API requests — Design Review reads from ai-impact/features
     // which internally reads from the releases execution store
     const apiResponses = [];
     page.on('response', response => {
@@ -189,7 +189,7 @@ test.describe('AI Impact Views @ai-impact', () => {
       }
     });
 
-    await page.goto('/#/ai-impact/feature-review');
+    await page.goto('/#/ai-impact/design-review');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
 

@@ -50,35 +50,35 @@ const guideBase = '#/ai-impact/ai-factory-guide?from=sotu&section='
 const columnGuidance = {
   'not-assessed': {
     text: 'RFEs that haven\'t been through the quality rubric yet. The pipeline will pick them up on its next run.',
-    guide: 'rfe-review'
+    guide: 'prd-review'
   },
   'needs-revision': {
     text: 'RFEs that failed scoring and couldn\'t be auto-fixed. Open in Jira, check the AI comments, and revise the WHAT and WHY.',
-    guide: 'rfe-review'
+    guide: 'prd-review'
   },
   'passed-with-caveats': {
     text: 'RFEs that passed scoring but have minor issues the automation couldn\'t resolve. Check Jira comments for specifics.',
-    guide: 'rfe-review'
+    guide: 'prd-review'
   },
   'ready-to-advance': {
     text: 'RFEs that passed quality checks. Add the scope label in Jira to queue them for strategy creation.',
-    guide: 'rfe-review'
+    guide: 'prd-review'
   },
   'queued-for-pipeline': {
     text: 'RFEs waiting for the automated pipeline to create a strategy feature. No action needed.',
-    guide: 'feature-review'
+    guide: 'design-review'
   },
   'rejected': {
     text: 'Features the AI review recommended rejecting. Check review comments and decide whether to revise the RFE or close it.',
-    guide: 'feature-review'
+    guide: 'design-review'
   },
   'revise-required': {
     text: 'Features with issues in feasibility, testability, scope, or architecture. Check scoring and revise the strategy in Jira.',
-    guide: 'feature-review'
+    guide: 'design-review'
   },
   'awaiting-signoff': {
     text: 'Features that passed AI scoring and need human sign-off from a staff engineer, architect, or SME.',
-    guide: 'feature-review'
+    guide: 'design-review'
   },
   'signed-off': {
     text: 'Features that have been reviewed and approved. Ready to move into implementation.',
