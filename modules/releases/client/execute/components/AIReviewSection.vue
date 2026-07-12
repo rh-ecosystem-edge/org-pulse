@@ -127,9 +127,9 @@ const DIMENSIONS = ['feasibility', 'testability', 'scope', 'architecture']
         </div>
       </div>
 
-      <!-- Design Review History -->
+      <!-- Score History -->
       <div v-if="featureReview.history?.length > 0" class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
-        <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Design Review History</h4>
+        <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Score History</h4>
         <div class="space-y-2">
           <div
             v-for="(entry, idx) in featureReview.history"

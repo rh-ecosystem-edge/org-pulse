@@ -83,7 +83,7 @@ describe('AIReviewSection', () => {
         }
       }
     });
-    expect(wrapper.text()).toContain('Design Review History');
+    expect(wrapper.text()).toContain('Score History');
     expect(wrapper.text()).toContain('5/8');
     expect(wrapper.text()).toContain('3/8');
   });
