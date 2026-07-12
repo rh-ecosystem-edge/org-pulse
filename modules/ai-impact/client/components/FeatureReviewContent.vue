@@ -31,11 +31,11 @@ const emit = defineEmits([
 <template>
   <main class="flex-1 flex flex-col overflow-auto">
     <!-- Loading -->
-    <LoadingOverlay v-if="loading" message="Loading feature reviews..." />
+    <LoadingOverlay v-if="loading" message="Loading design reviews..." />
 
     <!-- Error -->
     <div v-else-if="error" class="flex-1 flex flex-col items-center justify-center">
-      <div class="text-red-500 dark:text-red-400 mb-2">Failed to load feature data</div>
+      <div class="text-red-500 dark:text-red-400 mb-2">Failed to load design review data</div>
       <p class="text-sm text-gray-500 dark:text-gray-400 mb-4">{{ error }}</p>
       <button
         @click="emit('retry')"
@@ -55,7 +55,7 @@ const emit = defineEmits([
       </div>
       <h2 class="text-xl font-semibold mb-2 dark:text-gray-100">No Design Reviews Yet</h2>
       <p class="text-gray-500 dark:text-gray-400 text-center max-w-md">
-        Feature review data will appear here once the strat creator pipeline pushes results.
+        Design review data will appear here once the pipeline pushes results.
       </p>
     </div>
 
