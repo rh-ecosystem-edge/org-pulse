@@ -85,7 +85,7 @@ spec:
               mountPath: /app/data
           readinessProbe:
             httpGet:
-              path: /healthz
+              path: /readyz
               port: 3001
             initialDelaySeconds: 5
             periodSeconds: 10

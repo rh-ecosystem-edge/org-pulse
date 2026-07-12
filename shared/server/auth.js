@@ -280,7 +280,8 @@ function proxySecretGuard(req, res, next, options = {}) {
     return next();
   }
   if (req.method === 'OPTIONS') return next();
-  if (req.path === '/healthz' || req.path === '/api/healthz') return next();
+  if (req.path === '/healthz' || req.path === '/api/healthz' ||
+      req.path === '/readyz' || req.path === '/api/readyz') return next();
   // API docs: publicly accessible without auth
   if (req.path.startsWith('/api/docs')) return next();
   // Shell module list: public metadata only (same payload as unauthenticated dev)

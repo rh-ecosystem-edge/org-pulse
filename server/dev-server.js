@@ -311,6 +311,45 @@ app.get('/api/healthz', function(req, res) {
 });
 
 /**
+ * @openapi
+ * /api/readyz:
+ *   get:
+ *     tags: [Health]
+ *     summary: Readiness check — verifies data directory is accessible
+ *     security: []
+ *     responses:
+ *       200:
+ *         description: Server is ready to serve traffic
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: ok
+ *       503:
+ *         description: Server is not ready (data directory inaccessible)
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 status:
+ *                   type: string
+ *                   example: error
+ *                 reasons:
+ *                   type: array
+ *                   items:
+ *                     type: string
+ *                   example: ["data directory not readable/writable"]
+ */
+var { createReadyzHandler } = require('./readyz');
+var readyzHandler = createReadyzHandler(storageModule);
+app.get('/readyz', readyzHandler);
+app.get('/api/readyz', readyzHandler);
+
+/**
  * Built-in module manifests — intentionally public (no auth, no proxy secret).
  * Payload is low-sensitivity (names, icons, slugs, client entry paths); same class of info as bundled import.meta.glob.
  * Registered before authMiddleware so the shell can list modules on first paint without a session.
