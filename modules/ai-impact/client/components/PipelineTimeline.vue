@@ -1,4 +1,6 @@
 <script setup>
+const EP_GITHUB_REPO = 'https://github.com/osac-project/enhancement-proposals/pull'
+
 const props = defineProps({
   rfe: { type: Object, default: null },
   feature: { type: Object, default: null },
@@ -69,7 +71,8 @@ function getRFEPhaseSignal(phaseId) {
         aiUsed: rfe.aiInvolvement !== 'none',
         detail: rfe.aiInvolvement !== 'none'
           ? `AI ${rfe.aiInvolvement === 'both' ? 'created & revised' : rfe.aiInvolvement}`
-          : 'No AI involvement'
+          : 'No AI involvement',
+        sourceRfe: rfe.sourceRfe
       }
     case 'design-review':
       if (rfe.linkedFeature) {
@@ -254,6 +257,22 @@ function getFeaturePhaseSignal(phaseId) {
                 >
                   <svg class="inline h-3 w-3" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M22.65 14.39L12 22.13 1.35 14.39a.84.84 0 0 1-.3-.94l1.22-3.78 2.44-7.51A.42.42 0 0 1 4.82 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.49h8.1l2.44-7.51A.42.42 0 0 1 18.6 2a.43.43 0 0 1 .58 0 .42.42 0 0 1 .11.18l2.44 7.51L23 13.45a.84.84 0 0 1-.35.94z"/>
+                  </svg>
+                </a>
+              </template>
+              <!-- PRD Review with PR link -->
+              <template v-else-if="phase.id === 'prd-review' && getPhaseSignal(phase.id).sourceRfe?.startsWith('EP-')">
+                {{ getPhaseSignal(phase.id).detail }}
+                <a
+                  :href="`${EP_GITHUB_REPO}/${getPhaseSignal(phase.id).sourceRfe.slice(3)}`"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  class="ml-1 text-blue-600 dark:text-blue-400 hover:underline"
+                  title="View PRD pull request on GitHub"
+                >
+                  PR #{{ getPhaseSignal(phase.id).sourceRfe.slice(3) }}
+                  <svg class="inline h-3 w-3 ml-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                   </svg>
                 </a>
               </template>
