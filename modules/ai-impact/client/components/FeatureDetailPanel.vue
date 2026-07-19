@@ -37,6 +37,7 @@ watch(
   async (key) => {
     featureDetail.value = null
     testPlanData.value = null
+    expandedCriteria.value = {}
     if (!props.show || !key || !props.loadFeatureDetail) return
     detailLoading.value = true
     try {
