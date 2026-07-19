@@ -99,7 +99,10 @@ function toAiReviewPayload(validated) {
       labels: validated.labels,
       components: validated.components,
       reviewedAt: validated.reviewedAt,
-      runId: validated.runId
+      runId: validated.runId,
+      verdict: validated.verdict || undefined,
+      feedback: validated.feedback || undefined,
+      criterionNotes: validated.criterionNotes || undefined
     }
   };
 }

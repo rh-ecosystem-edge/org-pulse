@@ -36,6 +36,7 @@ function validateFeature(body) {
   if (body.needs_attention !== undefined && body.needsAttention === undefined) body.needsAttention = body.needs_attention;
   if (body.run_id && body.runId === undefined) body.runId = body.run_id;
   if (body.run_timestamp && body.runTimestamp === undefined) body.runTimestamp = body.run_timestamp;
+  if (body.criterion_notes && !body.criterionNotes) body.criterionNotes = body.criterion_notes;
   // Synthesize reviewedAt from runTimestamp if absent
   if (body.reviewedAt === undefined && typeof body.runTimestamp === 'string' && !isNaN(Date.parse(body.runTimestamp))) {
     body.reviewedAt = body.runTimestamp;
@@ -150,6 +151,35 @@ function validateFeature(body) {
     errors.push('reviewedAt must be a valid ISO 8601 date string');
   }
 
+  // verdict: optional string
+  if (body.verdict !== undefined && body.verdict !== null) {
+    if (typeof body.verdict !== 'string') {
+      errors.push('verdict must be a string');
+    }
+  }
+
+  // feedback: optional string
+  if (body.feedback !== undefined && body.feedback !== null) {
+    if (typeof body.feedback !== 'string') {
+      errors.push('feedback must be a string');
+    }
+  }
+
+  // criterionNotes: optional object with dimension keys
+  if (body.criterionNotes !== undefined && body.criterionNotes !== null) {
+    if (typeof body.criterionNotes !== 'object' || Array.isArray(body.criterionNotes)) {
+      errors.push('criterionNotes must be an object');
+    } else {
+      for (const k of Object.keys(body.criterionNotes)) {
+        if (!DIMENSIONS.includes(k)) {
+          errors.push('criterionNotes key "' + k + '" is not a valid dimension (' + DIMENSIONS.join(', ') + ')');
+        } else if (typeof body.criterionNotes[k] !== 'string') {
+          errors.push('criterionNotes.' + k + ' must be a string');
+        }
+      }
+    }
+  }
+
   if (errors.length > 0) {
     return { valid: false, errors };
   }
@@ -186,7 +216,10 @@ function validateFeature(body) {
       labels: body.labels,
       runId: body.runId || undefined,
       runTimestamp: body.runTimestamp || undefined,
-      reviewedAt: body.reviewedAt
+      reviewedAt: body.reviewedAt,
+      verdict: typeof body.verdict === 'string' ? body.verdict.trim() : undefined,
+      feedback: typeof body.feedback === 'string' ? body.feedback.trim() : undefined,
+      criterionNotes: body.criterionNotes || undefined
     }
   };
 }

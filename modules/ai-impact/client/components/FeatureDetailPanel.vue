@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, watch, onBeforeUnmount, nextTick } from 'vue'
 import PipelineTimeline from './PipelineTimeline.vue'
+import FeedbackText from './FeedbackText.vue'
 import { getRecommendationClass, getRecommendationLabel, getRecommendationTooltip, getScoreClass, getReviewStatusClass, getReviewStatusLabel, getReviewStatusTooltip } from '../utils/feature-helpers.js'
 import { useTestPlans } from '../composables/useTestPlans.js'
 import InfoBubble from './InfoBubble.vue'
@@ -22,6 +23,14 @@ let previousActiveElement = null
 
 const { loadTestPlanDetail } = useTestPlans()
 const testPlanData = ref(null)
+
+const expandedCriteria = ref({})
+
+function toggleCriterion(dim) {
+  expandedCriteria.value[dim] = !expandedCriteria.value[dim]
+}
+
+const currentData = computed(() => featureDetail.value?.latest || props.feature)
 
 watch(
   () => props.feature?.key,
@@ -220,21 +229,56 @@ const history = computed(() => featureDetail.value?.history || [])
                 <div
                   v-for="dim in DIMENSIONS"
                   :key="dim"
-                  class="p-3 rounded-lg border border-gray-200 dark:border-gray-600"
+                  class="p-3 rounded-lg border border-gray-200 dark:border-gray-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+                  @click="toggleCriterion(dim)"
                 >
                   <p class="text-xs text-gray-500 dark:text-gray-400 capitalize mb-1">{{ dim }}</p>
                   <div class="flex items-center justify-between">
                     <span class="text-lg font-bold" :class="getScoreClass(feature.scores?.[dim])">
                       {{ feature.scores?.[dim] ?? 0 }}/2
                     </span>
-                    <span
-                      class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
-                      :class="getRecommendationClass(feature.reviewers?.[dim])"
-                    >
-                      {{ feature.reviewers?.[dim] === 'approve' ? 'Pass' : feature.reviewers?.[dim] === 'revise' ? 'Revise' : feature.reviewers?.[dim] === 'reject' ? 'Fail' : getRecommendationLabel(feature.reviewers?.[dim]) }}
-                    </span>
+                    <div class="flex items-center gap-1">
+                      <span
+                        class="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium"
+                        :class="getRecommendationClass(feature.reviewers?.[dim])"
+                      >
+                        {{ feature.reviewers?.[dim] === 'approve' ? 'Pass' : feature.reviewers?.[dim] === 'revise' ? 'Revise' : feature.reviewers?.[dim] === 'reject' ? 'Fail' : getRecommendationLabel(feature.reviewers?.[dim]) }}
+                      </span>
+                      <svg
+                        v-if="currentData?.criterionNotes?.[dim]"
+                        class="h-4 w-4 text-gray-400 transition-transform"
+                        :class="{ 'rotate-180': expandedCriteria[dim] }"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                      >
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                      </svg>
+                    </div>
+                  </div>
+                  <div v-if="expandedCriteria[dim] && currentData?.criterionNotes?.[dim]"
+                       class="mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <FeedbackText :text="currentData.criterionNotes[dim]" />
+                  </div>
+                  <div v-else-if="expandedCriteria[dim]"
+                       class="mt-2 pt-2 border-t border-gray-100 dark:border-gray-700">
+                    <p class="text-sm text-gray-400 dark:text-gray-500">No notes available.</p>
                   </div>
                 </div>
+              </div>
+            </div>
+
+            <!-- Verdict -->
+            <div v-if="currentData?.verdict" class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
+              <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Verdict</h4>
+              <p class="text-sm font-medium text-gray-800 dark:text-gray-200 bg-gray-50 dark:bg-gray-700/50 rounded-md px-3 py-2">
+                {{ currentData.verdict }}
+              </p>
+            </div>
+
+            <!-- Feedback -->
+            <div v-if="currentData?.feedback" class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
+              <h4 class="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-2">Feedback</h4>
+              <div class="bg-gray-50 dark:bg-gray-700/50 rounded-md px-3 py-2">
+                <FeedbackText :text="currentData.feedback" />
               </div>
             </div>
 
