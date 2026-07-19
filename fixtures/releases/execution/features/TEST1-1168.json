@@ -94,7 +94,7 @@
   },
   "aiReview": {
     "title": "GPU-as-a-Service Observability Dashboard",
-    "sourceRfe": "RHAIRFE-262",
+    "sourceRfe": "RHAIRFE-1001",
     "size": "L",
     "recommendation": "approve",
     "needsAttention": false,

@@ -115,7 +115,7 @@
   },
   "aiReview": {
     "title": "Red Hat AI Inference UI MVP",
-    "sourceRfe": "RHAIRFE-1056",
+    "sourceRfe": "RHAIRFE-1005",
     "size": "M",
     "recommendation": "approve",
     "needsAttention": false,
