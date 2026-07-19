@@ -3,15 +3,12 @@ import { ref, computed, watch, inject } from 'vue'
 import { useAIImpact } from '../composables/useAIImpact.js'
 import { useAssessments } from '../composables/useAssessments.js'
 import { useFeatures } from '../composables/useFeatures.js'
-import { useModuleLink } from '@shared/client/composables/useModuleLink.js'
 import { PHASES } from '../constants.js'
 import PhaseContent from '../components/PhaseContent.vue'
 import RFEDetailModal from '../components/RFEDetailModal.vue'
 import AIImpactGuide from '../components/AIImpactGuide.vue'
 
 const moduleNav = inject('moduleNav')
-const { navigateTo: crossNavigate } = useModuleLink()
-
 const selectedRFE = ref(null)
 const notFoundRFE = ref(null)
 const timeWindow = ref('month')
@@ -107,10 +104,8 @@ function handleCloseModal() {
 }
 
 function handleNavigateToFeature(featureKey) {
-  crossNavigate('releases', 'feature-detail', {
-    key: featureKey,
-    fromRfe: selectedRFE.value?.key
-  })
+  selectedRFE.value = null
+  moduleNav.navigateTo('design-review', { select: featureKey })
 }
 
 function handleNavigateToTestPlan(sourceKey) {

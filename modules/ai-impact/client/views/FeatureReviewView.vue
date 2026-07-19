@@ -2,15 +2,12 @@
 import { ref, watch, inject } from 'vue'
 import { useFeatures } from '../composables/useFeatures.js'
 import { useAIImpact } from '../composables/useAIImpact.js'
-import { useModuleLink } from '@shared/client/composables/useModuleLink.js'
 import { PHASES } from '../constants.js'
 import FeatureReviewContent from '../components/FeatureReviewContent.vue'
 import FeatureDetailPanel from '../components/FeatureDetailPanel.vue'
 import AIImpactGuide from '../components/AIImpactGuide.vue'
 
 const moduleNav = inject('moduleNav')
-const { navigateTo: crossNavigate } = useModuleLink()
-
 const selectedFeature = ref(null)
 const searchQuery = ref('')
 const recommendationFilter = ref('all')
@@ -32,11 +29,8 @@ function handleRetry() {
 
 function handleSelectFeature(feature) {
   if (feature) {
-    // Navigate to the consolidated Feature Traffic Feature page
-    crossNavigate('releases', 'feature-detail', {
-      key: feature.key,
-      fromFeatureReview: '1'
-    })
+    selectedFeature.value = feature
+    moduleNav.navigateTo('design-review', { select: feature.key })
   }
 }
 
