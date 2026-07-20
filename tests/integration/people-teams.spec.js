@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { DEFAULT_PAGE_WAIT_TIME } = require('./constants');
-const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible, countDisabledNavItems } = require('./helpers');
+const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible } = require('./helpers');
 
 /**
  * Integration tests for People & Teams module
@@ -41,28 +41,17 @@ test.describe('People & Teams Module @people-teams', () => {
     expect(page.errors).toHaveLength(0);
   });
 
-  test('should navigate to People & Teams module when clicked', async ({ page }) => {
+  test('module header should be disabled', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
 
-    // Expand the People & Teams module section if it's collapsed
     const moduleHeader = page.locator('aside nav button').filter({ hasText: 'People & Teams' }).first();
-    await moduleHeader.click();
-    await page.waitForTimeout(500);
+    const isDisabled = await moduleHeader.getAttribute('disabled');
+    expect(isDisabled).not.toBeNull();
 
-    // Click on the "Team Directory" view (default view)
-    const viewLink = page.locator('aside nav button').filter({ hasText: 'Team Directory' }).first();
-    await viewLink.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
-
-    // Verify URL changed to team-tracker module (default view is home)
-    expect(page.url()).toMatch(/team-tracker\/home/);
-
-    // Verify main content is visible
-    const mainContentVisible = await mainContentIsVisible(page);
-    expect(mainContentVisible).toBe(true);
+    const cursor = await moduleHeader.evaluate(el => window.getComputedStyle(el).cursor);
+    expect(cursor).toBe('not-allowed');
 
     expect(page.errors).toHaveLength(0);
   });
@@ -97,33 +86,9 @@ test.describe('People & Teams Module @people-teams', () => {
 });
 
 /**
- * Disabled Menu Items
- *
- * Verify that People & Teams has no disabled menu items in the
- * publicly visible navigation (excluding role-gated items).
+ * Module is disabled for OSAC — verify the header is grayed out.
+ * Individual nav item tests removed since the module cannot be expanded.
  */
-test.describe('People & Teams Disabled Menu Items @people-teams', () => {
-  test.beforeEach(async ({ page }) => {
-    setupErrorTracking(page);
-  });
-
-  test.afterEach(async ({ page }, testInfo) => {
-    logCapturedErrors(page, testInfo);
-  });
-
-  test('should have no disabled menu items', async ({ page }) => {
-    await page.goto('/#/team-tracker/home');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
-
-    // Count disabled navigation items within the People & Teams section only
-    const disabledCount = await countDisabledNavItems(page, 'People & Teams');
-
-    // People & Teams module should have no disabled menu items
-    expect(disabledCount).toBe(0);
-    expect(page.errors).toHaveLength(0);
-  });
-});
 
 /**
  * Active Components

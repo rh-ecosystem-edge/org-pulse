@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { DEFAULT_PAGE_WAIT_TIME } = require('./constants');
-const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible, countDisabledNavItems } = require('./helpers');
+const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible } = require('./helpers');
 
 /**
  * Integration tests for System Health module
@@ -41,28 +41,17 @@ test.describe('System Health Module @system-health', () => {
     expect(page.errors).toHaveLength(0);
   });
 
-  test('should navigate to System Health module when clicked', async ({ page }) => {
+  test('module header should be disabled', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
 
-    // First, expand the System Health module section if it's collapsed
     const moduleHeader = page.locator('aside nav button').filter({ hasText: 'System Health' }).first();
-    await moduleHeader.click();
-    await page.waitForTimeout(500);
+    const isDisabled = await moduleHeader.getAttribute('disabled');
+    expect(isDisabled).not.toBeNull();
 
-    // Now click on the "Quality analysis" view within the module
-    const viewLink = page.locator('aside nav button').filter({ hasText: 'Quality analysis' }).first();
-    await viewLink.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
-
-    // Verify URL changed to system-health module (default view is quality-analysis)
-    expect(page.url()).toMatch(/system-health\/quality-analysis/);
-
-    // Verify main content is visible
-    const mainContentVisible = await mainContentIsVisible(page);
-    expect(mainContentVisible).toBe(true);
+    const cursor = await moduleHeader.evaluate(el => window.getComputedStyle(el).cursor);
+    expect(cursor).toBe('not-allowed');
 
     expect(page.errors).toHaveLength(0);
   });
@@ -99,33 +88,9 @@ test.describe('System Health Module @system-health', () => {
 });
 
 /**
- * Disabled Menu Items
- *
- * Verify that System Health module has no disabled menu items.
- * All navigation items should be active and clickable.
+ * Module is disabled for OSAC — verify the header is grayed out.
+ * Individual nav item tests removed since the module cannot be expanded.
  */
-test.describe('System Health Disabled Menu Items @system-health', () => {
-  test.beforeEach(async ({ page }) => {
-    setupErrorTracking(page);
-  });
-
-  test.afterEach(async ({ page }, testInfo) => {
-    logCapturedErrors(page, testInfo);
-  });
-
-  test('should have no disabled menu items', async ({ page }) => {
-    await page.goto('/#/system-health/quality-analysis');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
-
-    // Count disabled navigation items within the System Health section only
-    const disabledCount = await countDisabledNavItems(page, 'System Health');
-
-    // System Health module should have no disabled menu items
-    expect(disabledCount).toBe(0);
-    expect(page.errors).toHaveLength(0);
-  });
-});
 
 /**
  * Active Components

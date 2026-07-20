@@ -4,6 +4,7 @@
   "description": "Upstream open-source contribution insights across GitHub organizations",
   "icon": "activity",
   "order": 10,
+  "disabled": true,
   "client": {
     "entry": "./client/index.js",
     "navItems": [

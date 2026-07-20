@@ -122,6 +122,18 @@ test.describe('AI Impact Disabled Menu Items @ai-impact', () => {
     await testDisabledMenuItem(page, 'Security Review');
   });
 
+  test('Test Plan Review menu item should be disabled', async ({ page }) => {
+    await testDisabledMenuItem(page, 'Test Plan Review');
+  });
+
+  test('Documentation menu item should be disabled', async ({ page }) => {
+    await testDisabledMenuItem(page, 'Documentation');
+  });
+
+  test('Build & Release menu item should be disabled', async ({ page }) => {
+    await testDisabledMenuItem(page, 'Build & Release');
+  });
+
 });
 
 /**
@@ -203,20 +215,8 @@ test.describe('AI Impact Views @ai-impact', () => {
     expect(page.errors).toHaveLength(0);
   });
 
-  test('should load Documentation view', async ({ page }) => {
-    await testView(page, 'documentation', 'Documentation');
-  });
-
   test('should load Jira AutoFix view', async ({ page }) => {
     await testView(page, 'autofix', 'AutoFix');
-  });
-
-  test('should load Test Plan Review view', async ({ page }) => {
-    await testView(page, 'test-plan-review', 'Test Plan Review');
-  });
-
-  test('should load Build & Release view', async ({ page }) => {
-    await testView(page, 'build-release', 'Build & Release');
   });
 
   test('should load State of the Union on landing page', async ({ page }) => {

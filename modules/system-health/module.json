@@ -4,6 +4,7 @@
   "description": "Operational health signals for repositories and related systems",
   "icon": "hospital",
   "order": 18,
+  "disabled": true,
   "defaultEnabled": true,
   "requires": [],
   "client": {

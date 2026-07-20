@@ -1,4 +1,7 @@
 <script setup>
+import { useDisabledPipelines } from '../composables/useDisabledPipelines.js'
+
+const { isDisabled } = useDisabledPipelines()
 const EP_GITHUB_REPO = 'https://github.com/osac-project/enhancement-proposals/pull'
 
 const props = defineProps({
@@ -163,8 +166,8 @@ function getFeaturePhaseSignal(phaseId) {
             <svg v-else-if="getPhaseSignal(phase.id).current" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <circle cx="12" cy="12" r="10" stroke-width="2" />
             </svg>
-            <!-- Lock for coming-soon -->
-            <svg v-else-if="phase.status === 'coming-soon'" class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- Lock for coming-soon / not-active -->
+            <svg v-else-if="phase.status === 'coming-soon' || isDisabled(phase.id)" class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                 d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -178,7 +181,7 @@ function getFeaturePhaseSignal(phaseId) {
             <div class="flex items-center gap-2">
               <span
                 class="text-sm font-medium dark:text-gray-200"
-                :class="{ 'text-gray-300 dark:text-gray-600': phase.status === 'coming-soon' && phase.id !== 'build-release' }"
+                :class="{ 'text-gray-300 dark:text-gray-600': phase.status === 'coming-soon' || isDisabled(phase.id) }"
               >
                 {{ phase.name }}
               </span>
@@ -276,7 +279,7 @@ function getFeaturePhaseSignal(phaseId) {
                   </svg>
                 </a>
               </template>
-              <template v-else-if="phase.status === 'coming-soon' && phase.id !== 'design-review' && phase.id !== 'build-release'">
+              <template v-else-if="phase.status === 'coming-soon' || isDisabled(phase.id)">
                 <span class="text-gray-300 dark:text-gray-600">No signals yet</span>
               </template>
               <template v-else>

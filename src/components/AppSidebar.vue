@@ -39,11 +39,14 @@
           <!-- Collapsible section header (built-in modules) -->
           <template v-if="section.collapsible && !collapsed">
             <button
-              @click="toggleSection(section.id)"
+              @click="!section.disabled && toggleSection(section.id)"
+              :disabled="section.disabled"
               class="group relative w-full flex items-center py-2.5 rounded-xl text-sm font-medium transition-all duration-200 gap-3 px-3"
-              :class="activeModule === section.id
-                ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-sm'
-                : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'"
+              :class="section.disabled
+                ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : activeModule === section.id
+                  ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-sm'
+                  : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100'"
               :aria-expanded="section.expanded"
               :aria-label="section.headerLabel"
             >
@@ -321,7 +324,8 @@ const navSections = computed(() => {
       id: manifest.slug,
       label: '',
       collapsible: true,
-      expanded: expandedSections.value[manifest.slug] || false,
+      expanded: !manifest.disabled && (expandedSections.value[manifest.slug] || false),
+      disabled: manifest.disabled || false,
       headerLabel: manifest.name,
       headerIcon: resolveIcon(manifest.icon),
       items: navItems

@@ -4,6 +4,7 @@
   "description": "Catalog of AI catalyst projects with strategy pillar filtering and detail views",
   "icon": "Trophy",
   "order": 15,
+  "disabled": true,
   "defaultEnabled": false,
   "requires": [],
   "client": {

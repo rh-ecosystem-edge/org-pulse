@@ -2,11 +2,22 @@
 import { ref, watch } from 'vue'
 import { Video, Presentation, StickyNote, Play, ExternalLink } from 'lucide-vue-next'
 import { getAIImpactEnablementCategories } from '@shared/client/enablement-links.js'
+import { useDisabledPipelines } from '../composables/useDisabledPipelines.js'
+
+const { isDisabled } = useDisabledPipelines()
 
 const iconMap = { Video, Presentation, StickyNote, Play }
 function resolveIcon(name) { return iconMap[name] || Video }
 
 const enablementCategories = getAIImpactEnablementCategories()
+
+const enablementPipelineMap = {
+  'rfe-builder': 'rfe-creator',
+  'strat-builder': 'design-review',
+  'ai-quality': 'test-plan-review',
+  'ai-first-documentation': 'documentation',
+  'component-onboarding': 'build-release',
+}
 
 const props = defineProps({
   show: { type: Boolean, default: false },
@@ -63,11 +74,14 @@ function handleClose() {
               Quality Scoring
             </button>
             <button
-              @click="activeTab = 'creator'"
+              @click="!isDisabled('rfe-creator') && (activeTab = 'creator')"
+              :disabled="isDisabled('rfe-creator')"
               class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors"
-              :class="activeTab === 'creator'
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'"
+              :class="isDisabled('rfe-creator')
+                ? 'border-transparent text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : activeTab === 'creator'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'"
             >
               RFE Creator
             </button>
@@ -81,11 +95,14 @@ function handleClose() {
               Design Review
             </button>
             <button
-              @click="activeTab = 'testplans'"
+              @click="!isDisabled('test-plan-review') && (activeTab = 'testplans')"
+              :disabled="isDisabled('test-plan-review')"
               class="px-4 py-2.5 text-sm font-medium border-b-2 -mb-px transition-colors"
-              :class="activeTab === 'testplans'
-                ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'"
+              :class="isDisabled('test-plan-review')
+                ? 'border-transparent text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                : activeTab === 'testplans'
+                  ? 'border-blue-500 text-blue-600 dark:text-blue-400'
+                  : 'border-transparent text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300'"
             >
               Test Plan Review
             </button>
@@ -407,9 +424,16 @@ function handleClose() {
 
               <div v-for="cat in enablementCategories" :key="cat.id" class="space-y-3">
                 <div class="flex items-center gap-2">
-                  <h4 class="text-sm font-semibold text-gray-900 dark:text-gray-100">{{ cat.title }}</h4>
+                  <h4
+                    class="text-sm font-semibold"
+                    :class="isDisabled(enablementPipelineMap[cat.id]) ? 'text-gray-300 dark:text-gray-600' : 'text-gray-900 dark:text-gray-100'"
+                  >{{ cat.title }}</h4>
+                  <span
+                    v-if="isDisabled(enablementPipelineMap[cat.id])"
+                    class="text-xs text-gray-300 dark:text-gray-600"
+                  >Not active</span>
                   <a
-                    v-if="cat.slackChannel"
+                    v-else-if="cat.slackChannel"
                     :href="cat.slackChannel.url"
                     target="_blank"
                     rel="noopener noreferrer"
@@ -419,18 +443,20 @@ function handleClose() {
                   </a>
                 </div>
                 <div class="flex flex-wrap gap-3">
-                  <a
+                  <component
+                    :is="isDisabled(enablementPipelineMap[cat.id]) ? 'span' : 'a'"
                     v-for="link in cat.links"
                     :key="link.url"
-                    :href="link.url"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    class="flex items-center gap-2 px-3 py-2 rounded-lg border border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-sm font-medium text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 hover:border-gray-300 dark:hover:border-gray-500 transition-all duration-200"
+                    v-bind="isDisabled(enablementPipelineMap[cat.id]) ? {} : { href: link.url, target: '_blank', rel: 'noopener noreferrer' }"
+                    class="flex items-center gap-2 px-3 py-2 rounded-lg border text-sm font-medium transition-all duration-200"
+                    :class="isDisabled(enablementPipelineMap[cat.id])
+                      ? 'border-gray-100 dark:border-gray-700/50 bg-gray-50 dark:bg-gray-800/30 text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                      : 'border-gray-200 dark:border-gray-600 bg-gray-50 dark:bg-gray-700/50 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-600 hover:border-gray-300 dark:hover:border-gray-500'"
                   >
-                    <component :is="resolveIcon(link.icon)" :size="16" :stroke-width="1.7" class="flex-shrink-0 text-gray-500 dark:text-gray-400" />
+                    <component :is="resolveIcon(link.icon)" :size="16" :stroke-width="1.7" class="flex-shrink-0" :class="isDisabled(enablementPipelineMap[cat.id]) ? 'text-gray-300 dark:text-gray-600' : 'text-gray-500 dark:text-gray-400'" />
                     <span>{{ link.label }}</span>
-                    <ExternalLink :size="12" class="flex-shrink-0 text-gray-400 dark:text-gray-500" />
-                  </a>
+                    <ExternalLink v-if="!isDisabled(enablementPipelineMap[cat.id])" :size="12" class="flex-shrink-0 text-gray-400 dark:text-gray-500" />
+                  </component>
                 </div>
               </div>
 
