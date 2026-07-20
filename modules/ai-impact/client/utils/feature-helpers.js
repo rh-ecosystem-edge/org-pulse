@@ -12,7 +12,7 @@ export function getRecommendationLabel(rec) {
     case 'approve': return 'Approve'
     case 'revise': return 'Needs Revision'
     case 'reject': return 'Reject'
-    default: return rec || 'N/A'
+    default: return rec || 'Not Reviewed'
   }
 }
 
@@ -21,6 +21,8 @@ export function getReviewStatusClass(status) {
     case 'approved': return 'bg-green-100 text-green-800 dark:bg-green-900/40 dark:text-green-200'
     case 'needs-review': return 'bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200'
     case 'awaiting-review': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200'
+    case 'no-design-review': return 'bg-gray-100 text-gray-500 dark:bg-gray-700 dark:text-gray-400'
+    case 'awaiting-ai-review': return 'bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300'
     default: return 'bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300'
   }
 }
@@ -30,6 +32,8 @@ export function getReviewStatusLabel(status) {
     case 'approved': return 'Approved'
     case 'needs-review': return 'Flagged'
     case 'awaiting-review': return 'Awaiting Sign-off'
+    case 'no-design-review': return 'No Design Review'
+    case 'awaiting-ai-review': return 'Awaiting Review'
     default: return 'Awaiting Sign-off'
   }
 }
@@ -39,6 +43,8 @@ export function getReviewStatusTooltip(status) {
     case 'approved': return 'A human engineer has reviewed and signed off on this feature. No further action needed.'
     case 'needs-review': return 'The AI pipeline flagged concerns. Open in Jira, add feedback in the Staff Engineer Input section of the description, then remove the strat-creator-needs-attention label to unblock re-refinement.'
     case 'awaiting-review': return 'This feature passed AI review but still needs a human to review and sign off. Open in Jira and add the strat-creator-human-sign-off label when ready.'
+    case 'no-design-review': return 'No design document has been linked to this feature yet. Create a design PR in the enhancement-proposals repo to trigger AI review.'
+    case 'awaiting-ai-review': return 'A design PR exists but the AI review bot has not scored it yet. This usually resolves within a few minutes.'
     default: return 'This feature has not yet been reviewed by a human. Open in Jira to review and sign off.'
   }
 }
@@ -50,6 +56,13 @@ export function getRecommendationTooltip(rec) {
     case 'reject': return 'AI reviewers found significant concerns. This feature needs rework before proceeding.'
     default: return ''
   }
+}
+
+export function getEffectiveReviewStatus(feature) {
+  if (!feature.recommendation || !feature.scores) {
+    return 'awaiting-ai-review'
+  }
+  return feature.humanReviewStatus || 'awaiting-review'
 }
 
 export function getScoreClass(score) {
