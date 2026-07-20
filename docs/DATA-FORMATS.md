@@ -1121,6 +1121,9 @@ AI review scores and metadata pushed by the strat-creator pipeline via the AI Im
 | `labels` | string[] | Label snapshot from the AI pipeline push |
 | `reviewedAt` | string | ISO 8601 timestamp of this review |
 | `runId` | string | Pipeline run identifier |
+| `verdict` | string\|null | One-sentence summary of the review outcome (optional) |
+| `feedback` | string\|null | Structured markdown feedback with strengths/suggestions (optional) |
+| `criterionNotes` | object\|null | Per-dimension justification text, keyed by dimension name (optional) |
 | `history` | array | Previous review snapshots (max 20, newest first) |
 
 **Optional — Traffic Signals (`trafficSignals`):**

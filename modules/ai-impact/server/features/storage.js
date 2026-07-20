@@ -69,7 +69,11 @@ function readFeatures(readFromStorage) {
         reviewedAt: aiReview.reviewedAt || (entry.aiReview && entry.aiReview.reviewedAt) || null,
         runId: aiReview.runId || undefined,
         approvedBy: aiReview.approvedBy || null,
-        approvedAt: aiReview.approvedAt || null
+        approvedAt: aiReview.approvedAt || null,
+        verdict: aiReview.verdict || null,
+        feedback: aiReview.feedback || null,
+        criterionNotes: aiReview.criterionNotes || null,
+        designPrUrl: aiReview.designPrUrl || null
       },
       history: aiReview.history || []
     };

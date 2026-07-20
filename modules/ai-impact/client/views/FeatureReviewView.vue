@@ -10,7 +10,6 @@ import AIImpactGuide from '../components/AIImpactGuide.vue'
 
 const moduleNav = inject('moduleNav')
 const { navigateTo: crossNavigate } = useModuleLink()
-
 const selectedFeature = ref(null)
 const searchQuery = ref('')
 const recommendationFilter = ref('all')
@@ -32,11 +31,8 @@ function handleRetry() {
 
 function handleSelectFeature(feature) {
   if (feature) {
-    // Navigate to the consolidated Feature Traffic Feature page
-    crossNavigate('releases', 'feature-detail', {
-      key: feature.key,
-      fromFeatureReview: '1'
-    })
+    selectedFeature.value = feature
+    moduleNav.navigateTo('design-review', { select: feature.key })
   }
 }
 
@@ -51,6 +47,13 @@ function handleNavigateToRFE(rfeKey) {
 
 function handleNavigateToTestPlan(sourceKey) {
   moduleNav.navigateTo('test-plan-review', { select: sourceKey })
+}
+
+function handleNavigateToFeatureDetail(featureKey) {
+  crossNavigate('releases', 'feature-detail', {
+    key: featureKey,
+    fromFeatureReview: '1'
+  })
 }
 
 // Handle incoming select param (cross-link from RFE Review)
@@ -111,6 +114,7 @@ watch(() => Object.keys(features.value).length, () => {
       @close="handleCloseModal"
       @navigateToRFE="handleNavigateToRFE"
       @navigateToTestPlan="handleNavigateToTestPlan"
+      @navigateToFeatureDetail="handleNavigateToFeatureDetail"
     />
 
     <AIImpactGuide />
