@@ -102,7 +102,8 @@ function toAiReviewPayload(validated) {
       runId: validated.runId,
       verdict: validated.verdict || undefined,
       feedback: validated.feedback || undefined,
-      criterionNotes: validated.criterionNotes || undefined
+      criterionNotes: validated.criterionNotes || undefined,
+      designPrUrl: validated.designPrUrl || undefined
     }
   };
 }

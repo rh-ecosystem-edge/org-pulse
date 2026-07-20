@@ -72,7 +72,8 @@ function readFeatures(readFromStorage) {
         approvedAt: aiReview.approvedAt || null,
         verdict: aiReview.verdict || null,
         feedback: aiReview.feedback || null,
-        criterionNotes: aiReview.criterionNotes || null
+        criterionNotes: aiReview.criterionNotes || null,
+        designPrUrl: aiReview.designPrUrl || null
       },
       history: aiReview.history || []
     };

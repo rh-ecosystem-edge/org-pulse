@@ -180,6 +180,13 @@ function validateFeature(body) {
     }
   }
 
+  // designPrUrl: optional valid URL string
+  if (body.designPrUrl !== undefined && body.designPrUrl !== null) {
+    if (typeof body.designPrUrl !== 'string') {
+      errors.push('designPrUrl must be a string');
+    }
+  }
+
   if (errors.length > 0) {
     return { valid: false, errors };
   }
@@ -219,7 +226,8 @@ function validateFeature(body) {
       reviewedAt: body.reviewedAt,
       verdict: typeof body.verdict === 'string' ? body.verdict.trim() : undefined,
       feedback: typeof body.feedback === 'string' ? body.feedback.trim() : undefined,
-      criterionNotes: body.criterionNotes || undefined
+      criterionNotes: body.criterionNotes || undefined,
+      designPrUrl: typeof body.designPrUrl === 'string' ? body.designPrUrl.trim() : undefined
     }
   };
 }
