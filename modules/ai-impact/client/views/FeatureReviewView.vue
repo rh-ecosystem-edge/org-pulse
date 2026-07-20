@@ -2,12 +2,14 @@
 import { ref, watch, inject } from 'vue'
 import { useFeatures } from '../composables/useFeatures.js'
 import { useAIImpact } from '../composables/useAIImpact.js'
+import { useModuleLink } from '@shared/client/composables/useModuleLink.js'
 import { PHASES } from '../constants.js'
 import FeatureReviewContent from '../components/FeatureReviewContent.vue'
 import FeatureDetailPanel from '../components/FeatureDetailPanel.vue'
 import AIImpactGuide from '../components/AIImpactGuide.vue'
 
 const moduleNav = inject('moduleNav')
+const { navigateTo: crossNavigate } = useModuleLink()
 const selectedFeature = ref(null)
 const searchQuery = ref('')
 const recommendationFilter = ref('all')
@@ -45,6 +47,13 @@ function handleNavigateToRFE(rfeKey) {
 
 function handleNavigateToTestPlan(sourceKey) {
   moduleNav.navigateTo('test-plan-review', { select: sourceKey })
+}
+
+function handleNavigateToFeatureDetail(featureKey) {
+  crossNavigate('releases', 'feature-detail', {
+    key: featureKey,
+    fromFeatureReview: '1'
+  })
 }
 
 // Handle incoming select param (cross-link from RFE Review)
@@ -105,6 +114,7 @@ watch(() => Object.keys(features.value).length, () => {
       @close="handleCloseModal"
       @navigateToRFE="handleNavigateToRFE"
       @navigateToTestPlan="handleNavigateToTestPlan"
+      @navigateToFeatureDetail="handleNavigateToFeatureDetail"
     />
 
     <AIImpactGuide />
