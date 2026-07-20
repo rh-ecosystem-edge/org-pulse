@@ -4,6 +4,7 @@
   "description": "Track customer interactions and product feedback from field teams",
   "icon": "users",
   "order": 3,
+  "disabled": true,
   "client": {
     "entry": "./client/index.js",
     "navItems": [

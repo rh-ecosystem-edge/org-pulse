@@ -4,6 +4,7 @@
   "description": "Product drops, artifacts, and release statistics from CI/CD dashboard",
   "icon": "Factory",
   "order": 20,
+  "disabled": true,
   "defaultEnabled": true,
   "requires": [],
   "client": {

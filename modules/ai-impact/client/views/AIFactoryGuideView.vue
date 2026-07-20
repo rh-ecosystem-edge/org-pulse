@@ -1,7 +1,16 @@
 <script setup>
 import { ref, computed, watch, nextTick, inject } from 'vue'
 import { PHASES } from '../constants.js'
-import { ArrowLeft, ChevronRight, Sparkles, User, Pencil, Eye, RefreshCw, AlertTriangle, Play, FileText, StickyNote, Code, MessageSquare, HelpCircle, BookOpen, ChevronDown, Search, Zap, ChevronsRight, Archive, Globe, Lightbulb, GitPullRequest, Timer, Terminal, Package } from 'lucide-vue-next'
+import { ArrowLeft, ChevronRight, Sparkles, User, Pencil, Eye, RefreshCw, AlertTriangle, Play, FileText, StickyNote, Code, MessageSquare, HelpCircle, BookOpen, ChevronDown, Search, Zap, ChevronsRight, Archive, Globe, Lightbulb, GitPullRequest, Timer, Terminal, Package, Lock } from 'lucide-vue-next'
+import { useDisabledPipelines } from '../composables/useDisabledPipelines.js'
+
+const { isDisabled } = useDisabledPipelines()
+
+function getEffectiveStatus(phase) {
+  if (phase.status === 'coming-soon') return 'coming-soon'
+  if (isDisabled(phase.id)) return 'not-active'
+  return phase.status
+}
 
 const moduleNav = inject('moduleNav')
 
@@ -402,7 +411,7 @@ function labelColorClasses(color) {
               <!-- Card -->
               <div
                 class="flex-1 rounded-xl p-5 mb-1 border transition-all duration-200 flex items-start gap-3"
-                :class="phase.status === 'active'
+                :class="getEffectiveStatus(phase) === 'active'
                   ? 'bg-white dark:bg-gray-800/60 border-gray-200 dark:border-gray-700 group-hover:border-blue-300 dark:group-hover:border-blue-600/60 group-hover:shadow-md dark:group-hover:shadow-blue-500/5'
                   : 'bg-gray-50 dark:bg-gray-800/30 border-gray-100 dark:border-gray-700/50 group-hover:border-gray-200 dark:group-hover:border-gray-600'"
               >
@@ -410,25 +419,25 @@ function labelColorClasses(color) {
                   <div class="flex items-center justify-between mb-1.5">
                     <h3
                       class="text-base font-semibold"
-                      :class="phase.status === 'active' ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'"
+                      :class="getEffectiveStatus(phase) === 'active' ? 'text-gray-900 dark:text-white' : 'text-gray-400 dark:text-gray-500'"
                     >{{ phase.name }}</h3>
                     <span
                       class="px-2 py-0.5 text-xs rounded-full font-medium"
-                      :class="phase.status === 'active'
+                      :class="getEffectiveStatus(phase) === 'active'
                         ? 'bg-green-500/10 dark:bg-green-500/20 text-green-600 dark:text-green-400'
                         : 'bg-gray-100 dark:bg-gray-500/20 text-gray-400 dark:text-gray-500'"
-                    >{{ phase.status === 'active' ? 'Active' : 'Coming Soon' }}</span>
+                    >{{ getEffectiveStatus(phase) === 'active' ? 'Active' : getEffectiveStatus(phase) === 'not-active' ? 'Not Active' : 'Coming Soon' }}</span>
                   </div>
                   <p
                     v-if="phaseInfo[phase.id]"
                     class="text-sm"
-                    :class="phase.status === 'active' ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'"
+                    :class="getEffectiveStatus(phase) === 'active' ? 'text-gray-500 dark:text-gray-400' : 'text-gray-400 dark:text-gray-500'"
                   >{{ phaseInfo[phase.id].desc }}</p>
                 </div>
                 <ChevronRight
                   :size="18"
                   class="flex-shrink-0 mt-0.5 transition-transform duration-200 group-hover:translate-x-0.5"
-                  :class="phase.status === 'active' ? 'text-gray-400 dark:text-gray-500' : 'text-gray-300 dark:text-gray-600'"
+                  :class="getEffectiveStatus(phase) === 'active' ? 'text-gray-400 dark:text-gray-500' : 'text-gray-300 dark:text-gray-600'"
                 />
               </div>
             </button>
@@ -441,6 +450,26 @@ function labelColorClasses(color) {
               style="margin-left: 19px;"
             ></div>
           </template>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- ─── Not Active Placeholder ─── -->
+    <div v-else-if="selectedPhase && isDisabled(selectedPhase.id)" class="flex-1 overflow-auto p-6 lg:p-8">
+      <div class="max-w-3xl mx-auto">
+        <button
+          @click="closeDetail"
+          class="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-300 mb-4 cursor-pointer"
+        >
+          <ArrowLeft :size="16" />
+          Back to Pipeline Overview
+        </button>
+        <div class="text-center py-16">
+          <Lock :size="48" class="mx-auto text-gray-300 dark:text-gray-600 mb-4" />
+          <h2 class="text-xl font-bold text-gray-400 dark:text-gray-500 mb-2">{{ selectedPhase.name }}</h2>
+          <p class="text-sm text-gray-400 dark:text-gray-500">This pipeline is not active for this deployment.</p>
+          <p class="text-xs text-gray-400 dark:text-gray-500 mt-1">An admin can enable it in Settings.</p>
         </div>
       </div>
     </div>
@@ -1887,9 +1916,13 @@ function labelColorClasses(color) {
           <div class="w-16 h-16 rounded-full bg-gray-100 dark:bg-gray-700 flex items-center justify-center mx-auto mb-4">
             <Sparkles :size="28" class="text-gray-400 dark:text-gray-500" />
           </div>
-          <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">Details coming soon</h3>
+          <h3 class="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            {{ isDisabled(selectedPhase.id) ? 'Not active for this project' : 'Details coming soon' }}
+          </h3>
           <p class="text-sm text-gray-500 dark:text-gray-400 max-w-md mx-auto">
-            The detailed guide for this stage is being written. Check back soon for step-by-step instructions, scoring criteria, and links to resources.
+            {{ isDisabled(selectedPhase.id)
+              ? 'This pipeline stage is not currently used in this project.'
+              : 'The detailed guide for this stage is being written. Check back soon for step-by-step instructions, scoring criteria, and links to resources.' }}
           </p>
         </div>
       </div>
