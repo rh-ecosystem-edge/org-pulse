@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { DEFAULT_PAGE_WAIT_TIME } = require('./constants');
-const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible, countDisabledNavItems } = require('./helpers');
+const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible } = require('./helpers');
 
 /**
  * Integration tests for Upstream Pulse module
@@ -45,28 +45,17 @@ test.describe('Upstream Pulse Module @upstream-pulse', () => {
     expect(page.errors).toHaveLength(0);
   });
 
-  test('should navigate to Upstream Pulse module when clicked', async ({ page }) => {
+  test('module header should be disabled', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
 
-    // First, expand the Upstream Pulse module section if it's collapsed
     const moduleHeader = page.locator('aside nav button').filter({ hasText: 'Upstream Pulse' }).first();
-    await moduleHeader.click();
-    await page.waitForTimeout(500);
+    const isDisabled = await moduleHeader.getAttribute('disabled');
+    expect(isDisabled).not.toBeNull();
 
-    // Now click on the "Dashboard" view within the module (default view)
-    const viewLink = page.locator('aside nav button').filter({ hasText: 'Dashboard' }).first();
-    await viewLink.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
-
-    // Verify URL changed to upstream-pulse module (default view is dashboard)
-    expect(page.url()).toMatch(/upstream-pulse\/dashboard/);
-
-    // Verify main content is visible
-    const mainContentVisible = await mainContentIsVisible(page);
-    expect(mainContentVisible).toBe(true);
+    const cursor = await moduleHeader.evaluate(el => window.getComputedStyle(el).cursor);
+    expect(cursor).toBe('not-allowed');
 
     expect(page.errors).toHaveLength(0);
   });
@@ -107,33 +96,9 @@ test.describe('Upstream Pulse Module @upstream-pulse', () => {
 });
 
 /**
- * Disabled Menu Items
- *
- * Verify that Upstream Pulse module has no disabled menu items.
- * All navigation items should be active and clickable.
+ * Module is disabled for OSAC — verify the header is grayed out.
+ * Individual nav item tests removed since the module cannot be expanded.
  */
-test.describe('Upstream Pulse Disabled Menu Items @upstream-pulse', () => {
-  test.beforeEach(async ({ page }) => {
-    setupErrorTracking(page);
-  });
-
-  test.afterEach(async ({ page }, testInfo) => {
-    logCapturedErrors(page, testInfo);
-  });
-
-  test('should have no disabled menu items', async ({ page }) => {
-    await page.goto('/#/upstream-pulse/dashboard');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
-
-    // Count disabled navigation items within the Upstream Pulse section only
-    const disabledCount = await countDisabledNavItems(page, 'Upstream Pulse');
-
-    // Upstream Pulse module should have no disabled menu items
-    expect(disabledCount).toBe(0);
-    expect(page.errors).toHaveLength(0);
-  });
-});
 
 /**
  * Active Components

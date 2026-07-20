@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { DEFAULT_PAGE_WAIT_TIME } = require('./constants');
-const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible } = require('./helpers');
+const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete } = require('./helpers');
 
 /**
  * Integration tests for AI Catalyst Showcase module
@@ -40,27 +40,19 @@ test.describe('Catalyst Showcase Module @catalyst-showcase', () => {
     expect(appErrors).toHaveLength(0);
   });
 
-  test('should navigate to catalog view when clicked', async ({ page }) => {
+  test('module header should be disabled', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
 
     const moduleHeader = page.locator('aside nav button').filter({ hasText: 'AI Catalyst Showcase' }).first();
-    await moduleHeader.click();
-    await page.waitForTimeout(500);
+    const isDisabled = await moduleHeader.getAttribute('disabled');
+    expect(isDisabled).not.toBeNull();
 
-    const viewLink = page.locator('aside nav button').filter({ hasText: 'Catalog' }).first();
-    await viewLink.click();
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
+    const cursor = await moduleHeader.evaluate(el => window.getComputedStyle(el).cursor);
+    expect(cursor).toBe('not-allowed');
 
-    expect(page.url()).toMatch(/catalyst-showcase\/catalog/);
-
-    const mainContentVisible = await mainContentIsVisible(page);
-    expect(mainContentVisible).toBe(true);
-
-    const appErrors = page.errors.filter(e => !/status of (429|404)/.test(e.message));
-    expect(appErrors).toHaveLength(0);
+    expect(page.errors).toHaveLength(0);
   });
 });
 
