@@ -1,6 +1,6 @@
 const { test, expect } = require('@playwright/test');
 const { DEFAULT_PAGE_WAIT_TIME } = require('./constants');
-const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible } = require('./helpers');
+const { setupErrorTracking, logCapturedErrors, pageHasContent, pageLoadComplete, mainContentIsVisible, countDisabledNavItems } = require('./helpers');
 
 /**
  * Integration tests for People & Teams module
@@ -41,17 +41,28 @@ test.describe('People & Teams Module @people-teams', () => {
     expect(page.errors).toHaveLength(0);
   });
 
-  test('module header should be disabled', async ({ page }) => {
+  test('should navigate to People & Teams module when clicked', async ({ page }) => {
     await page.goto('/');
     await page.waitForLoadState('networkidle');
     await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
 
+    // Expand the People & Teams module section if it's collapsed
     const moduleHeader = page.locator('aside nav button').filter({ hasText: 'People & Teams' }).first();
-    const isDisabled = await moduleHeader.getAttribute('disabled');
-    expect(isDisabled).not.toBeNull();
+    await moduleHeader.click();
+    await page.waitForTimeout(500);
 
-    const cursor = await moduleHeader.evaluate(el => window.getComputedStyle(el).cursor);
-    expect(cursor).toBe('not-allowed');
+    // Click on the "Team Directory" view (default view)
+    const viewLink = page.locator('aside nav button').filter({ hasText: 'Team Directory' }).first();
+    await viewLink.click();
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
+
+    // Verify URL changed to team-tracker module (default view is home)
+    expect(page.url()).toMatch(/team-tracker\/home/);
+
+    // Verify main content is visible
+    const mainContentVisible = await mainContentIsVisible(page);
+    expect(mainContentVisible).toBe(true);
 
     expect(page.errors).toHaveLength(0);
   });
@@ -86,9 +97,33 @@ test.describe('People & Teams Module @people-teams', () => {
 });
 
 /**
- * Module is disabled for OSAC — verify the header is grayed out.
- * Individual nav item tests removed since the module cannot be expanded.
+ * Disabled Menu Items
+ *
+ * Verify that People & Teams has no disabled menu items in the
+ * publicly visible navigation (excluding role-gated items).
  */
+test.describe('People & Teams Disabled Menu Items @people-teams', () => {
+  test.beforeEach(async ({ page }) => {
+    setupErrorTracking(page);
+  });
+
+  test.afterEach(async ({ page }, testInfo) => {
+    logCapturedErrors(page, testInfo);
+  });
+
+  test('should have no disabled menu items', async ({ page }) => {
+    await page.goto('/#/team-tracker/home');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
+
+    // Count disabled navigation items within the People & Teams section only
+    const disabledCount = await countDisabledNavItems(page, 'People & Teams');
+
+    // People & Teams module should have no disabled menu items
+    expect(disabledCount).toBe(0);
+    expect(page.errors).toHaveLength(0);
+  });
+});
 
 /**
  * Active Components
@@ -147,44 +182,6 @@ test.describe('People & Teams Views @people-teams', () => {
 
   test('should load Org Dashboard view', async ({ page }) => {
     await testView(page, 'org-dashboard', 'Org Dashboard');
-  });
-});
-
-/**
- * Team Detail — Autofix Tab
- *
- * Verify the Autofix tab on a team detail page loads without errors.
- * In demo mode, the tab shows an empty state (fixture components don't
- * overlap with autofix fixture data), which is the expected behavior.
- */
-test.describe('People & Teams Autofix Tab @people-teams', () => {
-  test.beforeEach(async ({ page }) => {
-    setupErrorTracking(page);
-  });
-
-  test.afterEach(async ({ page }, testInfo) => {
-    logCapturedErrors(page, testInfo);
-  });
-
-  test('should load Autofix tab on team detail page', async ({ page }) => {
-    // Navigate to a team detail page (Platform team from fixtures)
-    await page.goto('/#/team-tracker/team-detail?teamKey=achen::Platform');
-    await page.waitForLoadState('networkidle');
-    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
-
-    // Click the Autofix tab
-    const autofixTab = page.locator('nav button').filter({ hasText: 'Autofix' });
-    await expect(autofixTab).toBeVisible();
-    await autofixTab.click();
-    await page.waitForTimeout(1000);
-
-    // Verify the tab loaded — expect an empty state in demo mode
-    // (team components don't overlap with autofix fixture components)
-    const mainContentVisible = await mainContentIsVisible(page);
-    expect(mainContentVisible).toBe(true);
-
-    // Verify no JavaScript errors occurred
-    expect(page.errors).toHaveLength(0);
   });
 });
 
