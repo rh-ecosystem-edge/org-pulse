@@ -1,0 +1,861 @@
+{
+  "fetchedAt": "2026-07-21T10:47:33Z",
+  "version": "0.3",
+  "demoMode": false,
+  "features": {
+    "OSAC-1": {
+      "key": "OSAC-1",
+      "summary": "DPU network class",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Connectivity&Fabric"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-17": {
+      "key": "OSAC-17",
+      "summary": "Add CUDN with VRF lite network class",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Connectivity&Fabric",
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-39": {
+      "key": "OSAC-39",
+      "summary": "VM Resize and Modification",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-50": {
+      "key": "OSAC-50",
+      "summary": "Control Plane Backup and Restore",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-51": {
+      "key": "OSAC-51",
+      "summary": "Secret Management with SSH Key Support",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-55": {
+      "key": "OSAC-55",
+      "summary": "VM Snapshots",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Carlo Lobrano",
+        "emailAddress": "clobrano@redhat.com"
+      },
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-63": {
+      "key": "OSAC-63",
+      "summary": "Activity and Audit Log API",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-75": {
+      "key": "OSAC-75",
+      "summary": "Notifications API",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-923": {
+      "key": "OSAC-923",
+      "summary": "e2e tests to publish API latencies for tracking",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Infrastructure"
+      ],
+      "violations": [
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-998": {
+      "key": "OSAC-998",
+      "summary": "Quota Management                                                                                                  ",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Metering, Billing and Quota"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1025": {
+      "key": "OSAC-1025",
+      "summary": "Define VPC                                                                                                        ",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Connectivity&Fabric"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1028": {
+      "key": "OSAC-1028",
+      "summary": "Region and Availability Zone Architecture Alignment",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "region-az-architecture-OSAC-1028"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1202": {
+      "key": "OSAC-1202",
+      "summary": "Serial Console Access for BMaaS",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "BMaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1414": {
+      "key": "OSAC-1414",
+      "summary": "GitOps support for admin resource management",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Riccardo Piccoli",
+        "emailAddress": "rpiccoli@redhat.com"
+      },
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1511": {
+      "key": "OSAC-1511",
+      "summary": "K8s Manager \u2014 CUDN LocalNet Fabric Bridge (Currently Frozen in favor of OVN EVPN)",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Dan Manor",
+        "emailAddress": "dmanor@redhat.com"
+      },
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "cudn-localnet"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1562": {
+      "key": "OSAC-1562",
+      "summary": "BMaaS Networking - Ansible Implementation",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "BMaaS",
+        "Connectivity&Fabric"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1565": {
+      "key": "OSAC-1565",
+      "summary": "BareMetalInstance Pool API",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "BMaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1589": {
+      "key": "OSAC-1589",
+      "summary": "Add KubeVirt VM-based worker node support for CaaS clusters",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1604": {
+      "key": "OSAC-1604",
+      "summary": "Cluster status report",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1610": {
+      "key": "OSAC-1610",
+      "summary": "Support Netbox Inventory",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1611": {
+      "key": "OSAC-1611",
+      "summary": "CaaS Networking - Ansible Implementation (reuses BMaaS AAP roles)",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1808": {
+      "key": "OSAC-1808",
+      "summary": "Expose pre-installed application details in the CaaS API",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-2134": {
+      "key": "OSAC-2134",
+      "summary": "Bare Metal Boot-over-Network (iSCSI/NFS)",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "BMaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-2288": {
+      "key": "OSAC-2288",
+      "summary": "Add osac scale in/out CLI for CaaS cluster node sets",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2476": {
+      "key": "OSAC-2476",
+      "summary": "Self-subject access review API for permission checks",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-2539": {
+      "key": "OSAC-2539",
+      "summary": "Catalog item override mechanism for tenant admins",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "missing-components",
+          "name": "Missing Components",
+          "category": "classification",
+          "message": "Feature has no components set",
+          "remediation": "Add at least one component"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-2800": {
+      "key": "OSAC-2800",
+      "summary": "Return resource upon deletion",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-2850": {
+      "key": "OSAC-2850",
+      "summary": "[spike] Investigate Slurm cluster setup using BMaaS API",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.3"
+      ],
+      "components": [
+        "BMaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    }
+  }
+}

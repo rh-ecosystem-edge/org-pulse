@@ -21,9 +21,9 @@ describe('getDefaults', function () {
     expect(defaults).toHaveProperty('issueTypes')
   })
 
-  it('projects defaults to RHAISTRAT and RHOAIENG', function () {
+  it('projects defaults to OSAC', function () {
     var defaults = getDefaults()
-    expect(defaults.projects).toEqual(['RHAISTRAT', 'RHOAIENG'])
+    expect(defaults.projects).toEqual(['OSAC'])
   })
 
   it('issueTypes defaults to Feature and Initiative', function () {
@@ -112,7 +112,7 @@ describe('loadConfig', function () {
       projects: 'not-an-array'
     }
     var config = loadConfig(storage)
-    expect(config.projects).toEqual(['RHAISTRAT', 'RHOAIENG'])
+    expect(config.projects).toEqual(['OSAC'])
   })
 
   it('falls back to default issueTypes if stored issueTypes is not an array', function () {
@@ -162,7 +162,7 @@ describe('saveConfig', function () {
     var storage = createMockStorage()
     saveConfig(storage, { rules: {} })
     var stored = storage._store['releases/hygiene-config.json']
-    expect(stored.projects).toEqual(['RHAISTRAT', 'RHOAIENG'])
+    expect(stored.projects).toEqual(['OSAC'])
     expect(stored.issueTypes).toEqual(['Feature', 'Initiative'])
   })
 

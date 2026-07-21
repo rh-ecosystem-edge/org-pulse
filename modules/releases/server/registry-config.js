@@ -9,7 +9,7 @@
 
 const STORAGE_KEY = 'releases/registry-config.json'
 
-const DEFAULT_JIRA_PROJECTS = ['RHAISTRAT', 'RHOAIENG']
+const DEFAULT_JIRA_PROJECTS = ['OSAC']
 
 function getDefaults() {
   return {

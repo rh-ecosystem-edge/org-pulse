@@ -22,8 +22,8 @@ const FETCH_TIMEOUT_MS = 5 * 60 * 1000 // 5 minutes — abort if Jira fetch hang
 const HEATMAP_MIN_ACTIVITY = 3 // minimum total created+resolved to appear in heatmap
 const HEATMAP_MAX_COMPONENTS = 25 // cap for readability
 
-const FEATURE_PROJECT = 'RHAISTRAT'
-const RFE_PROJECT = 'RHAIRFE'
+const FEATURE_PROJECT = 'OSAC'
+const RFE_PROJECT = 'OSAC'
 
 // Fields to fetch from Jira (Jira REST API uses 'resolutiondate', not 'resolved')
 const FEATURE_FIELDS = 'summary,status,components,created,resolutiondate'

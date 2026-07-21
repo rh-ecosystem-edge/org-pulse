@@ -1,5 +1,5 @@
 const DEFAULT_CONFIG = {
-  projectKeys: ['AIPCC', 'INFERENG', 'RHAIENG', 'RHOAIENG'],
+  projectKeys: ['OSAC'],
   storyPointsField: 'customfield_10028',
   featureWeightField: '',
   baselineDays: 180,
@@ -7,12 +7,12 @@ const DEFAULT_CONFIG = {
   riskIssuesPerDayGreen: 1,
   riskIssuesPerDayYellow: 10,
   productPagesReleasesUrl: '',
-  productPagesProductShortnames: ['rhoai', 'rhelai', 'RHAII'],
+  productPagesProductShortnames: [],
   productPagesBaseUrl: 'https://productpages.redhat.com',
   productPagesTokenUrl: 'https://auth.redhat.com/auth/realms/EmployeeIDP/protocol/openid-connect/token',
   jiraAllProjects: false,
   targetVersionJqlFragment: '',
-  commitmentTrackingJql: 'cf[10855] is not EMPTY'
+  commitmentTrackingJql: 'fixVersion is not EMPTY'
 };
 
 const PROJECT_KEY_PATTERN = /^[A-Z][A-Z0-9_]+$/;

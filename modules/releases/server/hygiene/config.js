@@ -9,7 +9,7 @@ const { getRuleDefaults } = require('./hygiene-rules')
 
 const STORAGE_KEY = 'releases/hygiene-config.json'
 
-const DEFAULT_PROJECTS = ['RHAISTRAT', 'RHOAIENG']
+const DEFAULT_PROJECTS = ['OSAC']
 const DEFAULT_ISSUE_TYPES = ['Feature', 'Initiative']
 
 /**

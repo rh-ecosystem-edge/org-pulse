@@ -1,30 +1,39 @@
 {
   "pillars": [
     {
-      "name": "Inference",
+      "name": "Connectivity & Fabric",
       "components": [
-        { "name": "Model Serving", "pmLead": "PM Lead 1", "engLead": "Eng Lead 1" },
-        { "name": "vLLM", "pmLead": "PM Lead 2", "engLead": "Eng Lead 2" }
+        { "name": "Connectivity&Fabric", "pmLead": "", "engLead": "" }
       ]
     },
     {
-      "name": "Data",
+      "name": "VMaaS",
       "components": [
-        { "name": "Training", "pmLead": "PM Lead 3", "engLead": "Eng Lead 3" },
-        { "name": "Pipelines", "pmLead": "PM Lead 4", "engLead": "Eng Lead 4" }
+        { "name": "VMaaS", "pmLead": "", "engLead": "" }
       ]
     },
     {
-      "name": "Agents",
+      "name": "Infrastructure",
       "components": [
-        { "name": "Agent Studio", "pmLead": "PM Lead 5", "engLead": "Eng Lead 5" }
+        { "name": "Infrastructure", "pmLead": "", "engLead": "" },
+        { "name": "Core", "pmLead": "", "engLead": "" },
+        { "name": "Storage", "pmLead": "", "engLead": "" }
+      ]
+    },
+    {
+      "name": "Services",
+      "components": [
+        { "name": "BMaaS", "pmLead": "", "engLead": "" },
+        { "name": "CaaS", "pmLead": "", "engLead": "" },
+        { "name": "Observability, Metering and Billing", "pmLead": "", "engLead": "" }
       ]
     },
     {
       "name": "Platform",
       "components": [
-        { "name": "Core Platform", "pmLead": "PM Lead 6", "engLead": "Eng Lead 6" },
-        { "name": "Notebooks", "pmLead": "PM Lead 7", "engLead": "Eng Lead 7" }
+        { "name": "Enclave", "pmLead": "", "engLead": "" },
+        { "name": "UI", "pmLead": "", "engLead": "" },
+        { "name": "agentic-sdlc", "pmLead": "", "engLead": "" }
       ]
     }
   ]

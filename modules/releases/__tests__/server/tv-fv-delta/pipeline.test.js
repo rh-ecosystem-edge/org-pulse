@@ -448,8 +448,8 @@ describe('buildExport', () => {
 // ---------------------------------------------------------------------------
 
 describe('DEFAULT_RELEASES', () => {
-  it('contains EA1, EA2, and GA in that order', () => {
-    expect(DEFAULT_RELEASES).toEqual(['rhoai-3.5.EA1', 'rhoai-3.5.EA2', 'rhoai-3.5']);
+  it('contains OSAC versions', () => {
+    expect(DEFAULT_RELEASES).toEqual(['0.2', '0.3']);
   });
 });
 

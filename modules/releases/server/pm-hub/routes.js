@@ -11,166 +11,45 @@ const { blockDuringImpersonation } = require('../../../../shared/server/auth')
 const { JIRA_HOST } = require('../../../../shared/server/jira')
 
 const JIRA_SEARCH = JIRA_HOST + '/issues/?jql='
-const PM_HUB_PROJECTS = ['RHAIENG', 'RHOAIENG', 'INFERENG', 'AIPCC', 'RHAISTRAT', 'RHAIRFE']
+const PM_HUB_PROJECTS = ['OSAC']
 const PILLAR_CONFIG_FILE = 'releases/pm-hub/pillar-config.json'
 
 var DEFAULT_PILLAR_CONFIG = {
   pillars: [
     {
-      name: 'Inference',
+      name: 'Connectivity & Fabric',
       components: [
-        { name: 'llm-d', pmLead: 'Naina Singh', engLead: 'Anish Asthana' },
-        { name: 'vllm', pmLead: 'Yuchen Fama', engLead: 'Ashraf Bhuiyan' },
-        { name: 'Inference Midstream', pmLead: 'Erwan Gallen', engLead: 'Selbi Nuryyeva' },
-        { name: 'llm-compressor', pmLead: 'Rob Greenberg', engLead: 'Dipika Sikka' },
-        { name: 'Optimized Models', pmLead: 'Rob Greenberg', engLead: 'Alexandre Marques' },
-        { name: 'Model Validation', pmLead: 'Rob Greenberg', engLead: 'Aviran Badli' },
-        { name: 'Tool calling', pmLead: 'Rob Greenberg, Yuchen Fama', engLead: 'Cat Weeks, Aviran Badli, Ben Browning' },
-        { name: 'AI security -model validation', pmLead: 'Rob Greenberg, William Caban, Adam Bellusci', engLead: 'Stuart Battersby, Dominik Dahlem, Aviran Badli' },
-        { name: 'Model Serving Runtimes', pmLead: 'Adam Bellusci', engLead: 'Steven Grubb' },
-        { name: 'Serving Orchestration', pmLead: 'Adam Bellusci', engLead: 'Yuan Tang' },
-        { name: 'PSAP', pmLead: 'Yuchen Fama', engLead: 'Ashish Kamra' }
+        { name: 'Connectivity&Fabric', pmLead: '', engLead: '' }
       ]
     },
     {
-      name: 'Data',
+      name: 'VMaaS',
       components: [
-        { name: 'EvalHub / Model Eval', pmLead: 'William Caban', engLead: 'Rui Vieira, Marius Danciu' },
-        { name: 'AutoRAG / RAG', pmLead: 'Suhas Kashyap', engLead: 'Lukasz Cmielowski' },
-        { name: 'AutoML', pmLead: 'Aditi Saluja', engLead: 'Lukasz Cmielowski' },
-        { name: 'Development platform', pmLead: 'Jehlum Pandit', engLead: 'Doug Hellmann' },
-        { name: 'Data Processing', pmLead: 'Jehlum Pandit', engLead: 'Francisco Arceo, Chris Bynum' },
-        { name: 'SDG', pmLead: 'Aditi Saluja', engLead: 'Abhishek Bhanwaldar' },
-        { name: 'Training Hub', pmLead: 'Aditi Saluja', engLead: 'Mustafa Eyceoz' },
-        { name: 'Fine Tuning / Kubeflow-Dev', pmLead: 'Aditi Saluja', engLead: 'Brian Gallagher' },
-        { name: 'Kubeflow Training', pmLead: 'Christoph Görn', engLead: 'Umberto Manganiello' },
-        { name: 'Ray Training', pmLead: 'Christoph Görn', engLead: 'Laura Fitzgerald' },
-        { name: 'Inference Time Techniques', pmLead: 'Luke Inglis', engLead: 'Yi Zheng' }
+        { name: 'VMaaS', pmLead: '', engLead: '' }
       ]
     },
     {
-      name: 'Agents',
+      name: 'Infrastructure',
       components: [
-        { name: 'GenAI Studio', pmLead: 'Peter Double', engLead: 'Eder Ignatowicz' },
-        { name: 'AgentOps', pmLead: 'Adel Zaalouk', engLead: 'Roland Huß, Dimitri Saridakis' },
-        { name: 'AgentDev', pmLead: 'Adel Zaalouk', engLead: 'Bill Murdock, Justin Sun' },
-        { name: 'OGX (formerly Llama Stack) core', pmLead: 'Adel Zaalouk', engLead: 'Sebastien Han, Francisco Arceo, Eric Duen' },
-        { name: 'Agentic and AI Tooling Experience', pmLead: 'Jehlum Pandit', engLead: 'Ann Marie Fred, Nick Ommen' },
-        { name: 'PSAP agentic', pmLead: '', engLead: 'Alex Calhoun / Tanya Osokin' },
-        { name: 'Model Context Protocol', pmLead: 'Peter Double', engLead: '' }
+        { name: 'Infrastructure', pmLead: '', engLead: '' },
+        { name: 'Core', pmLead: '', engLead: '' },
+        { name: 'Storage', pmLead: '', engLead: '' }
+      ]
+    },
+    {
+      name: 'Services',
+      components: [
+        { name: 'BMaaS', pmLead: '', engLead: '' },
+        { name: 'CaaS', pmLead: '', engLead: '' },
+        { name: 'Observability, Metering and Billing', pmLead: '', engLead: '' }
       ]
     },
     {
       name: 'Platform',
       components: [
-        { name: 'MaaS', pmLead: 'Jonathan Zarecki', engLead: 'Yuan Tang, Lindani Phiri' },
-        { name: 'AI Gateway', pmLead: 'Jonathan Zarecki', engLead: 'Shane Utt' },
-        { name: 'GPUaaS', pmLead: 'Christoph Goern', engLead: 'Luca Burgazzoli' },
-        { name: 'AI Hub', pmLead: 'Adam Bellusci', engLead: 'Chris Hambridge' },
-        { name: 'Observability', pmLead: 'Suhas Kashyap', engLead: 'Arik Hadas' },
-        { name: 'AI Safety', pmLead: 'William Caban', engLead: 'Stuart Battersby/Rob Geada/Rui Vieira' },
-        { name: 'AI Navigator', pmLead: 'Suhas Kashyap', engLead: 'Amit Oren' },
-        { name: 'Feature Store', pmLead: 'Jonathan Zarecki, Kezia Cook', engLead: 'Umberto Manganiello' },
-        { name: 'Notebook Server', pmLead: 'Kezia Cook', engLead: 'Andy Stoneberg' },
-        { name: 'Notebook images and extensions', pmLead: 'Kezia Cook', engLead: 'Nick Ommen' },
-        { name: 'AI Pipelines', pmLead: 'Myriam Fentanes Gutierrez', engLead: 'Edson Tirelli' },
-        { name: 'AI Core Platform', pmLead: 'Myriam Fentanes Gutierrez', engLead: 'Lindani Phiri' },
-        { name: 'MLflow', pmLead: 'Myriam Fentanes Gutierrez', engLead: 'Lindani Phiri' },
-        { name: 'AI Core Dashboard', pmLead: 'Jenny Yi', engLead: 'Eder Ignatowicz' }
-      ]
-    },
-    {
-      name: 'Undefined',
-      components: [
-        { name: 'AAET DevOps', pmLead: '', engLead: '' },
-        { name: 'AI Core Platform Security', pmLead: '', engLead: '' },
-        { name: 'AI Eng Agilist', pmLead: '', engLead: '' },
-        { name: 'AI Evaluations', pmLead: '', engLead: '' },
-        { name: 'AI Field Enablement', pmLead: '', engLead: '' },
-        { name: 'AI First', pmLead: '', engLead: '' },
-        { name: 'AI Platform DevOps', pmLead: '', engLead: '' },
-        { name: 'AI Research + Community', pmLead: '', engLead: '' },
-        { name: 'AI Testing + Workflow Validation', pmLead: '', engLead: '' },
-        { name: 'AIPCC Ecosystems', pmLead: '', engLead: '' },
-        { name: 'AIPCC Productization', pmLead: '', engLead: '' },
-        { name: 'Accelerator Enablement', pmLead: '', engLead: '' },
-        { name: 'Accelerator Platform', pmLead: '', engLead: '' },
-        { name: 'Agentic', pmLead: '', engLead: '' },
-        { name: 'Agile Roadmap', pmLead: '', engLead: '' },
-        { name: 'AutoRAG', pmLead: '', engLead: '' },
-        { name: 'BSA', pmLead: '', engLead: '' },
-        { name: 'Build and Release', pmLead: '', engLead: '' },
-        { name: 'CI/CD', pmLead: '', engLead: '' },
-        { name: 'Compressed-Tensors', pmLead: '', engLead: '' },
-        { name: 'Customer Exploration & Test', pmLead: '', engLead: '' },
-        { name: 'DevOps', pmLead: '', engLead: '' },
-        { name: 'DevTestOps', pmLead: '', engLead: '' },
-        { name: 'Distributed Workloads', pmLead: '', engLead: '' },
-        { name: 'Documentation', pmLead: '', engLead: '' },
-        { name: 'Experiment Tracking', pmLead: '', engLead: '' },
-        { name: 'Explainability', pmLead: '', engLead: '' },
-        { name: 'Fine Tuning', pmLead: '', engLead: '' },
-        { name: 'Gen AI Studio', pmLead: '', engLead: '' },
-        { name: 'IBM P', pmLead: '', engLead: '' },
-        { name: 'IBM Z', pmLead: '', engLead: '' },
-        { name: 'INFERENG Midstream', pmLead: '', engLead: '' },
-        { name: 'Inference Extensions', pmLead: '', engLead: '' },
-        { name: 'Inference Gateway', pmLead: '', engLead: '' },
-        { name: 'Inference Research', pmLead: '', engLead: '' },
-        { name: 'Inference-Time Techniques', pmLead: '', engLead: '' },
-        { name: 'Infra Midstream', pmLead: '', engLead: '' },
-        { name: 'InfraOps', pmLead: '', engLead: '' },
-        { name: 'Integrations', pmLead: '', engLead: '' },
-        { name: 'Internal Processes & Documentation', pmLead: '', engLead: '' },
-        { name: 'KubeRay', pmLead: '', engLead: '' },
-        { name: 'Kubeflow Spark Operator', pmLead: '', engLead: '' },
-        { name: 'Kubeflow Unified SDK', pmLead: '', engLead: '' },
-        { name: 'LLM Compressor', pmLead: '', engLead: '' },
-        { name: 'Llama Stack Core', pmLead: '', engLead: '' },
-        { name: 'LlamaStack', pmLead: '', engLead: '' },
-        { name: 'MLR Speculative Decoding', pmLead: '', engLead: '' },
-        { name: 'Model Customization', pmLead: '', engLead: '' },
-        { name: 'Model Eval', pmLead: '', engLead: '' },
-        { name: 'Model Explainability', pmLead: '', engLead: '' },
-        { name: 'Model Runtimes', pmLead: '', engLead: '' },
-        { name: 'Model Server', pmLead: '', engLead: '' },
-        { name: 'Model Serving', pmLead: '', engLead: '' },
-        { name: 'Model and Agent Observability', pmLead: '', engLead: '' },
-        { name: 'Model as a Service', pmLead: '', engLead: '' },
-        { name: 'Monitoring', pmLead: '', engLead: '' },
-        { name: 'Notebooks', pmLead: '', engLead: '' },
-        { name: 'Notebooks Extensions', pmLead: '', engLead: '' },
-        { name: 'Notebooks Images', pmLead: '', engLead: '' },
-        { name: 'Notebooks Server', pmLead: '', engLead: '' },
-        { name: 'OGX Core', pmLead: '', engLead: '' },
-        { name: 'OpenShift AI Productization', pmLead: '', engLead: '' },
-        { name: 'PXE', pmLead: '', engLead: '' },
-        { name: 'PerfScale', pmLead: '', engLead: '' },
-        { name: 'Project Navigator', pmLead: '', engLead: '' },
-        { name: 'PyTorch', pmLead: '', engLead: '' },
-        { name: 'QE', pmLead: '', engLead: '' },
-        { name: 'RAG', pmLead: '', engLead: '' },
-        { name: 'RAG + Vector DB', pmLead: '', engLead: '' },
-        { name: 'RAG_Agentic', pmLead: '', engLead: '' },
-        { name: 'Security', pmLead: '', engLead: '' },
-        { name: 'Speculators', pmLead: '', engLead: '' },
-        { name: 'TestOps', pmLead: '', engLead: '' },
-        { name: 'Tooling Experience', pmLead: '', engLead: '' },
-        { name: 'Training', pmLead: '', engLead: '' },
-        { name: 'Training Kubeflow', pmLead: '', engLead: '' },
-        { name: 'TrustyAI', pmLead: '', engLead: '' },
-        { name: 'UXD', pmLead: '', engLead: '' },
-        { name: 'Update This Field With Components', pmLead: '', engLead: '' },
-        { name: 'Wheel Package Index', pmLead: '', engLead: '' },
-        { name: 'Wheel building', pmLead: '', engLead: '' },
-        { name: 'Workbenches/IDE', pmLead: '', engLead: '' },
-        { name: 'Workload Orchestration', pmLead: '', engLead: '' },
-        { name: 'guide-llm', pmLead: '', engLead: '' },
-        { name: 'internal process', pmLead: '', engLead: '' },
-        { name: 'llama.cpp', pmLead: '', engLead: '' },
-        { name: 'to-refine', pmLead: '', engLead: '' },
-        { name: 'vLLM Runtime', pmLead: '', engLead: '' },
-        { name: 'watsonx Orchestrate Collaboration', pmLead: '', engLead: '' }
+        { name: 'Enclave', pmLead: '', engLead: '' },
+        { name: 'UI', pmLead: '', engLead: '' },
+        { name: 'agentic-sdlc', pmLead: '', engLead: '' }
       ]
     }
   ]

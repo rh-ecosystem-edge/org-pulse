@@ -1,0 +1,1651 @@
+{
+  "fetchedAt": "2026-07-21T10:47:33Z",
+  "version": "0.2",
+  "demoMode": false,
+  "features": {
+    "OSAC-19": {
+      "key": "OSAC-19",
+      "summary": "Scale Testing and Capacity Planning",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Infrastructure"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-917": {
+      "key": "OSAC-917",
+      "summary": "Storage Framework",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Akshay Nadkarni",
+        "emailAddress": "anadkarn@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Storage"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-967": {
+      "key": "OSAC-967",
+      "summary": "Enclave Wizard",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Riccardo Piccoli",
+        "emailAddress": "rpiccoli@redhat.com"
+      },
+      "fixVersions": [
+        "0.1",
+        "0.2"
+      ],
+      "components": [
+        "Enclave"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-970": {
+      "key": "OSAC-970",
+      "summary": "VMaaS graphical console                                                                                           ",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Ilya Skornyakov",
+        "emailAddress": "iskornya@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "UI",
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-976": {
+      "key": "OSAC-976",
+      "summary": "Easy Installation and Upgrades via Helm Chart                                                                     ",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Liat Gamliel",
+        "emailAddress": "lgamliel@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Infrastructure"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-982": {
+      "key": "OSAC-982",
+      "summary": "Expose Utilization Metrics (CPU/Memory/Storage/GPU)                                                               ",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Metering, Billing and Quota"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-983": {
+      "key": "OSAC-983",
+      "summary": "Expose Events and Alerts                                                                                          ",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-985": {
+      "key": "OSAC-985",
+      "summary": "Add Metering to OSAC                                                                                              ",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "metering-and-usage-tracking"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1036": {
+      "key": "OSAC-1036",
+      "summary": "Support Windows VM provisioning",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Ygal Blum",
+        "emailAddress": "yblum@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1061": {
+      "key": "OSAC-1061",
+      "summary": "Enforce Mandatory, Unique, and Immutable Resource Names",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Juan Antonio Hernandez Fernandez",
+        "emailAddress": "jhernand@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1192": {
+      "key": "OSAC-1192",
+      "summary": "OSAC Core \u2014 Multi-Tenancy, Identity, and Platform Services",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Crystal Chun",
+        "emailAddress": "cchun@redhat.com"
+      },
+      "fixVersions": [
+        "0.1",
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1201": {
+      "key": "OSAC-1201",
+      "summary": "Expose instance types from inventory backends",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Austin Jamias",
+        "emailAddress": "ajamias@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "baremetal-instance-types"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1269": {
+      "key": "OSAC-1269",
+      "summary": "Managed Cluster Versions",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Ilya Skornyakov",
+        "emailAddress": "iskornya@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "OSAC-1415-cluster-upgrade-caas"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1270": {
+      "key": "OSAC-1270",
+      "summary": "Base OS management for bare metal instances",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "disk-image-OSAC-2540"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1311": {
+      "key": "OSAC-1311",
+      "summary": "CaaS Networking \u2014 Hosted Clusters with Ansible VLAN Fabric Manager",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Yoni Bettan",
+        "emailAddress": "ybettan@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "CaaS",
+        "Connectivity&Fabric"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1314": {
+      "key": "OSAC-1314",
+      "summary": "CaaS DNS \u2014 Pluggable DNS Backend for Cluster Provisioning",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Dan Manor",
+        "emailAddress": "dmanor@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "CaaS",
+        "Connectivity&Fabric",
+        "Enclave"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1330": {
+      "key": "OSAC-1330",
+      "summary": "Type-safe resource references and local references in the API",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Haim Tayrie",
+        "emailAddress": "htayrie@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "type-safe-resource-references"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1333": {
+      "key": "OSAC-1333",
+      "summary": "CLI Improvements",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1339": {
+      "key": "OSAC-1339",
+      "summary": "BCM Backend Integration for BMaaS",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "MENNY ABOUSH",
+        "emailAddress": "maboush@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "bcm-backend"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1382": {
+      "key": "OSAC-1382",
+      "summary": "(Netris) East-West Connectivity Support for AI Workloads",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Vladik Romanovsky",
+        "emailAddress": "vromanso@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "multi-fabric-east-west"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1415": {
+      "key": "OSAC-1415",
+      "summary": "Support cluster upgrade",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Vitaliy Emporopulo",
+        "emailAddress": "vemporop@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "OSAC-1415-cluster-upgrade-caas"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1433": {
+      "key": "OSAC-1433",
+      "summary": "Unified Networking Architecture",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Siddarth Royapally",
+        "emailAddress": "sroyapal@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Connectivity&Fabric"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1434": {
+      "key": "OSAC-1434",
+      "summary": "External Access \u2014 ExternalIP and NATGateway",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Ori Amizur",
+        "emailAddress": "oamizur@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Connectivity&Fabric"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1435": {
+      "key": "OSAC-1435",
+      "summary": "VMaaS Networking",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Dan Manor",
+        "emailAddress": "dmanor@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "bmaas-networking"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1436": {
+      "key": "OSAC-1436",
+      "summary": "CaaS Networking",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Dan Manor",
+        "emailAddress": "dmanor@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "bmaas-networking"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1437": {
+      "key": "OSAC-1437",
+      "summary": "BMaaS Networking",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Dan Manor",
+        "emailAddress": "dmanor@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "bmaas-networking"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1531": {
+      "key": "OSAC-1531",
+      "summary": "Default Catalog Items",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Daniel Erez",
+        "emailAddress": "derez@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "default-catalog-items"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1543": {
+      "key": "OSAC-1543",
+      "summary": "Metal3 (BareMetalHost) Backend Integration for BMaaS",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Nick Carboni",
+        "emailAddress": "ncarboni@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "BMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1546": {
+      "key": "OSAC-1546",
+      "summary": "CLI tenancy model for admin and multi-org operations",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Dakota Crowder",
+        "emailAddress": "dcrowder@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1567": {
+      "key": "OSAC-1567",
+      "summary": "Secret Management \u2014 Encrypted Storage with Pluggable Backends",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Dakota Crowder",
+        "emailAddress": "dcrowder@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "secret-management"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1577": {
+      "key": "OSAC-1577",
+      "summary": "API Quality \u2014 Declarative Validation, Auto-Generated Public API, and Consistency",
+      "issueType": "Feature",
+      "status": "Review",
+      "team": "",
+      "assignee": {
+        "displayName": "Haim Tayrie",
+        "emailAddress": "htayrie@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1591": {
+      "key": "OSAC-1591",
+      "summary": "Enclave content management and upgrade strategy #2",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Maor Friedman",
+        "emailAddress": "mafriedm@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Enclave"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1710": {
+      "key": "OSAC-1710",
+      "summary": "ComputeInstance StorageTier Selection",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Carlo Lobrano",
+        "emailAddress": "clobrano@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Storage",
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1717": {
+      "key": "OSAC-1717",
+      "summary": "K8s Manager - OVN-k8s EVPN",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Benny Kopilov",
+        "emailAddress": "bkopilov@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "bmaas-networking"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1839": {
+      "key": "OSAC-1839",
+      "summary": "GPU-Enabled Compute Instances for Multitenant Environments",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Tzif Morgenshtern",
+        "emailAddress": "tmorgens@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-epics",
+          "name": "No Epics",
+          "category": "completeness",
+          "message": "Feature has no linked epics",
+          "remediation": "Link at least one epic to this feature"
+        }
+      ]
+    },
+    "OSAC-1938": {
+      "key": "OSAC-1938",
+      "summary": "Tenant on-boarding (continued)",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Daniel Erez",
+        "emailAddress": "derez@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-1961": {
+      "key": "OSAC-1961",
+      "summary": "OSAC Disconnected Environment Support",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Elior Erez",
+        "emailAddress": "eerez@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Infrastructure"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-1974": {
+      "key": "OSAC-1974",
+      "summary": "Bootstrap OSAC via Enclave Plugin (disconnected mode)",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Alona Paz",
+        "emailAddress": "alkaplan@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Infrastructure"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2051": {
+      "key": "OSAC-2051",
+      "summary": "Helm Chart Simplification & Release Pipeline",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Elior Erez",
+        "emailAddress": "eerez@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "installer-restructure"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-2053": {
+      "key": "OSAC-2053",
+      "summary": "CI Modernization & Quality",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Elior Erez",
+        "emailAddress": "eerez@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Infrastructure"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-2117": {
+      "key": "OSAC-2117",
+      "summary": "Pure Storage FlashBlade file storage (NFS) provider for OSAC",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Danni Shi",
+        "emailAddress": "sdanni@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Storage"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2135": {
+      "key": "OSAC-2135",
+      "summary": "CaaS Bare Metal Worker Node Provisioning",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2181": {
+      "key": "OSAC-2181",
+      "summary": "OSAC CSI Meta-Driver",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Storage"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2308": {
+      "key": "OSAC-2308",
+      "summary": "Expose Inventory Metadata in BareMetalInstance Status",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "bmaas-networking"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2312": {
+      "key": "OSAC-2312",
+      "summary": "Move OSAC realm configuration to fulfillment service",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2427": {
+      "key": "OSAC-2427",
+      "summary": "Order BaremetalInstance from OSAC API using MOC - Part 2",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Adrien Gentil",
+        "emailAddress": "agentil@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "BMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-2434": {
+      "key": "OSAC-2434",
+      "summary": "CaaS Networking \u2014 Hosted Clusters with Netris Fabric Manager - Part 2",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Dan Manor",
+        "emailAddress": "dmanor@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "CaaS",
+        "Connectivity&Fabric"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-2435": {
+      "key": "OSAC-2435",
+      "summary": "CaaS -  Provision Clusters via OSAC API Using Auto-Provisioned Agents from File/BCM Inventory - Part 2",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Elad Tabak",
+        "emailAddress": "etabak@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "CaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-2440": {
+      "key": "OSAC-2440",
+      "summary": "VMaaS Networking \u2014 End-to-End VM Connectivity using the OSAC Networking API - Part 2",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Ori Amizur",
+        "emailAddress": "oamizur@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Connectivity&Fabric",
+        "VMaaS"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-2446": {
+      "key": "OSAC-2446",
+      "summary": "OSAC Networking API - VirtualNetwork, Subnet, SecurityGroup, PublicIP, and NAT Gateway - Part 2",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Siddarth Royapally",
+        "emailAddress": "sroyapal@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "bmaas-networking"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2452": {
+      "key": "OSAC-2452",
+      "summary": "Support Catalog items for CaaS & VMaaS & BMaaS- Part 2",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Elad Tabak",
+        "emailAddress": "etabak@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "catalog-items"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        }
+      ]
+    },
+    "OSAC-2474": {
+      "key": "OSAC-2474",
+      "summary": "Catalog item assignment to tenants and projects",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": "",
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Core"
+      ],
+      "violations": [
+        {
+          "id": "missing-assignee",
+          "name": "Missing Assignee",
+          "category": "ownership",
+          "message": "Feature has no assignee",
+          "remediation": "Assign a team member to this feature"
+        },
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2540": {
+      "key": "OSAC-2540",
+      "summary": "DiskImage resource for disk image metadata management",
+      "issueType": "Feature",
+      "status": "In Progress",
+      "team": "",
+      "assignee": {
+        "displayName": "Marc Sluiter",
+        "emailAddress": "msluiter@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "disk-image-OSAC-2540"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    },
+    "OSAC-2872": {
+      "key": "OSAC-2872",
+      "summary": "OSAC Storage Control Plane",
+      "issueType": "Feature",
+      "status": "New",
+      "team": "",
+      "assignee": {
+        "displayName": "Akshay Nadkarni",
+        "emailAddress": "anadkarn@redhat.com"
+      },
+      "fixVersions": [
+        "0.2"
+      ],
+      "components": [
+        "Storage"
+      ],
+      "violations": [
+        {
+          "id": "no-story-points",
+          "name": "No Story Points",
+          "category": "estimation",
+          "message": "Feature has issues but no story points",
+          "remediation": "Add story point estimates to issues"
+        },
+        {
+          "id": "low-completion-red-health",
+          "name": "Critical Health Risk",
+          "category": "risk",
+          "message": "Feature has RED health with less than 20% completion",
+          "remediation": "Prioritize unblocking this feature"
+        }
+      ]
+    }
+  }
+}

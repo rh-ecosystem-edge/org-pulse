@@ -235,7 +235,7 @@ describe('registry-config', () => {
   it('returns defaults when no config exists', () => {
     const storage = createMockStorage();
     const config = loadRegistryConfig(storage);
-    expect(config.jiraProjects).toEqual(['RHAISTRAT', 'RHOAIENG']);
+    expect(config.jiraProjects).toEqual(['OSAC']);
   });
 
   it('loads stored config', () => {
@@ -249,7 +249,7 @@ describe('registry-config', () => {
   it('falls back to defaults for malformed data', () => {
     const storage = createMockStorage({ [STORAGE_KEY]: 'not-object' });
     const config = loadRegistryConfig(storage);
-    expect(config.jiraProjects).toEqual(['RHAISTRAT', 'RHOAIENG']);
+    expect(config.jiraProjects).toEqual(['OSAC']);
   });
 
   it('saves config to storage', () => {

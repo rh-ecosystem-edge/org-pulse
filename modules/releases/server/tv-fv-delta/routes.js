@@ -9,8 +9,8 @@ const VERSIONS_CACHE_MAX_AGE_MS = 4 * 60 * 60 * 1000 // 4 hours
 
 // Default releases — EA1, EA2, then GA (timeline order)
 // Fallback if Smartsheet/planning releases are not configured
-const DEFAULT_RELEASES = ['rhoai-3.5.EA1', 'rhoai-3.5.EA2', 'rhoai-3.5']
-const DEFAULT_JIRA_PROJECT = 'RHAISTRAT'
+const DEFAULT_RELEASES = ['0.2', '0.3']
+const DEFAULT_JIRA_PROJECT = 'OSAC'
 
 // JQL-safe release name pattern — allows spaces for version names like "RHAII-3.5 EA1"
 // Injection is prevented by quoteRelease() wrapping names in double quotes for JQL
@@ -39,21 +39,28 @@ function fetchReleasesFromPlanning(storage) {
       return { releases: DEFAULT_RELEASES, source: 'default' }
     }
 
-    // Expand each base version to EA1, EA2, GA (timeline order: all EA1s, all EA2s, all GAs)
-    const expanded = []
-    for (const v of baseVersions) expanded.push(v + '.EA1')
-    for (const v of baseVersions) expanded.push(v + '.EA2')
-    for (const v of baseVersions) expanded.push(v)
-
-    // Filter out any expanded versions that don't pass JQL safety validation
-    const safeExpanded = expanded.filter(function(v) { return jqlSafePattern.test(v) })
-    if (safeExpanded.length < expanded.length) {
-      const dropped = expanded.filter(function(v) { return !jqlSafePattern.test(v) })
-      console.warn('[releases/tv-fv-delta] Dropped ' + dropped.length + ' expanded releases that failed JQL safety validation: ' + dropped.join(', '))
+    // Try to read registry for actual Jira Fix Version names
+    const registry = storage.readFromStorage('releases/registry.json')
+    const registryVersions = new Set()
+    if (registry && Array.isArray(registry.releases)) {
+      for (const r of registry.releases) {
+        if (Array.isArray(r.fixVersions)) {
+          for (const fv of r.fixVersions) registryVersions.add(fv)
+        }
+      }
     }
 
-    console.log('[releases/tv-fv-delta] Fetched ' + baseVersions.length + ' base releases from planning, expanded to ' + safeExpanded.length + ' variants')
-    return { releases: safeExpanded, source: 'planning' }
+    // Use registry versions if available, otherwise use planning base versions directly
+    var releases
+    if (registryVersions.size > 0) {
+      releases = Array.from(registryVersions).filter(function(v) { return jqlSafePattern.test(v) }).sort()
+      console.log('[releases/tv-fv-delta] Using ' + releases.length + ' versions from registry')
+    } else {
+      releases = baseVersions
+      console.log('[releases/tv-fv-delta] Using ' + releases.length + ' base versions from planning (no registry)')
+    }
+
+    return { releases: releases, source: registryVersions.size > 0 ? 'registry' : 'planning' }
   } catch (err) {
     console.error('[releases/tv-fv-delta] Failed to fetch releases from planning:', err.message)
     console.warn('[releases/tv-fv-delta] Falling back to DEFAULT_RELEASES — data may be stale if current release has changed.')

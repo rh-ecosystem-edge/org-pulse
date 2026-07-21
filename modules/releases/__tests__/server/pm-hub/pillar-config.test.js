@@ -75,9 +75,9 @@ describe('DEFAULT_PILLAR_CONFIG', function () {
     expect(DEFAULT_PILLAR_CONFIG.pillars).toHaveLength(5)
   })
 
-  it('includes Inference, Data, Agents, Platform, Undefined', function () {
+  it('includes OSAC pillar names', function () {
     var names = DEFAULT_PILLAR_CONFIG.pillars.map(function (p) { return p.name })
-    expect(names).toEqual(['Inference', 'Data', 'Agents', 'Platform', 'Undefined'])
+    expect(names).toEqual(['Connectivity & Fabric', 'VMaaS', 'Infrastructure', 'Services', 'Platform'])
   })
 
   it('each pillar has at least one component', function () {
@@ -112,14 +112,13 @@ describe('backfillLeads', function () {
     expect(comp).toHaveProperty('engLead')
   })
 
-  it('backfills leads into object components missing them', function () {
+  it('does not backfill when default leads are empty', function () {
     var firstName = DEFAULT_PILLAR_CONFIG.pillars[0].components[0].name
     var config = {
       pillars: [{ name: 'Test', components: [{ name: firstName }] }]
     }
     var changed = backfillLeads(config)
-    expect(changed).toBe(true)
-    expect(config.pillars[0].components[0].pmLead).toBeTruthy()
+    expect(changed).toBe(false)
   })
 
   it('does not overwrite existing leads', function () {
