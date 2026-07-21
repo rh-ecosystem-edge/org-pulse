@@ -179,7 +179,8 @@ const history = computed(() => featureDetail.value?.history || [])
               </div>
               <div>
                 <p class="text-gray-500 dark:text-gray-400 text-xs mb-1">Score</p>
-                <p class="font-bold" :class="getScoreClass(Math.round((feature.scores?.total || 0) / 2))">
+                <p v-if="feature.designStatus === 'no-design'" class="font-bold text-gray-400 dark:text-gray-500">—</p>
+                <p v-else class="font-bold" :class="getScoreClass(Math.round((feature.scores?.total || 0) / 2))">
                   {{ feature.scores?.total || 0 }}/8
                 </p>
               </div>
@@ -200,6 +201,12 @@ const history = computed(() => featureDetail.value?.history || [])
 
             <!-- Links -->
             <div class="border-t border-gray-200 dark:border-gray-700 pt-4 mb-4">
+              <div v-if="feature.designStatus === 'no-design'" class="mb-3 px-3 py-2.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800">
+                <div class="flex items-center gap-2 text-sm text-blue-800 dark:text-blue-300">
+                  <svg class="h-4 w-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                  <span>No design document. This feature has a PRD only.</span>
+                </div>
+              </div>
               <div class="flex flex-wrap items-center gap-2">
                 <a
                   v-if="currentData?.designPrUrl"

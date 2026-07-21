@@ -45,7 +45,9 @@ const sortedAndFilteredFeatures = computed(() => {
   }
 
   // Recommendation filter
-  if (props.recommendationFilter !== 'all') {
+  if (props.recommendationFilter === 'no-design') {
+    items = items.filter(f => f.designStatus === 'no-design')
+  } else if (props.recommendationFilter !== 'all') {
     items = items.filter(f => f.recommendation === props.recommendationFilter)
   }
 
@@ -92,6 +94,7 @@ const sortedAndFilteredFeatures = computed(() => {
         <option value="approve">AI Recommendation: Approve</option>
         <option value="revise">AI Recommendation: Needs Revision</option>
         <option value="reject">AI Recommendation: Reject</option>
+        <option value="no-design">No Design Doc</option>
       </select>
 
       <select

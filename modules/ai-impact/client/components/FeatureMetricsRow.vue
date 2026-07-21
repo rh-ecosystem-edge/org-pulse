@@ -9,16 +9,18 @@ const featureList = computed(() => Object.values(props.features))
 
 const totalFeatures = computed(() => featureList.value.length)
 
+const reviewedFeatures = computed(() => featureList.value.filter(f => f.designStatus !== 'no-design'))
+
 const approvalRate = computed(() => {
-  if (totalFeatures.value === 0) return 0
-  const approved = featureList.value.filter(f => f.recommendation === 'approve').length
-  return Math.round((approved / totalFeatures.value) * 100)
+  if (reviewedFeatures.value.length === 0) return 0
+  const approved = reviewedFeatures.value.filter(f => f.recommendation === 'approve').length
+  return Math.round((approved / reviewedFeatures.value.length) * 100)
 })
 
 const avgScore = computed(() => {
-  if (totalFeatures.value === 0) return 0
-  const sum = featureList.value.reduce((acc, f) => acc + (f.scores?.total || 0), 0)
-  return (sum / totalFeatures.value).toFixed(1)
+  if (reviewedFeatures.value.length === 0) return 0
+  const sum = reviewedFeatures.value.reduce((acc, f) => acc + (f.scores?.total || 0), 0)
+  return (sum / reviewedFeatures.value.length).toFixed(1)
 })
 
 const needsActionCount = computed(() => {
