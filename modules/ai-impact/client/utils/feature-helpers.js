@@ -57,3 +57,19 @@ export function getScoreClass(score) {
   if (score === 1) return 'text-amber-600 dark:text-amber-400'
   return 'text-red-600 dark:text-red-400'
 }
+
+export function getDesignStatusClass(designStatus) {
+  switch (designStatus) {
+    case 'no-design': return 'bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-200'
+    case 'pending': return 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/40 dark:text-yellow-200'
+    default: return ''
+  }
+}
+
+export function getDesignStatusLabel(designStatus) {
+  switch (designStatus) {
+    case 'no-design': return 'No Design'
+    case 'pending': return 'Pending Review'
+    default: return null
+  }
+}

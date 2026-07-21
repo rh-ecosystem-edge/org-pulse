@@ -73,7 +73,8 @@ function readFeatures(readFromStorage) {
         verdict: aiReview.verdict || null,
         feedback: aiReview.feedback || null,
         criterionNotes: aiReview.criterionNotes || null,
-        designPrUrl: aiReview.designPrUrl || null
+        designPrUrl: aiReview.designPrUrl || null,
+        designStatus: aiReview.designStatus || (entry.aiReview && entry.aiReview.designStatus) || null
       },
       history: aiReview.history || []
     };
@@ -110,7 +111,8 @@ function getLatestProjection(data) {
       reviewedAt: entry.latest.reviewedAt,
       components: entry.latest.components || [],
       approvedBy: entry.latest.approvedBy || null,
-      approvedAt: entry.latest.approvedAt || null
+      approvedAt: entry.latest.approvedAt || null,
+      designStatus: entry.latest.designStatus || null
     };
   }
   return {

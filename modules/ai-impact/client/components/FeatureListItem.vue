@@ -1,5 +1,5 @@
 <script setup>
-import { getRecommendationClass, getRecommendationLabel, getRecommendationTooltip, getReviewStatusClass, getReviewStatusLabel, getReviewStatusTooltip } from '../utils/feature-helpers.js'
+import { getRecommendationClass, getRecommendationLabel, getRecommendationTooltip, getReviewStatusClass, getReviewStatusLabel, getReviewStatusTooltip, getDesignStatusClass, getDesignStatusLabel } from '../utils/feature-helpers.js'
 import InfoBubble from './InfoBubble.vue'
 
 defineProps({
@@ -47,9 +47,16 @@ const emit = defineEmits(['select'])
             </span>
             <InfoBubble :text="getReviewStatusTooltip(feature.humanReviewStatus)" />
           </span>
+          <span
+            v-if="getDesignStatusLabel(feature.designStatus)"
+            class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
+            :class="getDesignStatusClass(feature.designStatus)"
+          >
+            {{ getDesignStatusLabel(feature.designStatus) }}
+          </span>
           <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-xs">
             <span class="font-medium text-gray-500 dark:text-gray-400">Score</span>
-            <span class="text-gray-800 dark:text-gray-100">{{ feature.scores?.total || 0 }}/8</span>
+            <span class="text-gray-800 dark:text-gray-100">{{ feature.designStatus === 'no-design' ? '—' : `${feature.scores?.total || 0}/8` }}</span>
           </span>
           <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-gray-100 dark:bg-gray-700 text-xs">
             <span class="font-medium text-gray-500 dark:text-gray-400">Priority</span>
