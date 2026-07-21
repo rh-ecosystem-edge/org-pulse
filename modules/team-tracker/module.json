@@ -4,7 +4,6 @@
   "description": "People, teams, delivery metrics, and org insights",
   "icon": "users-round",
   "order": 0,
-  "disabled": true,
   "client": {
     "entry": "./client/index.js",
     "sotuWidgets": [
