@@ -96,14 +96,17 @@
             <template v-for="item in section.items" :key="item.id">
               <button
                 v-if="!section.collapsible || collapsed"
-                @click="$emit('navigate', item.id)"
+                :disabled="item.disabled"
+                @click="!item.disabled && $emit('navigate', item.id)"
                 :aria-current="isNavItemActive(item, section) ? 'page' : undefined"
                 :aria-label="item.label"
                 class="group relative w-full flex items-center py-2.5 rounded-xl text-sm font-medium transition-all duration-200"
                 :class="[
-                  isNavItemActive(item, section)
-                    ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-sm'
-                    : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100',
+                  item.disabled
+                    ? 'text-gray-300 dark:text-gray-600 cursor-not-allowed'
+                    : isNavItemActive(item, section)
+                      ? 'bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 shadow-sm'
+                      : 'text-gray-600 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-gray-900 dark:hover:text-gray-100',
                   collapsed ? 'justify-center px-0' : 'gap-3 px-3'
                 ]"
               >
@@ -367,7 +370,7 @@ const navSections = computed(() => {
       id: 'admin',
       label: 'Admin',
       items: [
-        { id: 'settings', label: 'Settings', icon: Settings },
+        { id: 'settings', label: 'Settings', icon: Settings, disabled: true },
       ]
     })
   }
