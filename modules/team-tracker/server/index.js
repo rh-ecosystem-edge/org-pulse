@@ -170,8 +170,8 @@ module.exports = function registerRoutes(router, context) {
           name: person.name,
           jiraDisplayName: person.name,
           uid: person.uid,
-          jiraAccountId: registryProvider === 'atlassian-teams' && person.uid
-            ? person.uid
+          jiraAccountId: registryProvider === 'atlassian-teams' && person.jiraAccountId
+            ? person.jiraAccountId
             : null,
           email: person.email,
           title: person.title,
