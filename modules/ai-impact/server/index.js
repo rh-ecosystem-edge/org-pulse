@@ -482,25 +482,33 @@ module.exports = function registerRoutes(router, context) {
   let aiCommitsCache = { html: null, fetchedAt: 0 };
   const AI_COMMITS_TTL = 60 * 60 * 1000;
   const MAX_REDIRECTS = 5;
+  const FETCH_TIMEOUT_MS = 15000;
 
   function fetchPage(url, redirectCount) {
     if (redirectCount === undefined) redirectCount = 0;
     return new Promise((resolve, reject) => {
       // eslint-disable-next-line org-pulse/no-module-process-env -- NODE_EXTRA_CA_CERTS is Node.js runtime config, not a secret
       const tlsOptions = process.env.NODE_EXTRA_CA_CERTS ? {} : { rejectUnauthorized: false };
-      https.get(url, tlsOptions, (res) => {
+      const req = https.get(url, tlsOptions, (res) => {
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
           if (redirectCount >= MAX_REDIRECTS) return reject(new Error('Too many redirects'));
-          return resolve(fetchPage(res.headers.location, redirectCount + 1));
+          const nextUrl = new URL(res.headers.location, url).toString();
+          res.resume();
+          return resolve(fetchPage(nextUrl, redirectCount + 1));
         }
         if (res.statusCode < 200 || res.statusCode >= 300) {
+          res.resume();
           return reject(new Error(`Upstream returned ${res.statusCode}`));
         }
         const chunks = [];
         res.on('data', (c) => chunks.push(c));
         res.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
         res.on('error', reject);
-      }).on('error', reject);
+      });
+      req.on('error', reject);
+      req.setTimeout(FETCH_TIMEOUT_MS, () => {
+        req.destroy(new Error('Upstream request timed out'));
+      });
     });
   }
 
@@ -547,6 +555,7 @@ module.exports = function registerRoutes(router, context) {
         aiCommitsCache = { html, fetchedAt: now };
       }
       res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.setHeader('Content-Security-Policy', "default-src 'self' 'unsafe-inline' 'unsafe-eval' https:; frame-ancestors 'self'");
       res.send(aiCommitsCache.html);
     } catch (err) {
       console.error('[ai-commits-proxy]', err.message);

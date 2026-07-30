@@ -20,6 +20,7 @@ const AI_COMMITS_PROXY_URL = '/api/modules/ai-impact/ai-commits-proxy'
     <iframe
       :src="AI_COMMITS_PROXY_URL"
       title="AI Commits Scanner — OSAC"
+      sandbox="allow-scripts allow-same-origin"
       class="w-full flex-1 border-0 block min-h-0"
       style="height: calc(100vh - 9rem)"
     />
