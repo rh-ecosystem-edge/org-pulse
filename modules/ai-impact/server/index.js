@@ -11,6 +11,7 @@ module.exports = function registerRoutes(router, context) {
   const DEMO_MODE = process.env.DEMO_MODE === 'true';
 
   // Jira helpers from shared package (no duplication)
+  const https = require('https');
   const { createJiraClient } = require('../../../shared/server/jira');
   const jira = createJiraClient({
     email: (context.secrets && context.secrets.JIRA_EMAIL) || '',
@@ -477,14 +478,21 @@ module.exports = function registerRoutes(router, context) {
 
   // --- AI Commits Scanner proxy ---
 
-  const https = require('https');
   const AI_COMMITS_URL = 'https://ai-commits-scanner-fd01cc.pages.redhat.com/osac/index.html';
   let aiCommitsCache = { html: null, fetchedAt: 0 };
-  const AI_COMMITS_TTL = 60 * 60 * 1000; // 1 hour
+  const AI_COMMITS_TTL = 60 * 60 * 1000;
+  const MAX_REDIRECTS = 5;
 
-  function fetchPage(url) {
+  function fetchPage(url, redirectCount) {
+    if (redirectCount === undefined) redirectCount = 0;
     return new Promise((resolve, reject) => {
-      https.get(url, { rejectUnauthorized: false }, (res) => {
+      // eslint-disable-next-line org-pulse/no-module-process-env -- NODE_EXTRA_CA_CERTS is Node.js runtime config, not a secret
+      const tlsOptions = process.env.NODE_EXTRA_CA_CERTS ? {} : { rejectUnauthorized: false };
+      https.get(url, tlsOptions, (res) => {
+        if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+          if (redirectCount >= MAX_REDIRECTS) return reject(new Error('Too many redirects'));
+          return resolve(fetchPage(res.headers.location, redirectCount + 1));
+        }
         if (res.statusCode < 200 || res.statusCode >= 300) {
           return reject(new Error(`Upstream returned ${res.statusCode}`));
         }
@@ -506,7 +514,7 @@ module.exports = function registerRoutes(router, context) {
    *       200:
    *         description: Modified HTML report
    */
-  router.get('/ai-commits-proxy', async function(req, res) {
+  router.get('/ai-commits-proxy', requireScope('ai-impact:read'), async function(req, res) {
     try {
       const now = Date.now();
       if (!aiCommitsCache.html || now - aiCommitsCache.fetchedAt > AI_COMMITS_TTL) {
@@ -532,7 +540,7 @@ module.exports = function registerRoutes(router, context) {
 
         // Remove rh-ecosystem-edge rows from tables
         html = html.replace(
-          /<tr><td>[^<]*rh-ecosystem-edge[^<]*<\/td>[\s\S]*?<\/tr>/g,
+          /<tr><td>(?:[^<](?!<\/td>))*rh-ecosystem-edge(?:[^<](?!<\/td>))*<\/td>(?:<td[^>]*>[^<]*<\/td>)*<\/tr>/g,
           ''
         );
 

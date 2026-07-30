@@ -219,6 +219,29 @@ test.describe('AI Impact Views @ai-impact', () => {
     await testView(page, 'autofix', 'AutoFix');
   });
 
+  test('should load AI Commits view', async ({ page }) => {
+    await page.goto('/#/ai-impact/ai-commits');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
+
+    const mainContentVisible = await mainContentIsVisible(page);
+    expect(mainContentVisible).toBe(true);
+
+    const iframe = page.locator('iframe[title="AI Commits Scanner — OSAC"]');
+    await expect(iframe).toBeVisible();
+
+    expect(page.errors).toHaveLength(0);
+  });
+
+  test('AI Commits proxy endpoint returns HTML', async ({ page }) => {
+    const response = await page.request.get('/api/modules/ai-impact/ai-commits-proxy');
+    expect(response.status()).toBe(200);
+    expect(response.headers()['content-type']).toContain('text/html');
+    const body = await response.text();
+    expect(body).toContain('AI Commit Scanner');
+    expect(body).not.toContain('rh-ecosystem-edge');
+  });
+
   test('should load State of the Union on landing page', async ({ page }) => {
     // SOTU content now lives on the landing page (home), not as an AI Impact nav item
     await page.goto('/');
