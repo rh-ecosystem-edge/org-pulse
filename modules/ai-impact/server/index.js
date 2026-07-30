@@ -474,4 +474,75 @@ module.exports = function registerRoutes(router, context) {
       };
     });
   }
+
+  // --- AI Commits Scanner proxy ---
+
+  const https = require('https');
+  const AI_COMMITS_URL = 'https://ai-commits-scanner-fd01cc.pages.redhat.com/osac/index.html';
+  let aiCommitsCache = { html: null, fetchedAt: 0 };
+  const AI_COMMITS_TTL = 60 * 60 * 1000; // 1 hour
+
+  function fetchPage(url) {
+    return new Promise((resolve, reject) => {
+      https.get(url, { rejectUnauthorized: false }, (res) => {
+        if (res.statusCode < 200 || res.statusCode >= 300) {
+          return reject(new Error(`Upstream returned ${res.statusCode}`));
+        }
+        const chunks = [];
+        res.on('data', (c) => chunks.push(c));
+        res.on('end', () => resolve(Buffer.concat(chunks).toString('utf-8')));
+        res.on('error', reject);
+      }).on('error', reject);
+    });
+  }
+
+  /**
+   * @openapi
+   * /api/modules/ai-impact/ai-commits-proxy:
+   *   get:
+   *     summary: Proxy the AI Commits Scanner report with modifications
+   *     tags: [ai-impact]
+   *     responses:
+   *       200:
+   *         description: Modified HTML report
+   */
+  router.get('/ai-commits-proxy', async function(req, res) {
+    try {
+      const now = Date.now();
+      if (!aiCommitsCache.html || now - aiCommitsCache.fetchedAt > AI_COMMITS_TTL) {
+        let html = await fetchPage(AI_COMMITS_URL);
+
+        // Make osac-project link open in a new tab
+        html = html.replace(
+          /(<a\s+href="https:\/\/github\.com\/osac-project")/g,
+          '$1 target="_blank" rel="noopener noreferrer"'
+        );
+
+        // Remove rh-ecosystem-edge <details> block
+        html = html.replace(
+          /<details>\s*<summary><a[^>]*>rh-ecosystem-edge<\/a>[\s\S]*?<\/details>/g,
+          ''
+        );
+
+        // Remove "Monthly Trend — Red Hat" section (match from <section> to next </section>)
+        html = html.replace(
+          /<section><h2>Monthly Trend — Red Hat<\/h2>[\s\S]*?<\/section>/,
+          ''
+        );
+
+        // Remove rh-ecosystem-edge rows from tables
+        html = html.replace(
+          /<tr><td>[^<]*rh-ecosystem-edge[^<]*<\/td>[\s\S]*?<\/tr>/g,
+          ''
+        );
+
+        aiCommitsCache = { html, fetchedAt: now };
+      }
+      res.setHeader('Content-Type', 'text/html; charset=utf-8');
+      res.send(aiCommitsCache.html);
+    } catch (err) {
+      console.error('[ai-commits-proxy]', err.message);
+      res.redirect(AI_COMMITS_URL);
+    }
+  });
 };
