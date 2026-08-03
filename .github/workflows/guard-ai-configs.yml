@@ -57,6 +57,7 @@ jobs:
     if: github.event_name != 'merge_group'
     runs-on: ubuntu-latest
     permissions:
+      contents: read        # To fetch OWNERS from the default branch
       pull-requests: write  # To post comments and read reviews
       statuses: write       # To set commit status via the API
     env:
@@ -171,10 +172,12 @@ jobs:
           APPROVERS=$(echo "$OWNERS_CONTENT" \
             | sed -n '/^approvers:/,/^[^ ]/p' \
             | grep '^\s*-' \
-            | sed 's/.*-\s*//')
+            | sed -E 's/^[[:space:]]*-[[:space:]]*//')
 
+          # Reduce to each author's latest review, then keep only approvals.
+          # This ensures a later CHANGES_REQUESTED overrides an earlier APPROVED.
           REVIEWS=$(gh pr view "$PR_NUMBER" --repo "$REPO" --json reviews \
-            -q '.reviews[] | select(.state=="APPROVED") | .author.login')
+            -q '[.reviews | group_by(.author.login)[] | sort_by(.submittedAt) | last | select(.state=="APPROVED") | .author.login] | .[]')
 
           APPROVED=false
           APPROVER=""
