@@ -531,6 +531,7 @@ const triageSegments = computed(() => {
     { label: 'External Reporter', count: v.external || 0, color: 'bg-purple-500', textClass: 'text-purple-600 dark:text-purple-400', jiraLabels: ['jira-triage-external'] },
     { label: 'Security Review', count: v.securityReview || 0, color: 'bg-rose-500', textClass: 'text-rose-600 dark:text-rose-400', jiraLabels: ['jira-triage-security-review'] },
     { label: 'Stale', count: v.stale || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-triage-stale'] },
+    { label: 'Deferred to Human', count: v.humanAssigned || 0, color: 'bg-cyan-500', textClass: 'text-cyan-600 dark:text-cyan-400', jiraLabels: [], jqlOverride: buildHumanAssignedJql() },
     { label: 'AI Assessing', count: v.pending || 0, color: 'bg-gray-300 dark:bg-gray-600', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-triage-pending'] }
   ].filter(s => s.count > 0)
 })
@@ -621,19 +622,14 @@ function buildJiraLabelUrl(jiraLabels, excludeLabels) {
 
 function buildHumanAssignedJql() {
   const host = jiraHost.value
-  const activeAutofix = ['jira-autofix-pending', 'jira-autofix-review',
-    'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected',
-    'jira-autofix-max-retries', 'jira-autofix-blocked']
-  const excluded = activeAutofix.map(l => `"${l}"`).join(', ')
-  let jql = `labels = "jira-autofix" AND assignee IS NOT EMPTY AND labels NOT IN (${excluded}) AND issuetype = Bug`
-  if (selectedProject.value !== 'all') {
-    jql += ` AND project = "${selectedProject.value}"`
-  } else {
-    const projects = availableProjects.value.map(p => `"${p}"`).join(', ')
-    if (projects) jql += ` AND project IN (${projects})`
+  const keys = timeFilteredIssues.value
+    .filter(i => i.pipelineState === 'triage-human-assigned')
+    .map(i => i.key)
+  if (keys.length > 0) {
+    const jql = `key IN (${keys.map(k => `"${k}"`).join(', ')}) ORDER BY updated DESC`
+    return `${host}/issues/?jql=${encodeURIComponent(jql)}`
   }
-  jql += ' ORDER BY updated DESC'
-  return `${host}/issues/?jql=${encodeURIComponent(jql)}`
+  return `${host}/issues/?jql=${encodeURIComponent('labels = "jira-autofix" AND assignee IS NOT EMPTY ORDER BY updated DESC')}`
 }
 </script>
 
