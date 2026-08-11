@@ -521,18 +521,20 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString()
 }
 
+const AUTOFIX_LABELS_EXCLUDE = ['jira-autofix', 'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked', 'jira-autofix-researched']
+
 const triageSegments = computed(() => {
   if (!metrics.value) return []
   const v = metrics.value.triageVerdicts
   return [
     { label: 'Ready for AI', count: v.ready || 0, color: 'bg-green-500', textClass: 'text-green-600 dark:text-green-400', jiraLabels: [], jqlOverride: buildReadyForAiJql() },
-    { label: 'Missing Info', count: v.missingInfo || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-triage-missing-info'] },
-    { label: 'Not AI-Fixable', count: v.notFixable || 0, color: 'bg-red-500', textClass: 'text-red-600 dark:text-red-400', jiraLabels: ['jira-triage-not-fixable'] },
-    { label: 'External Reporter', count: v.external || 0, color: 'bg-purple-500', textClass: 'text-purple-600 dark:text-purple-400', jiraLabels: ['jira-triage-external'] },
-    { label: 'Security Review', count: v.securityReview || 0, color: 'bg-rose-500', textClass: 'text-rose-600 dark:text-rose-400', jiraLabels: ['jira-triage-security-review'] },
-    { label: 'Stale', count: v.stale || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-triage-stale'] },
+    { label: 'Missing Info', count: v.missingInfo || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-triage-missing-info'], excludeLabels: [...AUTOFIX_LABELS_EXCLUDE, 'jira-triage-security-review', 'jira-triage-not-fixable', 'jira-triage-stale'] },
+    { label: 'Not AI-Fixable', count: v.notFixable || 0, color: 'bg-red-500', textClass: 'text-red-600 dark:text-red-400', jiraLabels: ['jira-triage-not-fixable'], excludeLabels: [...AUTOFIX_LABELS_EXCLUDE, 'jira-triage-security-review'] },
+    { label: 'External Reporter', count: v.external || 0, color: 'bg-purple-500', textClass: 'text-purple-600 dark:text-purple-400', jiraLabels: ['jira-triage-external'], excludeLabels: [...AUTOFIX_LABELS_EXCLUDE, 'jira-triage-security-review'] },
+    { label: 'Security Review', count: v.securityReview || 0, color: 'bg-rose-500', textClass: 'text-rose-600 dark:text-rose-400', jiraLabels: ['jira-triage-security-review'], excludeLabels: AUTOFIX_LABELS_EXCLUDE },
+    { label: 'Stale', count: v.stale || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-triage-stale'], excludeLabels: [...AUTOFIX_LABELS_EXCLUDE, 'jira-triage-security-review', 'jira-triage-not-fixable'] },
     { label: 'Deferred to Human', count: v.humanAssigned || 0, color: 'bg-cyan-500', textClass: 'text-cyan-600 dark:text-cyan-400', jiraLabels: [], jqlOverride: buildHumanAssignedJql() },
-    { label: 'AI Assessing', count: v.pending || 0, color: 'bg-gray-300 dark:bg-gray-600', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-triage-pending'] }
+    { label: 'AI Assessing', count: v.pending || 0, color: 'bg-gray-300 dark:bg-gray-600', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-triage-pending'], excludeLabels: [...AUTOFIX_LABELS_EXCLUDE, 'jira-triage-security-review', 'jira-triage-not-fixable', 'jira-triage-stale', 'jira-triage-missing-info'] }
   ].filter(s => s.count > 0)
 })
 
