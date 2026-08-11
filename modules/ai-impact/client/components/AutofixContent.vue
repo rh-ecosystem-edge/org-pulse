@@ -525,7 +525,7 @@ const triageSegments = computed(() => {
   if (!metrics.value) return []
   const v = metrics.value.triageVerdicts
   return [
-    { label: 'Ready for AI', count: v.ready || 0, color: 'bg-green-500', textClass: 'text-green-600 dark:text-green-400', jiraLabels: ['jira-autofix', 'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked'] },
+    { label: 'Ready for AI', count: v.ready || 0, color: 'bg-green-500', textClass: 'text-green-600 dark:text-green-400', jiraLabels: [], jqlOverride: buildReadyForAiJql() },
     { label: 'Missing Info', count: v.missingInfo || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-triage-missing-info'] },
     { label: 'Not AI-Fixable', count: v.notFixable || 0, color: 'bg-red-500', textClass: 'text-red-600 dark:text-red-400', jiraLabels: ['jira-triage-not-fixable'] },
     { label: 'External Reporter', count: v.external || 0, color: 'bg-purple-500', textClass: 'text-purple-600 dark:text-purple-400', jiraLabels: ['jira-triage-external'] },
@@ -617,6 +617,48 @@ function buildJiraLabelUrl(jiraLabels, excludeLabels) {
     jql += ` AND created >= "${cutoff.toISOString().slice(0, 10)}"`
     jql += ' ORDER BY created DESC'
   }
+  return `${host}/issues/?jql=${encodeURIComponent(jql)}`
+}
+
+function buildReadyForAiJql() {
+  const host = jiraHost.value
+  const stateLabels = [
+    'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing',
+    'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries',
+    'jira-autofix-blocked'
+  ]
+  const stateLabelList = stateLabels.map(l => `"${l}"`).join(', ')
+  let jql = `(labels IN (${stateLabelList}) OR (labels = "jira-autofix" AND (assignee is EMPTY OR assignee = "osac-dev-bot" OR status = "New")))`
+
+  const projects = availableProjects.value.map(p => `"${p}"`).join(', ')
+  if (selectedProject.value !== 'all') {
+    jql += ` AND project = "${selectedProject.value}"`
+  } else if (projects) {
+    jql += ` AND project IN (${projects})`
+  }
+  if (selectedIssueType.value !== 'all') {
+    jql += ` AND issuetype = "${selectedIssueType.value}"`
+  }
+  if (selectedComponent.value !== 'all') {
+    jql += ` AND component = "${selectedComponent.value}"`
+  }
+  jql += ' AND (component is EMPTY OR component NOT IN ("Enclave", "agentic-sdlc"))'
+
+  if (props.timeWindow === 'lastWeek') {
+    const { start, end } = getLastWeekBounds()
+    jql += ` AND created >= "${new Date(start).toISOString().slice(0, 10)}"`
+    jql += ` AND created < "${new Date(end).toISOString().slice(0, 10)}"`
+  } else {
+    const days = props.timeWindow === 'week' ? 7 : props.timeWindow === 'month' ? 30 : 90
+    const windowCutoff = new Date(Date.now() - days * 24 * 60 * 60 * 1000)
+    const earliestIssue = projectFilteredIssues.value.length > 0
+      ? projectFilteredIssues.value.reduce((min, i) => i.created < min ? i.created : min, projectFilteredIssues.value[0].created)
+      : null
+    const dataCutoff = earliestIssue ? new Date(earliestIssue) : null
+    const cutoff = dataCutoff && dataCutoff > windowCutoff ? dataCutoff : windowCutoff
+    jql += ` AND created >= "${cutoff.toISOString().slice(0, 10)}"`
+  }
+  jql += ' ORDER BY created DESC'
   return `${host}/issues/?jql=${encodeURIComponent(jql)}`
 }
 
