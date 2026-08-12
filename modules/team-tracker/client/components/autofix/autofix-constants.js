@@ -29,7 +29,8 @@ export const PIPELINE_BAR_SEGMENTS = [
   { state: 'autofix-pending', label: 'Pending', color: 'bg-gray-400' },
   { state: 'autofix-ci-failing', label: 'CI Failing', color: 'bg-orange-500' },
   { state: 'autofix-blocked', label: 'Blocked', color: 'bg-yellow-500' },
-  { state: 'autofix-max-retries', label: 'Max Retries', color: 'bg-red-500' }
+  { state: 'autofix-max-retries', label: 'Max Retries', color: 'bg-red-500' },
+  { state: 'autofix-fork-user-missing', label: 'Fork Missing', color: 'bg-amber-500' }
 ]
 
 export function stateLabel(state) {

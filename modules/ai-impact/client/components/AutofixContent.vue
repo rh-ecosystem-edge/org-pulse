@@ -247,7 +247,8 @@ const metrics = computed(() => {
     merged: windowIssues.filter(i => i.pipelineState === 'autofix-merged').length,
     rejected: windowIssues.filter(i => i.pipelineState === 'autofix-rejected').length,
     maxRetries: windowIssues.filter(i => i.pipelineState === 'autofix-max-retries').length,
-    blocked: windowIssues.filter(i => i.pipelineState === 'autofix-blocked').length
+    blocked: windowIssues.filter(i => i.pipelineState === 'autofix-blocked').length,
+    forkUserMissing: windowIssues.filter(i => i.pipelineState === 'autofix-fork-user-missing').length
   }
 
   const terminalTotal = autofixStates.merged + autofixStates.rejected + autofixStates.maxRetries
@@ -527,8 +528,8 @@ const autofixSegments = computed(() => {
     { label: 'AI Fix Merged', count: a.merged || 0, color: 'bg-green-500', textClass: 'text-green-600 dark:text-green-400', jiraLabels: ['jira-autofix-merged'] },
     { label: 'AI Fix Under Review', count: a.review || 0, color: 'bg-blue-500', textClass: 'text-blue-600 dark:text-blue-400', jiraLabels: ['jira-autofix-review'] },
     { label: 'AI Fix CI Failing', count: a.ciFailing || 0, color: 'bg-orange-500', textClass: 'text-orange-600 dark:text-orange-400', jiraLabels: ['jira-autofix-ci-failing'] },
-    { label: 'AI Working', count: a.pending || 0, color: 'bg-indigo-500', textClass: 'text-indigo-600 dark:text-indigo-400', jiraLabels: ['jira-autofix-pending'], excludeLabels: ['jira-autofix-blocked', 'jira-autofix-ci-failing', 'jira-autofix-review', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries'] },
-    { label: 'Queued for AI', count: a.ready || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-autofix'], excludeLabels: ['jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked'] },
+    { label: 'AI Working', count: a.pending || 0, color: 'bg-indigo-500', textClass: 'text-indigo-600 dark:text-indigo-400', jiraLabels: ['jira-autofix-pending'], excludeLabels: ['jira-autofix-blocked', 'jira-autofix-ci-failing', 'jira-autofix-review', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-fork-user-missing'] },
+    { label: 'Queued for AI', count: a.ready || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-autofix'], excludeLabels: ['jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked', 'jira-autofix-fork-user-missing'] },
     { label: 'AI Fix Rejected', count: a.rejected || 0, color: 'bg-red-500', textClass: 'text-red-600 dark:text-red-400', jiraLabels: ['jira-autofix-rejected'] },
     { label: 'AI Max Retries', count: a.maxRetries || 0, color: 'bg-orange-500', textClass: 'text-orange-600 dark:text-orange-400', jiraLabels: ['jira-autofix-max-retries'] },
     { label: 'AI Blocked', count: a.blocked || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-autofix-blocked'] },
@@ -608,7 +609,7 @@ function buildReadyForAiJql() {
   const stateLabels = [
     'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing',
     'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries',
-    'jira-autofix-blocked'
+    'jira-autofix-blocked', 'jira-autofix-fork-user-missing'
   ]
   const stateLabelList = stateLabels.map(l => `"${l}"`).join(', ')
   let jql = `(labels IN (${stateLabelList}) OR (labels = "jira-autofix" AND (assignee is EMPTY OR assignee = "osac-dev-bot" OR status = "New")))`

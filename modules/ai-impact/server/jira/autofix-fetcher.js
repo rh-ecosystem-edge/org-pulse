@@ -47,10 +47,10 @@ function classifyIssue(labels, status, assignee) {
   // Active autofix states (blocked before pending — blocked is added when
   // the bot gets stuck after starting, but pending may not be removed)
   if (labelSet.has('jira-autofix-blocked')) return 'autofix-blocked';
+  if (labelSet.has('jira-autofix-fork-user-missing')) return 'autofix-fork-user-missing';
   if (labelSet.has('jira-autofix-ci-failing')) return 'autofix-ci-failing';
   if (labelSet.has('jira-autofix-review')) return 'autofix-review';
   if (labelSet.has('jira-autofix-pending')) return 'autofix-pending';
-  if (labelSet.has('jira-autofix-fork-user-missing')) return 'autofix-fork-user-missing';
   if (labelSet.has('jira-autofix') && status === 'New') return 'autofix-ready';
   // Security review takes precedence over human-assigned — don't hide the reason code
   if (labelSet.has('jira-triage-security-review')) return 'triage-security-review';
