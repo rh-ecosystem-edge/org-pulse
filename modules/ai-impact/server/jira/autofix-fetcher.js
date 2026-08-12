@@ -29,7 +29,8 @@ const AUTOFIX_LABELS = [
   'jira-autofix-merged',
   'jira-autofix-rejected',
   'jira-autofix-max-retries',
-  'jira-autofix-blocked'
+  'jira-autofix-blocked',
+  'jira-autofix-fork-user-missing'
 ];
 
 const ALL_PIPELINE_LABELS = [...TRIAGE_LABELS, ...AUTOFIX_LABELS];
@@ -49,6 +50,7 @@ function classifyIssue(labels, status, assignee) {
   if (labelSet.has('jira-autofix-ci-failing')) return 'autofix-ci-failing';
   if (labelSet.has('jira-autofix-review')) return 'autofix-review';
   if (labelSet.has('jira-autofix-pending')) return 'autofix-pending';
+  if (labelSet.has('jira-autofix-fork-user-missing')) return 'autofix-fork-user-missing';
   if (labelSet.has('jira-autofix') && status === 'New') return 'autofix-ready';
   // Security review takes precedence over human-assigned — don't hide the reason code
   if (labelSet.has('jira-triage-security-review')) return 'triage-security-review';
@@ -160,7 +162,8 @@ function computeAutofixMetrics(issues, timeWindow) {
     merged: get('autofix-merged'),
     rejected: get('autofix-rejected'),
     maxRetries: get('autofix-max-retries'),
-    blocked: get('autofix-blocked')
+    blocked: get('autofix-blocked'),
+    forkUserMissing: get('autofix-fork-user-missing')
   };
 
   const autofixTotal = Object.values(autofixStates).reduce(function(s, v) { return s + v; }, 0);

@@ -335,7 +335,8 @@ const STATE_OPTIONS = [
   { value: 'autofix-merged', label: 'AI Fix Merged' },
   { value: 'autofix-rejected', label: 'AI Fix Rejected' },
   { value: 'autofix-max-retries', label: 'AI Max Retries' },
-  { value: 'autofix-blocked', label: 'AI Blocked' }
+  { value: 'autofix-blocked', label: 'AI Blocked' },
+  { value: 'autofix-fork-user-missing', label: 'Fork Not Installed' }
 ]
 
 const stateFilterOptions = STATE_OPTIONS.filter(o => o.value !== 'all')
@@ -491,6 +492,7 @@ function stateColorClass(state) {
   if (state === 'triage-external') return 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400'
   if (state === 'triage-security-review') return 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400'
   if (state === 'triage-human-assigned') return 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400'
+  if (state === 'autofix-fork-user-missing') return 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400'
   return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
 }
 
@@ -499,7 +501,7 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString()
 }
 
-const AUTOFIX_LABELS_EXCLUDE = ['jira-autofix', 'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked', 'jira-autofix-researched']
+const AUTOFIX_LABELS_EXCLUDE = ['jira-autofix', 'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked', 'jira-autofix-researched', 'jira-autofix-fork-user-missing']
 
 const triageSegments = computed(() => {
   if (!metrics.value) return []
@@ -529,7 +531,8 @@ const autofixSegments = computed(() => {
     { label: 'Queued for AI', count: a.ready || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-autofix'], excludeLabels: ['jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked'] },
     { label: 'AI Fix Rejected', count: a.rejected || 0, color: 'bg-red-500', textClass: 'text-red-600 dark:text-red-400', jiraLabels: ['jira-autofix-rejected'] },
     { label: 'AI Max Retries', count: a.maxRetries || 0, color: 'bg-orange-500', textClass: 'text-orange-600 dark:text-orange-400', jiraLabels: ['jira-autofix-max-retries'] },
-    { label: 'AI Blocked', count: a.blocked || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-autofix-blocked'] }
+    { label: 'AI Blocked', count: a.blocked || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-autofix-blocked'] },
+    { label: 'Fork Not Installed', count: a.forkUserMissing || 0, color: 'bg-amber-500', textClass: 'text-amber-600 dark:text-amber-400', jiraLabels: ['jira-autofix-fork-user-missing'] }
   ].filter(s => s.count > 0)
 })
 
