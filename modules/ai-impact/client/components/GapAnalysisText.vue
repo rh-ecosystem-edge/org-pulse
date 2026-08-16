@@ -29,10 +29,11 @@ function detectSectionType(title) {
 /**
  * Parse gap analysis markdown into structured sections.
  * Supports:
- * - Section headers (## Title)
- * - Bullet points with bold titles (**Title** — description)
+ * - Section headers (## Title or ### Title)
+ * - Bullet points (- item, * item) and numbered items (1. item)
  * - Inline bold (**text**)
- * - Section types: resolved (closed gaps), new (newly identified), open (active gaps)
+ * - Section types: critical (### Critical), suggestions (### Suggestions),
+ *   resolved (closed gaps), new (newly identified), open (active gaps)
  */
 const sections = computed(() => {
   if (!props.text) return []
