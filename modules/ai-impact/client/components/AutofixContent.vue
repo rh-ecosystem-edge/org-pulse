@@ -247,7 +247,8 @@ const metrics = computed(() => {
     merged: windowIssues.filter(i => i.pipelineState === 'autofix-merged').length,
     rejected: windowIssues.filter(i => i.pipelineState === 'autofix-rejected').length,
     maxRetries: windowIssues.filter(i => i.pipelineState === 'autofix-max-retries').length,
-    blocked: windowIssues.filter(i => i.pipelineState === 'autofix-blocked').length
+    blocked: windowIssues.filter(i => i.pipelineState === 'autofix-blocked').length,
+    forkUserMissing: windowIssues.filter(i => i.pipelineState === 'autofix-fork-user-missing').length
   }
 
   const terminalTotal = autofixStates.merged + autofixStates.rejected + autofixStates.maxRetries
@@ -335,7 +336,8 @@ const STATE_OPTIONS = [
   { value: 'autofix-merged', label: 'AI Fix Merged' },
   { value: 'autofix-rejected', label: 'AI Fix Rejected' },
   { value: 'autofix-max-retries', label: 'AI Max Retries' },
-  { value: 'autofix-blocked', label: 'AI Blocked' }
+  { value: 'autofix-blocked', label: 'AI Blocked' },
+  { value: 'autofix-fork-user-missing', label: 'Fork Not Installed' }
 ]
 
 const stateFilterOptions = STATE_OPTIONS.filter(o => o.value !== 'all')
@@ -450,28 +452,6 @@ const funnelChartOptions = computed(() => ({
   }
 }))
 
-const waitingChartData = computed(() => ({
-  labels: trendData.value.map(p => p.date),
-  datasets: [
-    { label: 'Under Review', data: trendData.value.map(p => p.review || 0), backgroundColor: 'rgba(59, 130, 246, 0.6)' },
-    { label: 'CI Failing', data: trendData.value.map(p => p.ciFailing || 0), backgroundColor: 'rgba(249, 115, 22, 0.6)' },
-    { label: 'Blocked', data: trendData.value.map(p => p.blocked || 0), backgroundColor: 'rgba(234, 179, 8, 0.6)' },
-    { label: 'Max Retries', data: trendData.value.map(p => p.maxRetries || 0), backgroundColor: 'rgba(239, 68, 68, 0.6)' }
-  ]
-}))
-
-const waitingChartOptions = computed(() => ({
-  responsive: true,
-  maintainAspectRatio: false,
-  plugins: {
-    legend: { display: true, position: 'top', labels: { font: { size: 10 }, color: textColor.value } }
-  },
-  scales: {
-    x: { stacked: true, ticks: { font: { size: 10 }, color: textColor.value, maxRotation: 0 }, grid: { color: gridColor.value } },
-    y: { stacked: true, beginAtZero: true, ticks: { font: { size: 10 }, color: textColor.value, precision: 0 }, title: { display: true, text: 'Issues waiting', font: { size: 11 }, color: textColor.value }, grid: { color: gridColor.value } }
-  }
-}))
-
 const triageWaitingData = computed(() => ({
   labels: trendData.value.map(p => p.date),
   datasets: [
@@ -513,6 +493,7 @@ function stateColorClass(state) {
   if (state === 'triage-external') return 'bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400'
   if (state === 'triage-security-review') return 'bg-rose-100 dark:bg-rose-500/20 text-rose-700 dark:text-rose-400'
   if (state === 'triage-human-assigned') return 'bg-cyan-100 dark:bg-cyan-500/20 text-cyan-700 dark:text-cyan-400'
+  if (state === 'autofix-fork-user-missing') return 'bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400'
   return 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
 }
 
@@ -521,7 +502,7 @@ function formatDate(iso) {
   return new Date(iso).toLocaleDateString()
 }
 
-const AUTOFIX_LABELS_EXCLUDE = ['jira-autofix', 'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked', 'jira-autofix-researched']
+const AUTOFIX_LABELS_EXCLUDE = ['jira-autofix', 'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked', 'jira-autofix-researched', 'jira-autofix-fork-user-missing']
 
 const triageSegments = computed(() => {
   if (!metrics.value) return []
@@ -547,11 +528,12 @@ const autofixSegments = computed(() => {
     { label: 'AI Fix Merged', count: a.merged || 0, color: 'bg-green-500', textClass: 'text-green-600 dark:text-green-400', jiraLabels: ['jira-autofix-merged'] },
     { label: 'AI Fix Under Review', count: a.review || 0, color: 'bg-blue-500', textClass: 'text-blue-600 dark:text-blue-400', jiraLabels: ['jira-autofix-review'] },
     { label: 'AI Fix CI Failing', count: a.ciFailing || 0, color: 'bg-orange-500', textClass: 'text-orange-600 dark:text-orange-400', jiraLabels: ['jira-autofix-ci-failing'] },
-    { label: 'AI Working', count: a.pending || 0, color: 'bg-indigo-500', textClass: 'text-indigo-600 dark:text-indigo-400', jiraLabels: ['jira-autofix-pending'], excludeLabels: ['jira-autofix-blocked', 'jira-autofix-ci-failing', 'jira-autofix-review', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries'] },
-    { label: 'Queued for AI', count: a.ready || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-autofix'], excludeLabels: ['jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked'] },
+    { label: 'AI Working', count: a.pending || 0, color: 'bg-indigo-500', textClass: 'text-indigo-600 dark:text-indigo-400', jiraLabels: ['jira-autofix-pending'], excludeLabels: ['jira-autofix-blocked', 'jira-autofix-ci-failing', 'jira-autofix-review', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-fork-user-missing'] },
+    { label: 'Queued for AI', count: a.ready || 0, color: 'bg-gray-400', textClass: 'text-gray-500 dark:text-gray-400', jiraLabels: ['jira-autofix'], excludeLabels: ['jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing', 'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries', 'jira-autofix-blocked', 'jira-autofix-fork-user-missing'] },
     { label: 'AI Fix Rejected', count: a.rejected || 0, color: 'bg-red-500', textClass: 'text-red-600 dark:text-red-400', jiraLabels: ['jira-autofix-rejected'] },
     { label: 'AI Max Retries', count: a.maxRetries || 0, color: 'bg-orange-500', textClass: 'text-orange-600 dark:text-orange-400', jiraLabels: ['jira-autofix-max-retries'] },
-    { label: 'AI Blocked', count: a.blocked || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-autofix-blocked'] }
+    { label: 'AI Blocked', count: a.blocked || 0, color: 'bg-yellow-500', textClass: 'text-yellow-600 dark:text-yellow-400', jiraLabels: ['jira-autofix-blocked'] },
+    { label: 'Fork Not Installed', count: a.forkUserMissing || 0, color: 'bg-amber-500', textClass: 'text-amber-600 dark:text-amber-400', jiraLabels: ['jira-autofix-fork-user-missing'] }
   ].filter(s => s.count > 0)
 })
 
@@ -627,7 +609,7 @@ function buildReadyForAiJql() {
   const stateLabels = [
     'jira-autofix-pending', 'jira-autofix-review', 'jira-autofix-ci-failing',
     'jira-autofix-merged', 'jira-autofix-rejected', 'jira-autofix-max-retries',
-    'jira-autofix-blocked'
+    'jira-autofix-blocked', 'jira-autofix-fork-user-missing'
   ]
   const stateLabelList = stateLabels.map(l => `"${l}"`).join(', ')
   let jql = `(labels IN (${stateLabelList}) OR (labels = "jira-autofix" AND (assignee is EMPTY OR assignee = "osac-dev-bot" OR status = "New")))`
@@ -1027,7 +1009,7 @@ function buildHumanAssignedJql() {
         </div>
 
         <!-- Pipeline Trends -->
-        <div class="px-6 pb-6 grid grid-cols-1 lg:grid-cols-3 gap-6" v-if="trendData.length > 0 && hasTrendActivity">
+        <div class="px-6 pb-6 grid grid-cols-1 lg:grid-cols-2 gap-6" v-if="trendData.length > 0 && hasTrendActivity">
           <!-- Waiting on Humans: Triage -->
           <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
             <div class="flex items-center justify-between mb-3">
@@ -1045,26 +1027,6 @@ function buildHumanAssignedJql() {
             </div>
             <div class="h-[180px]">
               <Bar :data="triageWaitingData" :options="triageWaitingOptions" />
-            </div>
-          </div>
-
-          <!-- Waiting on Humans: Autofix -->
-          <div class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-5">
-            <div class="flex items-center justify-between mb-3">
-              <div class="flex items-center gap-2">
-                <h3 class="text-sm font-semibold text-gray-900 dark:text-gray-100">Waiting on Humans: Autofix</h3>
-                <div class="relative group">
-                  <svg class="h-3.5 w-3.5 text-gray-400 dark:text-gray-500 cursor-help" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
-                  <div class="absolute right-0 top-6 z-10 hidden group-hover:block w-72 p-2 text-xs text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-lg dark:shadow-gray-900/50">
-                    Autofix issues where a human can help. Under Review: MR waiting for code review. CI Failing: MR exists but CI is red. Blocked: AI got stuck. Max Retries: AI exhausted its attempts.
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="h-[180px]">
-              <Bar :data="waitingChartData" :options="waitingChartOptions" />
             </div>
           </div>
 

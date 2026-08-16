@@ -1001,7 +1001,7 @@ Unified per-feature file combining data from pipeline (GitLab CI), Jira enrichme
 
 ```json
 {
-  "key": "RHAISTRAT-123",
+  "key": "OSAC-123",
   "summary": "Implement model serving autoscaling",
 
   "_sources": {
@@ -1020,7 +1020,7 @@ Unified per-feature file combining data from pipeline (GitLab CI), Jira enrichme
   "pm": { "displayName": "Jane PM" },
   "team": "Model Serving",
   "releaseType": "Feature",
-  "fixVersions": ["rhoai-3.5"],
+  "fixVersions": ["0.4"],
   "labels": ["core"],
   "components": ["Model Serving"],
   "docsRequired": "Yes",
@@ -1034,7 +1034,20 @@ Unified per-feature file combining data from pipeline (GitLab CI), Jira enrichme
     { "type": "Cloners", "direction": "outward", "linkedKey": "RHAIRFE-1234", "linkedSummary": "...", "linkedStatus": "Approved" }
   ],
   "epics": [
-    { "key": "RHOAIENG-456", "summary": "Epic: Autoscaling backend", "status": "In Progress" }
+    {
+      "key": "OSAC-456",
+      "summary": "Epic: Autoscaling backend",
+      "status": "In Progress",
+      "fixVersions": ["0.4"],
+      "fixVersionSource": "direct",
+      "components": ["Model Serving"],
+      "componentSource": "direct",
+      "parentFeatureKey": "OSAC-123",
+      "issueCount": 12,
+      "blockerCount": 1,
+      "pct": 40,
+      "progress": 40
+    }
   ],
   "architect": "Architect Name",
   "parentKey": "RHAISTRAT-100",
@@ -1061,6 +1074,8 @@ Unified per-feature file combining data from pipeline (GitLab CI), Jira enrichme
 - `statusNotes` (pipeline) and `statusSummary` (Jira) are different fields with different formats
 - Jira-owned fields are authoritative when present; pipeline-owned fields (`metrics`, `topology`) are preserved across Jira syncs
 - `aiReview` is optional; only present for features that have been scored by the AI review pipeline
+
+**Epic provenance (`fixVersionSource`, `componentSource`):** each is one of `direct`, `via-parent-feature`, or `unknown`. Consumers must render `via-parent-feature` values with a visible inherited-source indicator — never as if they were the epic's own — and render `unknown` as an explicit unknown state rather than leaving it blank. `parentFeatureKey`, `issueCount`, `blockerCount`, and `pct`/`progress` (`progress` is an alias of `pct`) make each epic object self-contained for consumers, without a separate lookup into `metrics.epicMetrics[]`.
 
 **Optional — AI Review (`aiReview`):**
 
@@ -1235,6 +1250,59 @@ Metadata from the most recent fetch attempt.
 - `warnings` is only present when there were non-fatal issues (e.g., unparseable JSON files)
 - On error: `{ "status": "error", "message": "...", "timestamp": "..." }`
 - On artifact expiration: `{ "status": "artifact_expired", "message": "...", "timestamp": "..." }`
+
+---
+
+## Releases — Feature Tracking (`data/releases/execution/tracking-data-{RELEASE_ID}.json`)
+
+Produced entirely by `org-pulse-data`'s `fetch-releases-feature-tracking.py`, one file per release. `org-pulse` is a read-only consumer — it never writes this file or queries Jira/Product Pages for it.
+
+```json
+{
+  "schemaVersion": 1,
+  "releaseId": "osac-0.2-M1",
+  "displayName": "OSAC 0.2-M1",
+  "fixVersions": ["0.2-M1"],
+  "baselineDate": "2026-07-08",
+  "baselineSource": "releaseStart+7d",
+  "fetchedAt": "2026-08-13T07:56:10Z",
+  "featureCount": 3,
+  "counts": {
+    "committed": 0,
+    "added": 0,
+    "dropped": 0,
+    "moved": 3,
+    "unknown": 0,
+    "blockerPriority": 0
+  },
+  "wasQueryFailed": false,
+  "features": [
+    {
+      "key": "OSAC-1415",
+      "summary": "Support cluster upgrade",
+      "status": "Review",
+      "statusCategory": "In Progress",
+      "priority": "Major",
+      "assignee": "Vitaliy Emporopulo",
+      "components": ["CaaS"],
+      "isBlockerPriority": false,
+      "scopeChange": "moved",
+      "fixVersionAddedAt": null,
+      "fixVersionRemovedAt": "2026-07-23T12:42:14.449+0000",
+      "movedTo": { "releaseId": "osac-0.3", "fixVersion": "0.3" }
+    }
+  ]
+}
+```
+
+**Notes:**
+- `baselineDate`/`baselineSource` are never fabricated: `baselineSource` is `"override"`, `"unknown"`, or `"releaseStart+{N}d"`. `baselineDate` is `null` only when `baselineSource == "unknown"` — no resolvable baseline exists for the release (no override, no registry `releaseStart`).
+- `scopeChange` is one of `null` (committed at baseline), `"added"`, `"dropped"`, `"moved"`, `"unknown"` (baseline is unknown, so scope can't be classified — never conflated with committed).
+- `movedTo` is only present (non-null) when `scopeChange == "moved"`.
+- `isBlockerPriority` reports Jira `priority == "Blocker"` on the Feature itself — it is **not** a "currently blocked" signal (this repo doesn't collect issue-link blocking state for Features).
+- `counts.blockerPriority` excludes features with `scopeChange` of `"dropped"` or `"moved"` — neither remains in the release's current scope.
+- `wasQueryFailed` is `true` when the dropped/moved-detection query failed for this release; when `true`, `counts.dropped`/`counts.moved` may undercount.
+- One file per active, non-Backlog release with a resolvable `fixVersions`; a release with no eligible fixVersion has no tracking-data file at all (not an empty one).
 
 ---
 
