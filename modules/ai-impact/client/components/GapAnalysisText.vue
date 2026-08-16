@@ -17,8 +17,11 @@ function detectSectionType(title) {
   if (lower.includes('resolved') || lower.includes('closed')) {
     return 'resolved'
   }
-  if (lower.includes('new gaps identified') || lower.includes('new gaps')) {
+  if (lower.includes('critical') || lower.includes('new gaps identified') || lower.includes('new gaps')) {
     return 'new'
+  }
+  if (lower.includes('suggestion')) {
+    return 'resolved'
   }
   return 'open'
 }
@@ -42,8 +45,8 @@ const sections = computed(() => {
   for (const line of lines) {
     const trimmed = line.trim()
 
-    const isHeader = trimmed.startsWith('## ')
-    const isBullet = (trimmed.startsWith('- ') || trimmed.startsWith('* '))
+    const isHeader = trimmed.startsWith('## ') || trimmed.startsWith('### ')
+    const isBullet = (trimmed.startsWith('- ') || trimmed.startsWith('* ') || /^\d+\.\s/.test(trimmed))
     const isEmpty = trimmed === ''
 
     // Flush previous bullet when a new structural element starts
@@ -56,7 +59,7 @@ const sections = computed(() => {
 
     if (isHeader) {
       if (currentSection) result.push(currentSection)
-      const title = trimmed.slice(3)
+      const title = trimmed.startsWith('### ') ? trimmed.slice(4) : trimmed.slice(3)
       currentSection = {
         title,
         type: detectSectionType(title),
@@ -66,7 +69,8 @@ const sections = computed(() => {
     }
 
     if (isBullet && currentSection) {
-      currentBullet = trimmed.slice(2)
+      const numMatch = trimmed.match(/^\d+\.\s/)
+      currentBullet = numMatch ? trimmed.slice(numMatch[0].length) : trimmed.slice(2)
       continue
     }
 
