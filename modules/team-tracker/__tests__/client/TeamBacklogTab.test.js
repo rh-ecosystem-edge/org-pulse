@@ -36,10 +36,10 @@ describe('TeamBacklogTab', () => {
         rfeConfig
       }
     })
-    // KServe appears in RFE-1 and RFE-2 = 2 RFEs
-    expect(wrapper.text()).toContain('2 RFEs')
-    // Caikit appears in RFE-3 = 1 RFE
-    expect(wrapper.text()).toContain('1 RFEs')
+    // KServe appears in RFE-1 and RFE-2 = 2 PRDs
+    expect(wrapper.text()).toContain('2 PRDs')
+    // Caikit appears in RFE-3 = 1 PRD
+    expect(wrapper.text()).toContain('1 PRDs')
   })
 
   it('hides Components section when components array is empty', () => {
