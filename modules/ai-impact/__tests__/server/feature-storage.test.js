@@ -69,10 +69,12 @@ describe('readFeatures', () => {
     expect(result.features['RHAISTRAT-1168'].history).toHaveLength(1);
   });
 
-  it('prefers a non-empty top-level Jira-owned components field over aiReview.components', () => {
-    const indexEntry = { key: 'RHAISTRAT-1168', aiReview: { recommendation: 'approve' } };
+  it('prefers the canonical Jira components field from the releases index entry over the feature file', () => {
+    const indexEntry = { key: 'RHAISTRAT-1168', aiReview: { recommendation: 'approve' }, components: ['Storage'] };
     const featureFile = makeFeatureFile();
-    featureFile.components = ['Storage'];
+    // Per-feature detail file can carry an enhancement-proposal-derived slug here;
+    // the index entry's Jira-sourced value must win regardless.
+    featureFile.components = ['storage-control-plane-osac-2872'];
     featureFile.aiReview.components = ['Legacy Component'];
     const read = vi.fn(function(key) {
       if (key === 'releases/execution/index.json') return makeReleasesIndex([indexEntry]);
@@ -84,10 +86,10 @@ describe('readFeatures', () => {
     expect(result.features['RHAISTRAT-1168'].latest.components).toEqual(['Storage']);
   });
 
-  it('trusts an explicit empty top-level components array as authoritative and does not fall back', () => {
-    const indexEntry = { key: 'RHAISTRAT-1168', aiReview: { recommendation: 'approve' } };
+  it('trusts an explicit empty components array on the index entry as authoritative and does not fall back', () => {
+    const indexEntry = { key: 'RHAISTRAT-1168', aiReview: { recommendation: 'approve' }, components: [] };
     const featureFile = makeFeatureFile();
-    featureFile.components = [];
+    featureFile.components = ['some-slug'];
     featureFile.aiReview.components = ['Legacy Component'];
     const read = vi.fn(function(key) {
       if (key === 'releases/execution/index.json') return makeReleasesIndex([indexEntry]);
@@ -99,11 +101,10 @@ describe('readFeatures', () => {
     expect(result.features['RHAISTRAT-1168'].latest.components).toEqual([]);
   });
 
-  it('falls back to aiReview.components when the feature file has no top-level components (legacy records)', () => {
+  it('falls back to aiReview.components when the index entry has no components field (legacy records)', () => {
     const indexEntry = { key: 'RHAISTRAT-1168', aiReview: { recommendation: 'approve' } };
     const featureFile = makeFeatureFile();
     featureFile.aiReview.components = ['Legacy Component'];
-    delete featureFile.components;
     const read = vi.fn(function(key) {
       if (key === 'releases/execution/index.json') return makeReleasesIndex([indexEntry]);
       if (key === 'releases/execution/features/RHAISTRAT-1168.json') return featureFile;
@@ -114,10 +115,9 @@ describe('readFeatures', () => {
     expect(result.features['RHAISTRAT-1168'].latest.components).toEqual(['Legacy Component']);
   });
 
-  it('returns an empty array when neither top-level nor aiReview components are present', () => {
+  it('returns an empty array when neither the index entry nor aiReview have components', () => {
     const indexEntry = { key: 'RHAISTRAT-1168', aiReview: { recommendation: 'approve' } };
     const featureFile = makeFeatureFile();
-    delete featureFile.components;
     delete featureFile.aiReview.components;
     const read = vi.fn(function(key) {
       if (key === 'releases/execution/index.json') return makeReleasesIndex([indexEntry]);

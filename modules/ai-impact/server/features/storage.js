@@ -50,12 +50,14 @@ function readFeatures(readFromStorage) {
     // Read the full feature file for history
     var featureFile = readFromStorage(RELEASES_FEATURE_PREFIX + entry.key + '.json');
     var aiReview = featureFile && featureFile.aiReview ? featureFile.aiReview : {};
-    // Jira-owned components (top-level, written by releases' jira-enrich merge) are the
-    // source of truth, including an explicit [] (Jira enrichment ran and found none).
-    // Only fall back to aiReview.components when the top-level field is absent, i.e.
-    // Jira enrichment has never run for this feature (legacy/unenriched record).
-    var components = featureFile && Array.isArray(featureFile.components)
-      ? featureFile.components
+    // The index entry's components come straight from Jira's Components field
+    // with no transformation, so it's the canonical source. The per-feature
+    // detail file's top-level components can be overridden by an unrelated
+    // enhancement-proposal-derived value upstream, so it is not trusted here.
+    // Only fall back to aiReview.components when the index entry has no
+    // components field at all, i.e. legacy/unenriched record.
+    var components = Array.isArray(entry.components)
+      ? entry.components
       : (aiReview.components || []);
 
     features[entry.key] = {
