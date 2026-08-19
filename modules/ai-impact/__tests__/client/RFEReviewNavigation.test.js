@@ -130,4 +130,16 @@ describe('RFEReviewView navigation', () => {
       'RHAIRFE-1': { key: 'RHAISTRAT-10', summary: 'Linked Feature', status: 'In Progress', fixVersions: [] }
     });
   });
+
+  it('updates componentFilter prop on PhaseContent when it emits update:componentFilter', async () => {
+    const wrapper = mountView();
+    const phaseContent = wrapper.findComponent(PhaseContentStub);
+
+    expect(phaseContent.props('componentFilter')).toBe('all');
+
+    phaseContent.vm.$emit('update:componentFilter', 'Storage');
+    await nextTick();
+
+    expect(wrapper.findComponent(PhaseContentStub).props('componentFilter')).toBe('Storage');
+  });
 });

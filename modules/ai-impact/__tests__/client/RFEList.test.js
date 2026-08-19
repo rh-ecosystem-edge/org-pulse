@@ -52,11 +52,11 @@ describe('RFEList component filter', () => {
     expect(wrapper.emitted('update:componentFilter')[0]).toEqual(['Storage']);
   });
 
-  it('restores the full list when switched back to All Components', () => {
+  it('restores the full list when switched back to All Components', async () => {
     const filtered = mount(RFEList, { props: { rfes, componentFilter: 'Core' } });
     expect(filtered.text()).toContain('1 of 3 total');
 
-    const all = mount(RFEList, { props: { rfes, componentFilter: 'all' } });
-    expect(all.text()).toContain('3 of 3 total');
+    await filtered.setProps({ componentFilter: 'all' });
+    expect(filtered.text()).toContain('3 of 3 total');
   });
 });

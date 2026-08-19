@@ -24,7 +24,9 @@ describe('FeatureList component filter', () => {
 
   it('defaults to All Components and shows every feature', () => {
     const wrapper = mount(FeatureList, { props: { features } });
-    expect(wrapper.find('option[value="all"]').text()).toBe('All AI Recommendations');
+    const selects = wrapper.findAll('select');
+    const componentSelect = selects.find(s => s.find('option[value="all"]').text() === 'All Components');
+    expect(componentSelect.find('option[value="all"]').text()).toBe('All Components');
     expect(wrapper.text()).toContain('3 features');
   });
 
@@ -51,11 +53,11 @@ describe('FeatureList component filter', () => {
     expect(wrapper.emitted('update:componentFilter')[0]).toEqual(['Core']);
   });
 
-  it('restores the full list when switched back to All Components', () => {
+  it('restores the full list when switched back to All Components', async () => {
     const filtered = mount(FeatureList, { props: { features, componentFilter: 'Core' } });
     expect(filtered.text()).toContain('1 feature');
 
-    const all = mount(FeatureList, { props: { features, componentFilter: 'all' } });
-    expect(all.text()).toContain('3 features');
+    await filtered.setProps({ componentFilter: 'all' });
+    expect(filtered.text()).toContain('3 features');
   });
 });
