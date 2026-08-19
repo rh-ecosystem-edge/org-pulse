@@ -50,6 +50,13 @@ function readFeatures(readFromStorage) {
     // Read the full feature file for history
     var featureFile = readFromStorage(RELEASES_FEATURE_PREFIX + entry.key + '.json');
     var aiReview = featureFile && featureFile.aiReview ? featureFile.aiReview : {};
+    // Jira-owned components (top-level, written by releases' jira-enrich merge) are the
+    // source of truth, including an explicit [] (Jira enrichment ran and found none).
+    // Only fall back to aiReview.components when the top-level field is absent, i.e.
+    // Jira enrichment has never run for this feature (legacy/unenriched record).
+    var components = featureFile && Array.isArray(featureFile.components)
+      ? featureFile.components
+      : (aiReview.components || []);
 
     features[entry.key] = {
       latest: {
@@ -65,7 +72,7 @@ function readFeatures(readFromStorage) {
         scores: aiReview.scores || (entry.aiReview && entry.aiReview.scores) || null,
         reviewers: aiReview.reviewers || null,
         labels: entry.labels || [],
-        components: aiReview.components || [],
+        components: components,
         reviewedAt: aiReview.reviewedAt || (entry.aiReview && entry.aiReview.reviewedAt) || null,
         runId: aiReview.runId || undefined,
         approvedBy: aiReview.approvedBy || null,

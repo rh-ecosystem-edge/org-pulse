@@ -73,8 +73,8 @@ vi.mock('../../client/composables/useFeatures.js', () => ({
 const PhaseContentStub = defineComponent({
   name: 'PhaseContent',
   template: '<div class="phase-content"><slot /></div>',
-  props: ['phase', 'loading', 'error', 'rfeData', 'metrics', 'trendData', 'breakdown', 'filteredRFEs', 'timeWindow', 'filter', 'searchQuery', 'chartExpanded', 'assessments', 'filteredAssessments', 'sortBy', 'passFailFilter', 'priorityFilter', 'statusFilter', 'selectedRFE', 'rfeToFeature'],
-  emits: ['selectRFE', 'retry', 'update:timeWindow', 'update:filter', 'update:searchQuery', 'update:chartExpanded', 'update:sortBy', 'update:passFailFilter', 'update:priorityFilter', 'update:statusFilter']
+  props: ['phase', 'loading', 'error', 'rfeData', 'metrics', 'trendData', 'breakdown', 'filteredRFEs', 'timeWindow', 'filter', 'searchQuery', 'chartExpanded', 'assessments', 'filteredAssessments', 'sortBy', 'passFailFilter', 'priorityFilter', 'statusFilter', 'componentFilter', 'selectedRFE', 'rfeToFeature'],
+  emits: ['selectRFE', 'retry', 'update:timeWindow', 'update:filter', 'update:searchQuery', 'update:chartExpanded', 'update:sortBy', 'update:passFailFilter', 'update:priorityFilter', 'update:statusFilter', 'update:componentFilter']
 });
 
 describe('RFEReviewView navigation', () => {
