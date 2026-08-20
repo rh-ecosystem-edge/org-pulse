@@ -215,6 +215,25 @@ test.describe('AI Impact Views @ai-impact', () => {
     await testView(page, 'autofix', 'AutoFix');
   });
 
+  test('autofix bar Jira links use classified issue keys', async ({ page }) => {
+    await page.goto('/#/ai-impact/autofix');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
+
+    const readyRow = page.locator('div.flex.items-center.justify-between').filter({
+      has: page.locator('span.text-sm', { hasText: /^Ready for AI$/ })
+    });
+    if (await readyRow.count()) {
+      const href = await readyRow.locator('a[href*="jql"]').first().getAttribute('href');
+      expect(href).toBeTruthy();
+      const jql = decodeURIComponent(href);
+      expect(jql).toContain('key IN (');
+      expect(jql).not.toContain('assignee is EMPTY');
+    }
+
+    expect(page.errors).toHaveLength(0);
+  });
+
   test('should load AI Commits view', async ({ page }) => {
     await page.goto('/#/ai-impact/ai-commits');
     await page.waitForLoadState('networkidle');
