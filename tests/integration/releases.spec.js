@@ -633,6 +633,24 @@ test.describe('Releases Unified Feature Store @releases', () => {
     expect(feature.aiReview).toHaveProperty('reviewedAt');
   });
 
+  test('feature detail links to the PRD review, PRD pull request, and design links', async ({ page }) => {
+    await page.goto('/#/releases/feature-detail?key=TEST1-1168');
+    await page.waitForLoadState('networkidle');
+    await page.waitForTimeout(DEFAULT_PAGE_WAIT_TIME);
+
+    const sourcePrdButton = page.getByRole('button', { name: 'Open RHAIRFE-1001 in PRD Review', exact: true });
+    await expect(sourcePrdButton).toBeVisible();
+    await expect(sourcePrdButton.locator('..')).toContainText('Source PRD:');
+    await expect(page.getByRole('link', { name: 'Open PRD pull request on GitHub', exact: true }))
+      .toHaveAttribute('href', 'https://github.com/osac-project/enhancement-proposals/pull/1168');
+    await expect(page.getByRole('button', { name: 'Open TEST1-1168 in Design Review', exact: true })).toBeVisible();
+    await expect(page.getByRole('link', { name: 'Open Design pull request on GitHub', exact: true }))
+      .toHaveAttribute('href', 'https://github.com/osac-project/enhancement-proposals/pull/131');
+
+    await sourcePrdButton.click();
+    await expect(page).toHaveURL(/#\/ai-impact\/prd-review\?select=RHAIRFE-1001$/);
+  });
+
   test('AI Impact features API reads from unified store', async ({ request }) => {
     const res = await request.get('/api/modules/ai-impact/features');
     expect(res.ok()).toBe(true);
