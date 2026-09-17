@@ -71,6 +71,16 @@ describe('CiDutyWidget', () => {
     expect(wrapper.text()).toContain('Current')
   })
 
+  it('renders the supporting copy alongside the current lead', async () => {
+    apiRequest.mockResolvedValue(makeRoster([
+      { lead: 'Riccardo Piccoli', workgroup: 'CaaS', startDate: '2000-01-01', endDate: '2999-01-01' }
+    ]))
+    const wrapper = mount(CiDutyWidget, { props: { size: 'half' } })
+    await flushPromises()
+    expect(wrapper.text()).toContain('On duty this week')
+    expect(wrapper.text()).toContain('Keeping our CI systems healthy and running.')
+  })
+
   it('renders the next lead in the footer when there is a current duty', async () => {
     apiRequest.mockResolvedValue(makeRoster([
       { lead: 'Riccardo Piccoli', workgroup: 'CaaS', startDate: '2000-01-01', endDate: '2999-01-01' },
@@ -78,8 +88,7 @@ describe('CiDutyWidget', () => {
     ]))
     const wrapper = mount(CiDutyWidget, { props: { size: 'half' } })
     await flushPromises()
-    expect(wrapper.text()).toContain('Next:')
-    expect(wrapper.text()).toContain('Alice Chen')
+    expect(wrapper.text()).toContain('Next: Alice Chen')
     expect(wrapper.text()).toContain('Networking')
   })
 
