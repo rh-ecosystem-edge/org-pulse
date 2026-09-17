@@ -14,6 +14,17 @@
       { "id": "ci-duty", "label": "CI Duty", "icon": "shield-check" },
       { "id": "component-maturity", "label": "Component maturity", "icon": "layers", "separatorBefore": true, "disabled": true }
     ],
+    "sotuWidgets": [
+      {
+        "id": "ci-duty",
+        "name": "CI Duty",
+        "description": "Current and next CI Duty lead with workgroup and rotation dates",
+        "component": "./client/widgets/CiDutyWidget.vue",
+        "defaultSize": "half",
+        "icon": "ShieldCheck",
+        "category": "system-health"
+      }
+    ],
     "hiddenRoutes": {
       "disconnected-repo-detail": "component-maturity"
     }
