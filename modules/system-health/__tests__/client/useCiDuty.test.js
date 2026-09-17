@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { findCurrentEntry, findNextEntry, sortedRotation, getInitials, formatDutyDate } from '../../client/composables/useCiDuty.js'
+import { findCurrentEntry, findNextEntry, sortedRotation, getInitials, formatDutyDate, assignWorkgroupColors, WORKGROUP_PALETTE } from '../../client/composables/useCiDuty.js'
 
 function entry(lead, workgroup, startDate, endDate) {
   return { lead, workgroup, startDate, endDate }
@@ -108,6 +108,32 @@ describe('getInitials', () => {
 
   it('handles names with more than two words by using first and last', () => {
     expect(getInitials('Mary Jane Watson')).toBe('MW')
+  })
+})
+
+describe('assignWorkgroupColors', () => {
+  it('gives every workgroup a distinct color when there are enough palette slots', () => {
+    const workgroups = ['BMaaS', 'VMaaS', 'Networking', 'Core', 'Storage', 'Metering', 'CaaS']
+    const assignment = assignWorkgroupColors(workgroups)
+    const classes = Object.values(assignment)
+    expect(new Set(classes).size).toBe(workgroups.length)
+  })
+
+  it('is deterministic for the same input set', () => {
+    const workgroups = ['BMaaS', 'VMaaS', 'Networking']
+    expect(assignWorkgroupColors(workgroups)).toEqual(assignWorkgroupColors([...workgroups].reverse()))
+  })
+
+  it('ignores duplicates and falsy values', () => {
+    const assignment = assignWorkgroupColors(['CaaS', 'CaaS', null, undefined, ''])
+    expect(Object.keys(assignment)).toEqual(['CaaS'])
+  })
+
+  it('degrades to repeated colors once workgroups exceed palette size', () => {
+    const workgroups = Array.from({ length: WORKGROUP_PALETTE.length + 3 }, (_, i) => `Group${i}`)
+    const assignment = assignWorkgroupColors(workgroups)
+    expect(new Set(Object.values(assignment)).size).toBeLessThanOrEqual(WORKGROUP_PALETTE.length)
+    expect(Object.keys(assignment).length).toBe(workgroups.length)
   })
 })
 

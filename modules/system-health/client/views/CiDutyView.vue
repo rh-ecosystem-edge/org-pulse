@@ -4,7 +4,7 @@ import { ClockIcon, CalendarDaysIcon } from 'lucide-vue-next'
 import { useCiDuty, formatDutyDate, getInitials } from '../composables/useCiDuty.js'
 import WorkgroupBadge from '../components/ci-duty/WorkgroupBadge.vue'
 
-const { loading, error, notFound, load, currentEntry, nextEntry, rotation } = useCiDuty()
+const { loading, error, notFound, load, currentEntry, nextEntry, rotation, workgroupColors } = useCiDuty()
 
 onMounted(load)
 
@@ -68,7 +68,7 @@ function retry() {
               </div>
               <div class="min-w-0">
                 <p class="text-base font-semibold text-gray-900 dark:text-gray-100 truncate">{{ currentEntry.lead }}</p>
-                <WorkgroupBadge class="mt-1.5" :workgroup="currentEntry.workgroup" />
+                <WorkgroupBadge class="mt-1.5" :workgroup="currentEntry.workgroup" :color-class="workgroupColors[currentEntry.workgroup]" />
               </div>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-4">
@@ -91,7 +91,7 @@ function retry() {
               </div>
               <div class="min-w-0">
                 <p class="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">{{ nextEntry.lead }}</p>
-                <WorkgroupBadge class="mt-1.5" :workgroup="nextEntry.workgroup" />
+                <WorkgroupBadge class="mt-1.5" :workgroup="nextEntry.workgroup" :color-class="workgroupColors[nextEntry.workgroup]" />
               </div>
             </div>
             <p class="text-xs text-gray-500 dark:text-gray-400 mt-4">
@@ -146,7 +146,7 @@ function retry() {
                   >Current</span>
                 </span>
               </td>
-              <td class="px-4 py-2"><WorkgroupBadge :workgroup="entry.workgroup" /></td>
+              <td class="px-4 py-2"><WorkgroupBadge :workgroup="entry.workgroup" :color-class="workgroupColors[entry.workgroup]" /></td>
               <td class="px-4 py-2 text-gray-700 dark:text-gray-300">{{ formatDutyDate(entry.startDate) }}</td>
               <td class="px-4 py-2 text-gray-700 dark:text-gray-300">{{ formatDutyDate(entry.endDate) }}</td>
             </tr>
