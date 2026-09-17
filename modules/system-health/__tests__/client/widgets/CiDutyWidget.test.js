@@ -58,6 +58,18 @@ describe('CiDutyWidget', () => {
     expect(wrapper.text()).toContain('No one is currently on CI Duty')
   })
 
+  it('shows "no current duty" alongside the next duty during a roster gap', async () => {
+    apiRequest.mockResolvedValue(makeRoster([
+      { lead: 'Past Person', workgroup: 'CaaS', startDate: '2000-01-01', endDate: '2000-01-07' },
+      { lead: 'Future Lead', workgroup: 'Networking', startDate: '2999-01-01', endDate: '2999-01-07' }
+    ]))
+    const wrapper = mount(CiDutyWidget, { props: { size: 'half' } })
+    await flushPromises()
+    expect(wrapper.text()).toContain('No one is currently on CI Duty')
+    expect(wrapper.text()).toContain('Next: Future Lead')
+    expect(wrapper.text()).toContain('Networking')
+  })
+
   it('renders the current lead with workgroup badge and date range', async () => {
     apiRequest.mockResolvedValue(makeRoster([
       { lead: 'Riccardo Piccoli', workgroup: 'CaaS', startDate: '2000-01-01', endDate: '2999-01-01' }

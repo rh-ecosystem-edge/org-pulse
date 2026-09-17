@@ -42,14 +42,14 @@ onMounted(load)
       CI Duty roster unavailable.
     </p>
 
-    <!-- No current duty -->
-    <p v-else-if="!currentEntry" class="text-sm text-gray-500 dark:text-gray-400 py-1">
-      No one is currently on CI Duty.
-    </p>
-
     <template v-else>
       <div :class="size === 'full' ? 'w-full xl:max-w-xl' : 'w-full'">
-        <div class="rounded-lg border border-gray-200 dark:border-gray-700 border-l-4 border-l-primary-500 bg-primary-50/40 dark:bg-primary-500/5 p-4">
+        <!-- No current duty -->
+        <p v-if="!currentEntry" class="text-sm text-gray-500 dark:text-gray-400 py-1">
+          No one is currently on CI Duty.
+        </p>
+
+        <div v-else class="rounded-lg border border-gray-200 dark:border-gray-700 border-l-4 border-l-primary-500 bg-primary-50/40 dark:bg-primary-500/5 p-4">
           <span class="inline-flex items-center gap-1.5 text-xs font-medium px-2 py-0.5 rounded-full bg-primary-100 text-primary-700 dark:bg-primary-900/40 dark:text-primary-400">
             <span class="w-1.5 h-1.5 rounded-full bg-primary-500"></span>
             Current
