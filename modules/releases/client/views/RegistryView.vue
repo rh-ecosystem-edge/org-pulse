@@ -32,7 +32,9 @@
     <!-- Releases tab -->
     <div v-else class="max-w-4xl mx-auto py-6 px-4">
     <div class="flex items-center justify-between mb-6">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">Release Registry</h1>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-gray-100">
+        Release Registry<span v-if="projectId"> · {{ projectId }}</span>
+      </h1>
       <div class="flex items-center gap-3">
         <input
           v-model="searchQuery"
@@ -81,9 +83,26 @@
     <!-- Loading state -->
     <div v-if="loading" class="text-center py-12 text-gray-500 dark:text-gray-400">Loading releases...</div>
 
+    <!-- Publication failure state -->
+    <div
+      v-else-if="errorMessage"
+      class="text-center py-16 bg-white dark:bg-gray-800 rounded-lg border border-red-200 dark:border-red-900"
+    >
+      <h3 class="text-lg font-semibold text-red-700 dark:text-red-300 mb-2">Release registry unavailable</h3>
+      <p class="text-gray-500 dark:text-gray-400">{{ errorMessage }}</p>
+    </div>
+
+    <!-- Stale/partial publication state -->
+    <div
+      v-if="publication?.partial || publication?.freshness === 'stale' || publication?.freshness === 'expired'"
+      class="mb-4 rounded-lg border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-900/20 px-4 py-3 text-sm text-amber-800 dark:text-amber-200"
+    >
+      This registry is showing previously published data while the latest source attempt is unavailable.
+    </div>
+
     <!-- Empty state -->
     <div
-      v-else-if="releases.length === 0"
+      v-if="!loading && !errorMessage && releases.length === 0"
       class="text-center py-16 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700"
     >
       <div class="text-gray-400 dark:text-gray-500 mb-4">
@@ -97,7 +116,7 @@
 
     <!-- No matches for current filter -->
     <div
-      v-else-if="filteredReleases.length === 0"
+      v-if="!loading && !errorMessage && releases.length > 0 && filteredReleases.length === 0"
       class="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-8 text-center"
     >
       <h3 class="text-lg font-medium text-gray-900 dark:text-gray-100 mb-1">No matching releases</h3>
@@ -105,7 +124,7 @@
     </div>
 
     <!-- Release cards -->
-    <div v-else class="space-y-4">
+    <div v-if="!loading && !errorMessage && releases.length > 0 && filteredReleases.length > 0" class="space-y-4">
       <div
         v-for="release in filteredReleases"
         :key="release.id"
@@ -212,9 +231,13 @@ const hasAccess = computed(() => isAdmin.value || userRoles.value.includes('plan
 
 const releases = ref([])
 const loading = ref(true)
+const errorMessage = ref('')
+const publication = ref(null)
 const showArchived = ref(false)
 const selectedProduct = ref(null)
 const searchQuery = ref('')
+const projectId = computed(() => nav.params.value?.projectId || '')
+let requestSequence = 0
 
 const KNOWN_MILESTONES = ['codeFreeze', 'ea1', 'ga']
 
@@ -245,15 +268,31 @@ const filteredReleases = computed(() => {
 })
 
 async function fetchReleases() {
+  const sequence = ++requestSequence
+  loading.value = true
+  errorMessage.value = ''
+  publication.value = null
+  releases.value = []
+  const suffix = projectId.value ? `?projectId=${encodeURIComponent(projectId.value)}` : ''
   try {
-    const data = await apiRequest('/modules/releases/registry')
+    const data = await apiRequest(`/modules/releases/registry${suffix}`)
+    if (sequence !== requestSequence) return
     releases.value = data.releases || []
+    publication.value = data.publication || null
   } catch (e) {
+    if (sequence !== requestSequence) return
     console.error('Failed to fetch releases:', e)
+    errorMessage.value = e?.data?.error || e?.message || 'The release registry could not be loaded.'
   } finally {
-    loading.value = false
+    if (sequence === requestSequence) loading.value = false
   }
 }
+
+watch(projectId, () => {
+  selectedProduct.value = null
+  searchQuery.value = ''
+  if (hasAccess.value) fetchReleases()
+})
 
 function formatMilestoneLabel(key) {
   const labels = { codeFreeze: 'Code Freeze', ea1: 'EA1', ga: 'GA' }
