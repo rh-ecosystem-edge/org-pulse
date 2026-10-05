@@ -1,5 +1,44 @@
 const { test, expect } = require('@playwright/test');
 const evidence = require('../../fixtures/releases/project-execution-evidence.json');
+const express = require('express');
+const registerEvidenceRoutes = require('../../modules/releases/server/execution/evidence-routes');
+
+test('execution presentation API reports unavailable for unsupported views @releases', async ({ request }) => {
+  const profile = { projectId: 'flightctl', capabilities: {} };
+  let profiles = [profile];
+  const app = express();
+  const router = express.Router();
+  registerEvidenceRoutes(router, {
+    projects: { get: id => profiles.find(row => row.projectId === id), list: () => profiles },
+    requireAuth: (_req, _res, next) => next(),
+    requireScope: () => (_req, _res, next) => next()
+  });
+  app.use('/api/modules/releases/execution', router);
+  const server = await new Promise(resolve => {
+    const listener = app.listen(0, '127.0.0.1', () => resolve(listener));
+  });
+  const url = `http://127.0.0.1:${server.address().port}/api/modules/releases/execution/presentation`;
+  try {
+    for (const [capability, state, view] of [
+      [{ state: 'supported' }, 'unavailable', null],
+      [{ state: 'supported', view: 'unknown' }, 'unavailable', null],
+      [{ state: 'empty', view: 'feature-execution' }, 'empty', 'feature-execution'],
+      [{ state: 'disabled', view: 'release-evidence' }, 'disabled', 'release-evidence'],
+      [{ state: 'supported', artifactKey: 'sources/release-execution/registry.json' }, 'supported', 'release-evidence']
+    ]) {
+      profile.capabilities.releaseExecution = capability;
+      const response = await request.get(url, { params: { projectId: 'flightctl' } });
+      expect(response.status()).toBe(200);
+      expect(await response.json()).toMatchObject({ projectId: 'flightctl', state, view });
+    }
+    profiles = [];
+    const legacy = await request.get(url);
+    expect(legacy.status()).toBe(200);
+    expect(await legacy.json()).toMatchObject({ projectId: 'osac', state: 'supported', view: 'feature-execution' });
+  } finally {
+    await new Promise((resolve, reject) => server.close(error => error ? reject(error) : resolve()));
+  }
+});
 
 test.describe('Release execution evidence @releases', () => {
   test.setTimeout(60000);

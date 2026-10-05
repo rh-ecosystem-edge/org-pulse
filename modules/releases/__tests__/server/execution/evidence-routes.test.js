@@ -43,6 +43,39 @@ describe('project release execution evidence', () => {
       expect(t.projects.readArtifact).not.toHaveBeenCalled()
     }
   })
+  it.each([
+    { state: 'supported' },
+    { state: 'empty', view: null },
+    { state: 'supported', view: '' },
+    { state: 'supported', view: 'unknown' },
+    { state: 'supported', view: 'unknown', artifactKey: 'sources/release-execution/registry.json' },
+  ])('reports unavailable for an unsupported presentation: %j', capability => {
+    const t = setup(null)
+    t.projects.get('flightctl').capabilities.releaseExecution = capability
+    t.request({ projectId: 'flightctl' }, '/presentation')
+    expect(t.res.body).toMatchObject({ projectId: 'flightctl', state: 'unavailable', view: null })
+    expect(t.projects.readArtifact).not.toHaveBeenCalled()
+  })
+  it.each(['feature-execution', 'release-evidence'])('preserves capability states for %s', view => {
+    for (const state of ['supported', 'empty', 'disabled', 'error', undefined]) {
+      const t = setup(null)
+      t.projects.get('flightctl').capabilities.releaseExecution = { state, view }
+      t.request({ projectId: 'flightctl' }, '/presentation')
+      expect(t.res.body).toMatchObject({ state: state || 'unavailable', view })
+    }
+  })
+  it('preserves the artifact-key presentation fallback', () => {
+    const t = setup(null)
+    t.projects.get('flightctl').capabilities.releaseExecution = { state: 'empty', artifactKey: 'sources/release-execution/registry.json' }
+    t.request({ projectId: 'flightctl' }, '/presentation')
+    expect(t.res.body).toMatchObject({ state: 'empty', view: 'release-evidence' })
+  })
+  it('preserves supported legacy presentation without published profiles', () => {
+    const t = setup(null)
+    t.projects.list = () => []
+    t.request({}, '/presentation')
+    expect(t.res.body).toMatchObject({ projectId: 'osac', state: 'supported', view: 'feature-execution' })
+  })
   it('reads the third project publication through the same configured evidence path', () => {
     const t = setup({ projectId: 'microshift', state: 'empty', data: { projectId: 'microshift', releases: [] } })
     t.request({ projectId: 'microshift' })

@@ -32,7 +32,7 @@ module.exports = function registerExecutionEvidenceRoutes(router, context) {
     return res.json({
       projectId: selection.projectId,
       projectDisplayName: selection.profile?.displayName || selection.projectId,
-      state: selection.legacy ? 'supported' : capability?.state || 'unavailable',
+      state: selection.legacy ? 'supported' : supportedView ? capability?.state || 'unavailable' : 'unavailable',
       view: supportedView ? view : null,
       message: capability?.reason || (!supportedView ? 'Execution presentation is not configured for this project.' : null)
     });
