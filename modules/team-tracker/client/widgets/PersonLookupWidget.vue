@@ -2,6 +2,7 @@
 import { ref, computed, onMounted, onBeforeUnmount } from 'vue'
 import { useRoster } from '@shared/client/composables/useRoster.js'
 import { useModuleLink } from '@shared/client/composables/useModuleLink.js'
+import { useProjectId, projectParam } from '@shared/client/composables/useProjectId.js'
 import { Search } from 'lucide-vue-next'
 
 defineProps({
@@ -9,31 +10,29 @@ defineProps({
 })
 
 const { navigateTo: crossNavigate } = useModuleLink()
-const { rosterData, loading, loadRoster } = useRoster()
+const { teams, loading, loadRoster } = useRoster()
+const projectId = useProjectId()
 
 onMounted(() => {
   loadRoster()
 })
 
-// Flatten all people from all orgs/teams into a searchable list
+// Flatten all people from all teams into a searchable list
 const allPeople = computed(() => {
-  if (!rosterData.value?.orgs) return []
   const seen = new Set()
   const people = []
-  for (const org of rosterData.value.orgs) {
-    if (!org.teams) continue
-    for (const [teamName, team] of Object.entries(org.teams)) {
-      for (const member of team.members) {
-        const key = member.uid || member.name
-        if (seen.has(key)) continue
-        seen.add(key)
-        people.push({
-          uid: member.uid,
-          name: member.name || member.jiraDisplayName || key,
-          title: member.title || '',
-          teamName: team.displayName || teamName
-        })
-      }
+  for (const team of teams.value) {
+    for (const member of team.members) {
+      const key = member.uid || member.accountId || member.name
+      if (seen.has(key)) continue
+      seen.add(key)
+      people.push({
+        uid: member.uid || null,
+        accountId: member.accountId || null,
+        name: member.name || member.jiraDisplayName || key,
+        title: member.title || '',
+        teamName: team.displayName
+      })
     }
   }
   return people.sort((a, b) => a.name.localeCompare(b.name))
@@ -68,6 +67,8 @@ function selectPerson(person) {
   searchText.value = ''
   if (person.uid) {
     crossNavigate('team-tracker', 'person-detail', { uid: person.uid, from: 'sotu' })
+  } else if (person.accountId) {
+    crossNavigate('team-tracker', 'person-detail', { ...projectParam(projectId.value), accountId: person.accountId, from: 'sotu' })
   }
 }
 
@@ -130,7 +131,7 @@ onBeforeUnmount(() => document.removeEventListener('mousedown', onClickOutside))
       >
         <li
           v-for="(person, idx) in filteredPeople"
-          :key="person.uid || person.name"
+          :key="person.uid || person.accountId || person.name"
           :id="`plw-opt-${idx}`"
           role="option"
           :aria-selected="highlightedIndex === idx"

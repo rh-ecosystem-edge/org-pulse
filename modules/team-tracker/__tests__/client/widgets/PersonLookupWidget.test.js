@@ -3,36 +3,32 @@ import { mount } from '@vue/test-utils'
 import { ref } from 'vue'
 import PersonLookupWidget from '../../../client/widgets/PersonLookupWidget.vue'
 
-const mockRosterData = ref({
-  orgs: [
-    {
-      key: 'org1',
-      teams: {
-        'Team Alpha': {
-          displayName: 'Team Alpha',
-          members: [
-            { uid: 'jdoe', name: 'Jane Doe', title: 'Senior Engineer' },
-            { uid: 'jsmith', name: 'John Smith', title: 'Manager' }
-          ]
-        },
-        'Team Beta': {
-          displayName: 'Team Beta',
-          members: [
-            { uid: 'abrown', name: 'Alice Brown', title: 'Staff Engineer' },
-            { uid: 'jdoe', name: 'Jane Doe', title: 'Senior Engineer' } // duplicate
-          ]
-        }
-      }
-    }
-  ]
-})
+const mockTeams = ref([
+  {
+    key: 'org1::Team Alpha',
+    displayName: 'Team Alpha',
+    members: [
+      { uid: 'jdoe', name: 'Jane Doe', title: 'Senior Engineer' },
+      { uid: 'jsmith', name: 'John Smith', title: 'Manager' }
+    ]
+  },
+  {
+    key: 'org1::Team Beta',
+    displayName: 'Team Beta',
+    members: [
+      { uid: 'abrown', name: 'Alice Brown', title: 'Staff Engineer' },
+      { uid: 'jdoe', name: 'Jane Doe', title: 'Senior Engineer' }, // duplicate
+      { accountId: 'acct-99', name: 'Carla Flight', title: 'Project Engineer' }
+    ]
+  }
+])
 
 const mockLoadRoster = vi.fn()
 const mockCrossNavigate = vi.fn()
 
 vi.mock('@shared/client/composables/useRoster.js', () => ({
   useRoster: () => ({
-    rosterData: mockRosterData,
+    teams: mockTeams,
     loading: ref(false),
     loadRoster: mockLoadRoster
   })
@@ -44,9 +40,16 @@ vi.mock('@shared/client/composables/useModuleLink.js', () => ({
   })
 }))
 
+const { mockProjectId } = vi.hoisted(() => ({ mockProjectId: { value: '' } }))
+vi.mock('@shared/client/composables/useProjectId.js', () => ({
+  useProjectId: () => mockProjectId,
+  projectParam: id => (id ? { projectId: id } : {})
+}))
+
 describe('PersonLookupWidget', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockProjectId.value = ''
   })
 
   it('renders in half size', () => {
@@ -110,7 +113,7 @@ describe('PersonLookupWidget', () => {
     expect(option.text()).toContain('Team Beta')
   })
 
-  it('navigates to person-detail on click', async () => {
+  it('navigates to person-detail on click (legacy uid, no projectId)', async () => {
     const wrapper = mount(PersonLookupWidget)
     const input = wrapper.find('input')
     await input.setValue('John')
@@ -118,6 +121,38 @@ describe('PersonLookupWidget', () => {
     const option = wrapper.find('li[role="option"]')
     await option.trigger('mousedown')
     expect(mockCrossNavigate).toHaveBeenCalledWith('team-tracker', 'person-detail', { uid: 'jsmith', from: 'sotu' })
+  })
+
+  it('uid navigation stays legacy even when a projectId is set', async () => {
+    mockProjectId.value = 'flightctl'
+    const wrapper = mount(PersonLookupWidget)
+    const input = wrapper.find('input')
+    await input.setValue('John')
+    await input.trigger('input')
+    const option = wrapper.find('li[role="option"]')
+    await option.trigger('mousedown')
+    expect(mockCrossNavigate).toHaveBeenCalledWith('team-tracker', 'person-detail', { uid: 'jsmith', from: 'sotu' })
+  })
+
+  it('navigates to person-detail with accountId preserving projectId when project-qualified', async () => {
+    mockProjectId.value = 'flightctl'
+    const wrapper = mount(PersonLookupWidget)
+    const input = wrapper.find('input')
+    await input.setValue('Carla')
+    await input.trigger('input')
+    const option = wrapper.find('li[role="option"]')
+    await option.trigger('mousedown')
+    expect(mockCrossNavigate).toHaveBeenCalledWith('team-tracker', 'person-detail', { projectId: 'flightctl', accountId: 'acct-99', from: 'sotu' })
+  })
+
+  it('accountId navigation omits projectId when none is set', async () => {
+    const wrapper = mount(PersonLookupWidget)
+    const input = wrapper.find('input')
+    await input.setValue('Carla')
+    await input.trigger('input')
+    const option = wrapper.find('li[role="option"]')
+    await option.trigger('mousedown')
+    expect(mockCrossNavigate).toHaveBeenCalledWith('team-tracker', 'person-detail', { accountId: 'acct-99', from: 'sotu' })
   })
 
   it('clears search after navigation', async () => {

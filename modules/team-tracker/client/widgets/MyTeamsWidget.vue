@@ -5,15 +5,17 @@ import { useRoster } from '@shared/client/composables/useRoster.js'
 import { usePermissions } from '@shared/client/composables/usePermissions.js'
 import { useFieldDefinitions } from '@shared/client/composables/useFieldDefinitions.js'
 import { useModuleLink } from '@shared/client/composables/useModuleLink.js'
+import { useProjectId, projectParam } from '@shared/client/composables/useProjectId.js'
 
 defineProps({
   size: { type: String, default: 'half' }
 })
 
 const { navigateTo: crossNavigate } = useModuleLink()
+const projectId = useProjectId()
 const { user } = useAuth()
 const { userUid } = usePermissions()
-const { rosterData, loading: rosterLoading, loadRoster } = useRoster()
+const { teams: rosterTeams, loading: rosterLoading, loadRoster } = useRoster()
 const { definitions, loading: defsLoading, fetchDefinitions } = useFieldDefinitions()
 
 onMounted(() => {
@@ -39,22 +41,12 @@ const componentTeamFieldId = computed(() => {
   return comp?.id || null
 })
 
-const allTeams = computed(() => {
-  const orgs = rosterData.value?.orgs || []
-  const result = []
-  for (const org of orgs) {
-    if (!org.teams) continue
-    for (const [teamName, team] of Object.entries(org.teams)) {
-      result.push({
-        key: `${org.key}::${teamName}`,
-        displayName: team.displayName,
-        members: team.members,
-        metadata: team.metadata || {}
-      })
-    }
-  }
-  return result
-})
+const allTeams = computed(() => rosterTeams.value.map(team => ({
+  key: team.key,
+  displayName: team.displayName,
+  members: team.members,
+  metadata: team.metadata || {}
+})))
 
 function isCurrentUser(member) {
   const uid = userUid.value
@@ -85,7 +77,7 @@ function getTeamComponents(metadata) {
 const loading = computed(() => rosterLoading.value || defsLoading.value)
 
 function handleTeamClick(teamKey) {
-  crossNavigate('team-tracker', 'team-detail', { teamKey, from: 'sotu' })
+  crossNavigate('team-tracker', 'team-detail', { ...projectParam(projectId.value), teamKey, from: 'sotu' })
 }
 </script>
 
