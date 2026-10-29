@@ -58,6 +58,7 @@ const hygieneFeatures = ref({})
 const executionFeatures = ref([])
 const summary = ref(null)
 const fetchedAt = ref(null)
+const allHygieneDataPublished = ref(false)
 const unavailableMessage = ref('')
 
 async function loadVersions() {
@@ -99,6 +100,7 @@ async function loadData(versions) {
     executionFeatures.value = []
     summary.value = null
     fetchedAt.value = null
+    allHygieneDataPublished.value = false
     loading.value = false
     return
   }
@@ -109,6 +111,7 @@ async function loadData(versions) {
   try {
     const mergedHygiene = {}
     let oldestFetchedAt = null
+    let allPublished = true
     let mergedSummary = null
     const execByKey = {}
 
@@ -118,11 +121,26 @@ async function loadData(versions) {
         ? rel.fixVersions[0]
         : version
 
-      const [hygieneData, summaryData, execData] = await Promise.all([
+      const [displayHygiene, displaySummary, execData] = await Promise.all([
         apiRequest(scopedUrl('/modules/releases/hygiene/features', { version })),
         apiRequest(scopedUrl('/modules/releases/hygiene/summary', { version })),
         apiRequest(scopedUrl('/modules/releases/execution/features', { version: execVersion }))
       ])
+
+      if (requestId !== dataRequestId || projectId.value !== requestedProjectId) return
+      let hygieneData = displayHygiene
+      let summaryData = displaySummary
+      const hasDisplayData = displayHygiene?.fetchedAt || displaySummary?.fetchedAt ||
+        Object.keys(displayHygiene?.features || {}).length > 0 || displaySummary?.totalFeatures > 0
+      const initialUnavailable = [displayHygiene, displaySummary, execData].some(item => item?.state === 'unavailable')
+      if (!hasDisplayData && !initialUnavailable && execVersion !== version) {
+        const [fallbackHygiene, fallbackSummary] = await Promise.all([
+          apiRequest(scopedUrl('/modules/releases/hygiene/features', { version: execVersion })),
+          apiRequest(scopedUrl('/modules/releases/hygiene/summary', { version: execVersion }))
+        ])
+        hygieneData = fallbackHygiene
+        summaryData = fallbackSummary
+      }
 
       if (requestId !== dataRequestId || projectId.value !== requestedProjectId) return
       const unavailable = [hygieneData, summaryData, execData].find(item => item?.state === 'unavailable')
@@ -134,6 +152,7 @@ async function loadData(versions) {
       Object.assign(mergedHygiene, hygieneData.features || {})
 
       const fa = hygieneData.fetchedAt
+      if (!fa) allPublished = false
       if (fa && (!oldestFetchedAt || new Date(fa) < new Date(oldestFetchedAt))) {
         oldestFetchedAt = fa
       }
@@ -163,6 +182,7 @@ async function loadData(versions) {
 
     hygieneFeatures.value = mergedHygiene
     fetchedAt.value = oldestFetchedAt
+    allHygieneDataPublished.value = allPublished
     summary.value = mergedSummary
     executionFeatures.value = Object.values(execByKey)
   } catch (err) {
@@ -236,6 +256,7 @@ watch(projectId, async () => {
   executionFeatures.value = []
   summary.value = null
   fetchedAt.value = null
+  allHygieneDataPublished.value = false
   unavailableMessage.value = ''
   await loadVersions()
 }, { flush: 'sync' })
@@ -530,8 +551,11 @@ const versionOptions = computed(() =>
       v-else-if="!hasData && !error"
       class="text-center py-12"
     >
-      <p class="text-gray-500 dark:text-gray-400 mb-4">No hygiene data available for this version.</p>
-      <p class="text-xs text-gray-400 dark:text-gray-500">Use the Manage page to trigger a hygiene data refresh.</p>
+      <p v-if="allHygieneDataPublished" class="text-gray-500 dark:text-gray-400 mb-4">No features found for the selected release.</p>
+      <template v-else>
+        <p class="text-gray-500 dark:text-gray-400 mb-4">No hygiene data available for this version.</p>
+        <p class="text-xs text-gray-400 dark:text-gray-500">Use the Manage page to trigger a hygiene data refresh.</p>
+      </template>
     </div>
 
     <!-- Kanban board -->
