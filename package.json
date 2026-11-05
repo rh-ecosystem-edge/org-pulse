@@ -73,6 +73,10 @@
     "vitest": "^5.1.0",
     "xlsx": "^0.18.5"
   },
+  "overrides": {
+    "minimatch": "^11.0.1",
+    "glob": "^14.0.2"
+  },
   "lint-staged": {
     "*.{js,mjs,cjs,vue}": "eslint --fix"
   }
