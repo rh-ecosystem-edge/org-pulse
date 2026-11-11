@@ -41,7 +41,7 @@
     "ldapjs": "^3.0.7",
     "lucide-vue-next": "^1.0.0",
     "marked": "^18.0.14",
-    "mermaid": "^12.2.0",
+    "mermaid": "^12.3.0",
     "node-fetch": "^3.3.2",
     "sortablejs": "^1.15.7",
     "swagger-jsdoc": "^6.3.0",
