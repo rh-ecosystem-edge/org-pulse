@@ -19,7 +19,7 @@
       <OverviewView v-if="activeTab === 'feature-list'" />
       <FeatureTrackingView v-else-if="activeTab === 'feature-tracking'" />
       <EpicsByReleaseView v-else-if="activeTab === 'epics-by-release'" />
-      <EpicsByComponentView v-else-if="activeTab === 'ui-epics-by-component'" />
+      <UiUxByComponentView v-else-if="activeTab === 'ui-epics-by-component'" />
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ import { useProjectId } from '@shared/client/composables/useProjectId.js'
 import OverviewView from '../execute/views/OverviewView.vue'
 import FeatureTrackingView from '../execute/views/FeatureTrackingView.vue'
 import EpicsByReleaseView from '../execute/views/EpicsByReleaseView.vue'
-import EpicsByComponentView from '../execute/views/EpicsByComponentView.vue'
+import UiUxByComponentView from '../execute/views/UiUxByComponentView.vue'
 import { resolveComponentDashboard } from '../execute/utils/componentDashboardConfig'
 
 const nav = inject('moduleNav')
@@ -40,7 +40,7 @@ const ALL_TABS = [
   { id: 'feature-list', label: 'Feature List' },
   { id: 'feature-tracking', label: 'Feature Tracking', projectIds: ['osac'] },
   { id: 'epics-by-release', label: 'Epics by Release', projectIds: ['osac'] },
-  { id: 'ui-epics-by-component', label: 'UI Epics by Component', requiresComponentDashboard: true },
+  { id: 'ui-epics-by-component', label: 'UI/UX by Component', requiresComponentDashboard: true },
 ]
 
 const projectId = useProjectId()
@@ -51,16 +51,22 @@ const tabs = computed(() => ALL_TABS.filter(tab =>
 ))
 const validTabs = computed(() => tabs.value.map(tab => tab.id))
 const DEFAULT_TAB = 'feature-list'
+const RELEASE_TAB = 'ui-epics-by-component'
 const activeTab = ref(DEFAULT_TAB)
 
 let updatingFromUrl = false
 
 watch(activeTab, (tab) => {
-  if (!updatingFromUrl) nav.updateParams({ tab: tab === DEFAULT_TAB ? undefined : tab })
+  // `release` belongs to the UI/UX by Component tab; changing tabs clears it in the same URL update.
+  if (!updatingFromUrl) nav.updateParams({ tab: tab === DEFAULT_TAB ? undefined : tab, release: undefined })
 })
 
 watch([() => nav.params.value?.tab, validTabs], ([tabParam]) => {
   const tab = tabParam && validTabs.value.includes(tabParam) ? tabParam : DEFAULT_TAB
+  // A `release` left in a URL that resolves to another tab is dropped in place (no history entry).
+  if (tab !== RELEASE_TAB && nav.params.value?.release !== undefined) {
+    nav.updateParams({ release: undefined }, { push: false })
+  }
   if (activeTab.value !== tab) {
     updatingFromUrl = true
     activeTab.value = tab

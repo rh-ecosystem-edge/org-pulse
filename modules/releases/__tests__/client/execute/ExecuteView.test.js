@@ -10,11 +10,11 @@ vi.mock('@shared/client/composables/useProjectId.js', () => ({
 import ExecuteView from '../../../client/views/ExecuteView.vue'
 
 const FLIGHTCTL_TABS = ['Feature List']
-const ALL_TABS = ['Feature List', 'Feature Tracking', 'Epics by Release', 'UI Epics by Component']
+const ALL_TABS = ['Feature List', 'Feature Tracking', 'Epics by Release', 'UI/UX by Component']
 
 function mountView(projectId, tab = undefined) {
   mockProjectId.value = projectId
-  const nav = { params: ref({ tab }), updateParams: () => {} }
+  const nav = { params: ref({ tab }), updateParams: vi.fn() }
   const wrapper = shallowMount(ExecuteView, { global: { provide: { moduleNav: nav } } })
   return { wrapper, nav }
 }
@@ -26,7 +26,7 @@ describe('shared Execute presentation', () => {
     mockProjectId.value = ''
   })
 
-  it.each(['osac', ''])('shows the UI Epics by Component tab for project "%s"', async (projectId) => {
+  it.each(['osac', ''])('shows the UI/UX by Component tab for project "%s"', async (projectId) => {
     const { wrapper } = mountView(projectId)
 
     expect(tabLabels(wrapper)).toEqual(ALL_TABS)
@@ -36,7 +36,54 @@ describe('shared Execute presentation', () => {
     await wrapper.findAll('nav button')[2].trigger('click')
     expect(wrapper.find('epics-by-release-view-stub').exists()).toBe(true)
     await wrapper.findAll('nav button')[3].trigger('click')
-    expect(wrapper.find('epics-by-component-view-stub').exists()).toBe(true)
+    expect(wrapper.find('ui-ux-by-component-view-stub').exists()).toBe(true)
+    wrapper.unmount()
+  })
+
+  it('clears the board release from the URL in the same update that changes the tab', async () => {
+    const { wrapper, nav } = mountView('osac', 'ui-epics-by-component')
+    await nextTick()
+    await nextTick()
+    await wrapper.findAll('nav button')[2].trigger('click')
+    const [params] = nav.updateParams.mock.calls.at(-1)
+    expect(params.tab).toBe('epics-by-release')
+    expect(Object.keys(params)).toContain('release')
+    expect(params.release).toBeUndefined()
+    wrapper.unmount()
+  })
+
+  it.each([
+    ['another tab', 'feature-tracking'],
+    ['an unknown tab', 'no-such-tab'],
+    ['the default tab', undefined]
+  ])('drops a stale release from a URL that resolves to %s, in place', async (_, tab) => {
+    mockProjectId.value = 'osac'
+    const nav = { params: ref({ tab, release: '0.5' }), updateParams: vi.fn() }
+    const wrapper = shallowMount(ExecuteView, { global: { provide: { moduleNav: nav } } })
+    await nextTick()
+    expect(nav.updateParams).toHaveBeenCalledWith({ release: undefined }, { push: false })
+    wrapper.unmount()
+  })
+
+  it('drops a stale release when a URL-driven change leaves the board tab', async () => {
+    const { wrapper, nav } = mountView('osac', 'ui-epics-by-component')
+    nav.params.value = { tab: 'ui-epics-by-component', release: '0.5' }
+    await nextTick()
+    expect(nav.updateParams).not.toHaveBeenCalled()
+
+    nav.params.value = { tab: 'epics-by-release', release: '0.5' }
+    await nextTick()
+    expect(nav.updateParams).toHaveBeenCalledWith({ release: undefined }, { push: false })
+    wrapper.unmount()
+  })
+
+  it('keeps the release of a board URL, such as the Feature Detail return', async () => {
+    const nav = { params: ref({ tab: 'ui-epics-by-component', release: '0.5' }), updateParams: vi.fn() }
+    mockProjectId.value = 'osac'
+    const wrapper = shallowMount(ExecuteView, { global: { provide: { moduleNav: nav } } })
+    await nextTick()
+    expect(nav.updateParams).not.toHaveBeenCalled()
+    expect(wrapper.find('ui-ux-by-component-view-stub').exists()).toBe(true)
     wrapper.unmount()
   })
 
@@ -86,15 +133,15 @@ describe('shared Execute presentation', () => {
     wrapper.unmount()
   })
 
-  it('opens the UI Epics by Component tab from a deep link', () => {
+  it('opens the UI/UX by Component tab from a deep link', () => {
     const { wrapper } = mountView('osac', 'ui-epics-by-component')
-    expect(wrapper.find('epics-by-component-view-stub').exists()).toBe(true)
+    expect(wrapper.find('ui-ux-by-component-view-stub').exists()).toBe(true)
     wrapper.unmount()
   })
 
   it('ignores a deep link to the tab for a project without a dashboard config', () => {
     const { wrapper } = mountView('flightctl', 'ui-epics-by-component')
-    expect(wrapper.find('epics-by-component-view-stub').exists()).toBe(false)
+    expect(wrapper.find('ui-ux-by-component-view-stub').exists()).toBe(false)
     expect(wrapper.find('overview-view-stub').exists()).toBe(true)
     wrapper.unmount()
   })
@@ -114,14 +161,14 @@ describe('shared Execute presentation', () => {
 
   it('leaves the tab when the project switches to one without a dashboard config', async () => {
     const { wrapper } = mountView('osac', 'ui-epics-by-component')
-    expect(wrapper.find('epics-by-component-view-stub').exists()).toBe(true)
+    expect(wrapper.find('ui-ux-by-component-view-stub').exists()).toBe(true)
 
     mockProjectId.value = 'flightctl'
     await nextTick()
     await nextTick()
 
     expect(tabLabels(wrapper)).toEqual(FLIGHTCTL_TABS)
-    expect(wrapper.find('epics-by-component-view-stub').exists()).toBe(false)
+    expect(wrapper.find('ui-ux-by-component-view-stub').exists()).toBe(false)
     expect(wrapper.find('overview-view-stub').exists()).toBe(true)
     wrapper.unmount()
   })
